@@ -1,81 +1,26 @@
 /*
 ======================================================================
-【JavaScript初心者向け詳細ガイド＆目次】
-
-◆ JavaScript（JS）とは？
-JavaScript（ジャバスクリプト）は、Webページに「動き」や「仕掛け」を追加するためのプログラミング言語です。
-HTMLが「骨組み」、CSSが「デザイン」なら、JSは「筋肉」や「脳」のような働きをします。
-例えば、「ローディング画面の数字を0から100に増やす」「メニューボタンを押したら画面を開く」「画面をスクロールしたら要素をフワッと表示する」といった動的な処理をすべてこのファイルで行っています。
-
-◆ このファイル（top.js）の役割
-このファイルは、MIA Portfolioに動きとインタラクティブな機能を与えています。
-大きく分けて、画面全体の機能（UI）の制御と、Three.jsやMediaPipeを使った高度な描画（動画に重なる波打ち効果や、AIによる人物認識エフェクト）を行っています。
-
-◆ JSコードの基本的な見方
-- 「/ *」と「* /」（※実際は間のスペースなし）で囲まれた部分、または // から始まる行は「コメント」です。
-- const, let は変数（データを入れる箱）を宣言する言葉です。
-- function() や () => {} は「関数（決められた処理のまとまり）」を作ります。
-- document.getElementById や document.querySelector は、HTMLの中の特定の要素を探し出して操作するための命令です。
-
-======================================================================
-【目次 (Table of Contents)】
-
-1. VideoTextMask クラス (動画のテキスト切り抜きと波打ちエフェクト)
-   - "Design & Capture" の文字の形に沿って動画を切り抜き、マウスや時間に合わせて文字の輪郭が揺らぐ（水面のような）WebGLエフェクトを実装しています。
-
-2. initUI 関数 (UI・画面機能の初期化)
-   - 2-1. Loader (ローディング): 0%から100%までのカウントアップとプログレスバーのアニメーション。
-   - 2-2. Custom Cursor (カスタムカーソル): マウスの動きに追従する黒い点と輪っかの動き。
-   - 2-3. Local Time (現在時刻): ヘッダーの時計を1秒ごとに日本時間で更新。
-   - 2-4. Menu Overlay (メニュー開閉): メニューボタンをクリックした時の全画面ナビゲーションの開閉処理。
-   - 2-5. Header Scroll (ヘッダースクロール): スクロールした時にヘッダーに枠線をつける処理。
-   - 2-6. FAQ (よくある質問): 質問をクリックして回答を開閉するアコーディオン機能。
-   - 2-7. Works Filter (作品フィルター): 「All」「Web」などのボタンで表示する作品を絞り込む機能。
-   - 2-8. IntersectionObserver (スクロールアニメーション): 要素が画面に入ってきた時にフワッと表示する（fade-in）処理。
-   - 2-9. Typewriter Animation (タイピングアニメーション): メインタイトルの文字がランダムな記号から徐々に正しい文字に変わるエフェクト。
-   - 2-10. Timeline Update (タイムライン): Processセクションの縦線の進み具合をスクロールに連動させる処理。
-
-3. initWebGL 関数 (Three.js + MediaPipe 姿勢推定)
-   - ブラウザ上でAI（MediaPipe）を使ってカメラや動画の人物の姿勢（骨格）を検知し、Three.jsという3Dライブラリを使って、メディアアート風の緑の枠線や関節マーカーを描画する高度な処理です。
-
-4. initTable 関数 (Skills テーブルの制御)
-   - 「できること」一覧表の並び替え（ソート）機能や、検索窓で文字を打った時に行を絞り込む機能、チェックボックスの全選択機能などを実装しています。
-
-5. 実行トリガー
-   - HTMLが読み込まれた直後に、上記の機能（initUI, initWebGL, initTableなど）を順番に実行するための命令が一番最後に書かれています。
-
+【MIA Portfolio '26 — top.js FINAL UNABRIDGED + PHYSICS】
+- Particle-based Video Mask with CPU Spring Physics
+- Hybrid AI Detection (Bee / Plant / Face / Person)
+- Recurrence Velocity & Golden Spiral Trajectory
+- Glassmorphism UI & Blob Data Stream (Auto-DOM Generation)
 ======================================================================
 */
 
-/**
- * ============================================================================
- * MIA Portfolio '26 — main.js (完全・軽量化・ローダー修正版)
- * ----------------------------------------------------------------------------
- * 1. VideoTextMask (DPR上限設定・シェーダー負荷軽減)
- * 2. UI機能 (DOM読み込み完了後に確実に実行されるよう修正)
- * 3. MediaPipe + Three.js (推論インターバル拡大・Canvasコピーの間引き)
- * 4. Data Table (省略なし)
- * 5. Footer Logo (WebGLからCSSマーキーへ変更し負荷を劇的に改善)
- * ============================================================================
- */
-
-/* ============================================================================
- * 1. VideoTextMask (shimmer.js)
- * ============================================================================ */
-
-// グローバルフラグの初期化
 window.isModelReady = false;
 
+/* ============================================================================
+ * 1. VideoTextMask (動画のテキスト切り抜きと波打ちエフェクト)
+ * ============================================================================ */
 class VideoTextMask {
     constructor() {
         this.accentWord = document.querySelector('.intro__title-word--accent');
         this.accentAmp = document.querySelector('.intro__title-amp');
-
         if (!this.accentWord) return;
 
         this.time = 0;
         this.mouse = { x: 0.5, y: 0.5 };
-        // 軽量化: 解像度の上限を2から1.5に制限してピクセル描画負荷を低減
         this.dpr = Math.min(window.devicePixelRatio || 1, 1.5);
 
         this._initVideo();
@@ -99,11 +44,11 @@ class VideoTextMask {
 
         this.video.addEventListener('canplaythrough', () => {
             this.videoReady = true;
-            this.video.play().catch(() => { });
+            this.video.play().catch(() => {});
         });
         this.video.addEventListener('loadeddata', () => {
             this.videoReady = true;
-            this.video.play().catch(() => { });
+            this.video.play().catch(() => {});
         });
         this.video.load();
     }
@@ -132,7 +77,6 @@ class VideoTextMask {
             titleEl.style.position = 'relative';
             titleEl.appendChild(this.wrapper);
         }
-
         this._updateSize();
     }
 
@@ -146,7 +90,6 @@ class VideoTextMask {
 
         this.canvas.width = w;
         this.canvas.height = h;
-
         this.titleWidth = titleRect.width;
         this.titleHeight = titleRect.height;
 
@@ -191,19 +134,16 @@ class VideoTextMask {
             const fontWeight = style.fontWeight;
             const fontFamily = style.fontFamily;
             const fontStyle = style.fontStyle || 'normal';
-
             const text = el.textContent;
 
             ctx.save();
             ctx.fillStyle = '#ffffff';
             ctx.font = `${fontStyle} ${fontWeight} ${fontSize}px ${fontFamily}`;
-
             ctx.textBaseline = 'alphabetic';
             const metrics = ctx.measureText(text);
 
             const textWidth = metrics.width;
             const xOffset = (elW - textWidth) / 2;
-
             const ascent = metrics.actualBoundingBoxAscent || fontSize * 0.75;
             const descent = metrics.actualBoundingBoxDescent || fontSize * 0.25;
             const yBaseline = relY + (elH + ascent - descent) / 2;
@@ -221,15 +161,8 @@ class VideoTextMask {
     }
 
     _initWebGL() {
-        const gl = this.canvas.getContext('webgl2', {
-            alpha: true,
-            antialias: true,
-            premultipliedAlpha: true,
-        });
-        if (!gl) {
-            console.warn('WebGL2 not available for VideoTextMask');
-            return;
-        }
+        const gl = this.canvas.getContext('webgl2', { alpha: true, antialias: true, premultipliedAlpha: true });
+        if (!gl) return;
         this.gl = gl;
 
         gl.enable(gl.BLEND);
@@ -243,8 +176,7 @@ class VideoTextMask {
             void main() {
                 vUv = aPos * 0.5 + 0.5;
                 gl_Position = vec4(aPos, 0.0, 1.0);
-            }
-        `;
+            }`;
 
         const fsSrc = `#version 300 es
             precision mediump float;
@@ -259,33 +191,26 @@ class VideoTextMask {
             vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
             vec2 mod289(vec2 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
             vec3 permute(vec3 x) { return mod289((x * 34.0 + 1.0) * x); }
-
             float snoise(vec2 v) {
                 const vec4 C = vec4(0.211324865405187, 0.366025403784439, -0.577350269189626, 0.024390243902439);
                 vec2 i = floor(v + dot(v, C.yy));
                 vec2 x0 = v - i + dot(i, C.xx);
                 vec2 i1 = (x0.x > x0.y) ? vec2(1.0, 0.0) : vec2(0.0, 1.0);
-                vec4 x12 = x0.xyxy + C.xxzz;
-                x12.xy -= i1;
+                vec4 x12 = x0.xyxy + C.xxzz; x12.xy -= i1;
                 i = mod289(i);
                 vec3 p = permute(permute(i.y + vec3(0.0, i1.y, 1.0)) + i.x + vec3(0.0, i1.x, 1.0));
                 vec3 m = max(0.5 - vec3(dot(x0,x0), dot(x12.xy,x12.xy), dot(x12.zw,x12.zw)), 0.0);
                 m = m * m; m = m * m;
-                vec3 x_ = 2.0 * fract(p * C.www) - 1.0;
-                vec3 h = abs(x_) - 0.5;
-                vec3 ox = floor(x_ + 0.5);
-                vec3 a0 = x_ - ox;
+                vec3 x_ = 2.0 * fract(p * C.www) - 1.0; vec3 h = abs(x_) - 0.5;
+                vec3 ox = floor(x_ + 0.5); vec3 a0 = x_ - ox;
                 m *= 1.79284291400159 - 0.85373472095314 * (a0*a0 + h*h);
-                vec3 g;
-                g.x  = a0.x  * x0.x  + h.x  * x0.y;
-                g.yz = a0.yz * x12.xz + h.yz * x12.yw;
+                vec3 g; g.x = a0.x * x0.x + h.x * x0.y; g.yz = a0.yz * x12.xz + h.yz * x12.yw;
                 return 130.0 * dot(m, g);
             }
-
             float fbm(vec2 p) {
-                float v = 0.0, a = 0.5;
+                float v = 0.0;
+                float a = 0.5;
                 mat2 rot = mat2(0.8, 0.6, -0.6, 0.8);
-                // 軽量化: ループを5回から2回に減らしGPU負荷を下げる
                 for (int i = 0; i < 2; i++) {
                     v += a * snoise(p);
                     p = rot * p * 2.0;
@@ -297,38 +222,28 @@ class VideoTextMask {
             void main() {
                 vec2 uv = vUv;
                 float t = uTime;
-
                 float mask = texture(uMask, vec2(uv.x, 1.0 - uv.y)).r;
                 if (mask < 0.01) {
                     fragColor = vec4(0.0);
                     return;
                 }
 
-                vec2 aspect = vec2(uResolution.x / uResolution.y, 1.0);
                 float n1 = fbm(uv * 3.5 + t * 0.2);
                 float n2 = fbm(uv * 3.5 + vec2(5.2, 1.3) + t * 0.18);
-                
                 vec2 displacement = vec2(n1 * 0.015, n2 * 0.015);
                 vec2 distortedUv = clamp(uv + displacement, 0.001, 0.999);
                 vec4 videoColor = texture(uVideo, distortedUv);
 
-                // グレースケール変換 (VideoTextMaskは独自WebGLコンテキストのため
-                // Three.js側のvideoMatグレースケールは適用されない。ここで変換する)
                 float luma = dot(videoColor.rgb, vec3(0.299, 0.587, 0.114));
-                // コントラストを少し強めて文字が映えるように
                 luma = clamp(luma * 1.1, 0.0, 1.0);
 
                 float shimmer = fbm(uv * 6.0 + t * 0.3);
                 float highlight = pow(shimmer * 0.5 + 0.5, 3.0) * 0.2;
-
-                // 白黒ベース + シマーハイライト (白)
-                vec3 color = vec3(luma);
-                color += highlight * 0.06;
+                vec3 color = vec3(luma) + highlight * 0.06;
 
                 float solidMask = smoothstep(0.1, 0.6, mask);
                 fragColor = vec4(clamp(color, 0.0, 1.0) * solidMask, solidMask);
-            }
-        `;
+            }`;
 
         const vs = this._compileShader(gl.VERTEX_SHADER, vsSrc);
         const fs = this._compileShader(gl.FRAGMENT_SHADER, fsSrc);
@@ -345,6 +260,7 @@ class VideoTextMask {
         const buf = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, buf);
         gl.bufferData(gl.ARRAY_BUFFER, quad, gl.STATIC_DRAW);
+        
         const loc = gl.getAttribLocation(this.program, 'aPos');
         gl.enableVertexAttribArray(loc);
         gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
@@ -363,7 +279,7 @@ class VideoTextMask {
         };
         gl.uniform1i(this.uniforms.uVideo, 0);
         gl.uniform1i(this.uniforms.uMask, 1);
-
+        
         this.isReady = true;
         document.body.classList.add('video-text-active');
     }
@@ -404,9 +320,15 @@ class VideoTextMask {
             this.mouse.y = (e.clientY - rect.top) / rect.height;
         }, { passive: true });
 
-        document.fonts?.ready?.then(() => {
-            setTimeout(() => { this._updateSize(); this._updateMask(); }, 100);
-        });
+        if (document.fonts && document.fonts.ready) {
+            document.fonts.ready.then(() => {
+                setTimeout(() => {
+                    this._updateSize();
+                    this._updateMask();
+                }, 100);
+            });
+        }
+        
         setTimeout(() => { this._updateSize(); this._updateMask(); }, 2000);
         setTimeout(() => { this._updateSize(); this._updateMask(); }, 4000);
     }
@@ -422,23 +344,24 @@ class VideoTextMask {
 
     _render() {
         if (!this.isReady || !this.gl) return;
+        
         const gl = this.gl;
         gl.clear(gl.COLOR_BUFFER_BIT);
-
+        
         if (this.videoReady && this.video.readyState >= 2) {
             gl.activeTexture(gl.TEXTURE0);
             gl.bindTexture(gl.TEXTURE_2D, this.videoTexture);
-            try { gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, this.video); } catch (e) { }
+            try {
+                gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, this.video);
+            } catch (e) {}
         }
-
+        
         gl.activeTexture(gl.TEXTURE1);
         gl.bindTexture(gl.TEXTURE_2D, this.maskTexture);
-
         gl.useProgram(this.program);
         gl.uniform1f(this.uniforms.uTime, this.time);
         gl.uniform2f(this.uniforms.uResolution, this.canvas.width, this.canvas.height);
         gl.uniform2f(this.uniforms.uMouse, Math.max(0, Math.min(1, this.mouse.x)), Math.max(0, Math.min(1, this.mouse.y)));
-
         gl.bindVertexArray(this.vao);
         gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     }
@@ -446,17 +369,18 @@ class VideoTextMask {
     destroy() {
         if (this.animId) cancelAnimationFrame(this.animId);
         if (this.video) this.video.pause();
-        if (this.wrapper?.parentNode) this.wrapper.parentNode.removeChild(this.wrapper);
+        if (this.wrapper && this.wrapper.parentNode) {
+            this.wrapper.parentNode.removeChild(this.wrapper);
+        }
     }
 }
 
 /* ============================================================================
- * 2. UI スクリプト (安全な初期化)
+ * 2. UI スクリプト (ローディング、メニュー、スクロール等)
  * ============================================================================ */
 const initUI = () => {
     'use strict';
-
-    // (1) Loader (MediaPipeの読み込みと連動)
+    
     const loader = document.getElementById('loader');
     const loaderNum = document.getElementById('loaderNum');
     const loaderBar = document.getElementById('loaderBar');
@@ -464,9 +388,8 @@ const initUI = () => {
     if (loader && loaderNum && loaderBar) {
         let current = 0;
         const target = 100;
-        document.body.style.overflow = 'hidden'; // スクロール防止
+        document.body.style.overflow = 'hidden';
 
-        // ローダー完了処理
         const finishLoader = () => {
             current = target;
             loaderNum.textContent = current;
@@ -474,81 +397,54 @@ const initUI = () => {
             setTimeout(() => {
                 loader.classList.add('is-done');
                 document.body.style.overflow = '';
-            }, 400);
-        };
-
-        // 90%以降、モデル未読込時にゆっくり進むタイマー
-        let slowTickTimer = null;
-        const startSlowTick = () => {
-            slowTickTimer = setInterval(() => {
-                if (window.isModelReady) {
-                    clearInterval(slowTickTimer);
-                    slowTickTimer = null;
-                    finishLoader();
-                    return;
-                }
-                if (current < 99) {
-                    current += 1;
-                    loaderNum.textContent = current;
-                    loaderBar.style.width = current + '%';
-                }
-                // 99に達してもモデルが来なければ99のまま待機
-            }, 800);
+            }, 500);
         };
 
         const updateLoader = () => {
-            // 90%に達した時点でモデル未読込なら、ゆっくりモードへ移行
-            if (current >= 90 && !window.isModelReady) {
-                loaderNum.textContent = current;
-                loaderBar.style.width = current + '%';
-                startSlowTick();
+            if (current >= 99 && !window.isModelReady) {
+                setTimeout(updateLoader, 100);
                 return;
             }
-
-            // 徐々にカウントアップさせる
-            const increment = Math.max(1, Math.round((target - current) * 0.12));
+            
+            const increment = current < 90 ? 2 : 1;
             current += increment;
+            
+            if (current > target) current = target;
+            
+            loaderNum.textContent = current;
+            loaderBar.style.width = current + '%';
 
-            if (current >= target) {
-                finishLoader();
-            } else {
-                loaderNum.textContent = current;
-                loaderBar.style.width = current + '%';
+            if (current < target) {
                 setTimeout(updateLoader, 30);
+            } else {
+                finishLoader();
             }
         };
-        setTimeout(updateLoader, 100);
-
-        // モデルが読み込まれたらスローティックをクリアして完了
-        const modelReadyCheck = setInterval(() => {
-            if (window.isModelReady) {
-                clearInterval(modelReadyCheck);
-                if (slowTickTimer) {
-                    clearInterval(slowTickTimer);
-                    slowTickTimer = null;
-                }
-                finishLoader();
-            }
-        }, 200);
+        updateLoader();
     }
 
-    // (2) Custom Cursor
     const cursorDot = document.getElementById('cursorDot');
     const cursorRing = document.getElementById('cursorRing');
+    
     if (cursorDot && cursorRing && window.matchMedia('(hover: hover)').matches) {
         let mx = -100, my = -100, rx = -100, ry = -100;
-        document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; }, { passive: true });
+        document.addEventListener('mousemove', (e) => {
+            mx = e.clientX;
+            my = e.clientY;
+        }, { passive: true });
+        
         const tick = () => {
             cursorDot.style.transform = `translate(${mx}px, ${my}px) translate(-50%, -50%)`;
-            rx += (mx - rx) * 0.14; ry += (my - ry) * 0.14;
+            rx += (mx - rx) * 0.14;
+            ry += (my - ry) * 0.14;
             cursorRing.style.transform = `translate(${rx}px, ${ry}px) translate(-50%, -50%)`;
             requestAnimationFrame(tick);
         };
         tick();
     }
 
-    // (3) Local Time Display
-    const localTime = document.getElementById('localTime'), footerTime = document.getElementById('footerTime');
+    const localTime = document.getElementById('localTime');
+    const footerTime = document.getElementById('footerTime');
     const updateTime = () => {
         const now = new Date();
         const jst = new Date(now.getTime() + (now.getTimezoneOffset() + 9 * 60) * 60000);
@@ -556,43 +452,101 @@ const initUI = () => {
         if (localTime) localTime.textContent = str;
         if (footerTime) footerTime.textContent = str;
     };
-    updateTime(); setInterval(updateTime, 1000);
+    updateTime();
+    setInterval(updateTime, 1000);
 
-    // (4) Menu Overlay
-    const menuBtn = document.getElementById('menuBtn'), navOverlay = document.getElementById('navOverlay'), navLinks = document.querySelectorAll('.nav-link');
-    const closeMenu = () => { navOverlay?.classList.remove('is-open'); menuBtn?.classList.remove('is-open'); document.body.classList.remove('menu-open'); document.body.style.overflow = ''; };
-    menuBtn?.addEventListener('click', () => {
-        if (navOverlay.classList.contains('is-open')) closeMenu();
-        else { navOverlay?.classList.add('is-open'); menuBtn?.classList.add('is-open'); document.body.classList.add('menu-open'); document.body.style.overflow = 'hidden'; }
+    const menuBtn = document.getElementById('menuBtn');
+    const navOverlay = document.getElementById('navOverlay');
+    const navLinks = document.querySelectorAll('.nav-link');
+    const closeBtn = document.getElementById('closeBtn');
+
+    const closeMenu = () => {
+        if (navOverlay) navOverlay.classList.remove('is-open');
+        if (menuBtn) menuBtn.classList.remove('is-open');
+        document.body.classList.remove('menu-open');
+        document.body.style.overflow = '';
+    };
+
+    if (menuBtn && navOverlay) {
+        menuBtn.addEventListener('click', () => {
+            if (navOverlay.classList.contains('is-open')) {
+                closeMenu();
+            } else {
+                navOverlay.classList.add('is-open');
+                menuBtn.classList.add('is-open');
+                document.body.classList.add('menu-open');
+                document.body.style.overflow = 'hidden';
+            }
+        });
+    }
+
+    if (closeBtn) closeBtn.addEventListener('click', closeMenu);
+    navLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            setTimeout(closeMenu, 100);
+        });
     });
-    document.getElementById('closeBtn')?.addEventListener('click', closeMenu);
-    navLinks.forEach(a => a.addEventListener('click', () => setTimeout(closeMenu, 100)));
 
-    // (5) Header Scroll
     const header = document.getElementById('header');
-    const onScroll = () => { if (header) header.classList.toggle('is-scrolled', window.scrollY > 10); };
-    onScroll(); window.addEventListener('scroll', onScroll, { passive: true });
+    const onScroll = () => {
+        if (header) {
+            if (window.scrollY > 10) {
+                header.classList.add('is-scrolled');
+            } else {
+                header.classList.remove('is-scrolled');
+            }
+        }
+    };
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
 
-    // (6) FAQ
-    document.querySelectorAll('.faq__item').forEach(item => {
+    const faqItems = document.querySelectorAll('.faq__item');
+    faqItems.forEach(item => {
         const btn = item.querySelector('.faq__q');
-        btn?.addEventListener('click', () => btn.setAttribute('aria-expanded', item.classList.toggle('is-open')));
+        if (btn) {
+            btn.addEventListener('click', () => {
+                const isOpen = item.classList.toggle('is-open');
+                btn.setAttribute('aria-expanded', isOpen);
+            });
+        }
     });
 
-    // (7) Works Filter
-    const filterBtns = document.querySelectorAll('.works__filter-btn'), workCards = document.querySelectorAll('.work');
-    filterBtns.forEach(btn => btn.addEventListener('click', () => {
-        filterBtns.forEach(b => b.classList.toggle('is-active', b === btn));
-        workCards.forEach(card => card.classList.toggle('is-hidden', btn.dataset.filter !== 'all' && card.dataset.category !== btn.dataset.filter));
-    }));
+    const filterBtns = document.querySelectorAll('.works__filter-btn');
+    const workCards = document.querySelectorAll('.work');
+    
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            filterBtns.forEach(b => b.classList.remove('is-active'));
+            btn.classList.add('is-active');
+            const filterValue = btn.getAttribute('data-filter');
+            
+            workCards.forEach(card => {
+                if (filterValue === 'all') {
+                    card.classList.remove('is-hidden');
+                } else {
+                    if (card.getAttribute('data-category') === filterValue) {
+                        card.classList.remove('is-hidden');
+                    } else {
+                        card.classList.add('is-hidden');
+                    }
+                }
+            });
+        });
+    });
 
-    // (8) IntersectionObserver
     const fadeTargets = document.querySelectorAll('.section__head, .about__lead, .about__body, .about__stats, .process__intro, .process__item, .works__intro, .work, .works__more, .price__block, .price__note, .mia-table-wrap, .faq__item, .contact__aside, .contact__form');
     fadeTargets.forEach(el => el.classList.add('fade-in'));
-    const io = new IntersectionObserver(entries => entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('is-visible'); io.unobserve(entry.target); } }), { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+    
+    const io = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('is-visible');
+                io.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
     fadeTargets.forEach(el => io.observe(el));
 
-    // (9) Typewriter Animation for intro__title (負荷軽減)
     const titleEl = document.querySelector('.intro__title');
     if (titleEl) {
         const walker = document.createTreeWalker(titleEl, NodeFilter.SHOW_TEXT, null, false);
@@ -604,16 +558,16 @@ const initUI = () => {
                 node.nodeValue = '';
             }
         }
-
+        
         const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*";
-
+        
         const scrambleNode = (item, delay, onUpdate) => {
             return new Promise(resolve => {
                 setTimeout(() => {
                     let charIdx = 0;
                     let resText = "";
                     const targetText = item.original;
-
+                    
                     const typeScramble = () => {
                         if (charIdx >= targetText.length) {
                             item.node.nodeValue = targetText;
@@ -625,7 +579,7 @@ const initUI = () => {
                         const int = setInterval(() => {
                             item.node.nodeValue = resText + chars[Math.floor(Math.random() * chars.length)];
                             if (onUpdate) onUpdate();
-
+                            
                             if (++count >= 2) {
                                 clearInterval(int);
                                 resText += targetText[charIdx++];
@@ -639,30 +593,24 @@ const initUI = () => {
                 }, delay);
             });
         };
-
+        
         const playSequence = async () => {
             titleEl.classList.remove('typing-done');
             titleEl.classList.add('is-typing');
-
-            textNodes.forEach(n => n.node.nodeValue = '');
+            textNodes.forEach(n => { n.node.nodeValue = ''; });
             if (window.__videoTextMask) window.__videoTextMask._updateMask();
-
             for (const item of textNodes) {
                 await scrambleNode(item, 20, () => {
                     if (window.__videoTextMask) window.__videoTextMask._updateMask();
                 });
             }
-
             setTimeout(() => {
                 titleEl.classList.remove('is-typing');
                 titleEl.classList.add('typing-done');
             }, 800);
-
-            setTimeout(() => {
-                playSequence();
-            }, 8000);
+            setTimeout(playSequence, 8000);
         };
-
+        
         const typeObserver = new IntersectionObserver((entries) => {
             if (entries[0].isIntersecting) {
                 setTimeout(playSequence, 900);
@@ -672,732 +620,896 @@ const initUI = () => {
         typeObserver.observe(titleEl);
     }
 
-    // Timeline Update
     const tl = document.querySelector('.process__list');
     if (tl) {
         const updateTL = () => {
             const rect = tl.getBoundingClientRect();
-            tl.style.setProperty('--timeline-black', `${Math.max(0, Math.min(1, ((window.innerHeight / 2) - rect.top) / rect.height)) * 100}%`);
+            const viewportHeight = window.innerHeight;
+            const center = viewportHeight / 2;
+            let progress = (center - rect.top) / rect.height;
+            progress = Math.max(0, Math.min(1, progress));
+            tl.style.setProperty('--timeline-black', `${progress * 100}%`);
         };
-        window.addEventListener('scroll', updateTL); updateTL();
+        window.addEventListener('scroll', updateTL);
+        updateTL();
     }
 };
 
 /* ============================================================================
- * 3. WebGL + MediaPipe 姿勢推定 (Glassmorphism・全身トラッキング版)
- * 軽量化対応: インターバルの見直し・Canvasコピーの間引き
+ * 3. Unified Hybrid HUD Engine + CPU Spring Physics + Blob Tracking
  * ============================================================================ */
 async function initWebGL() {
     if (typeof THREE === 'undefined') {
         window.isModelReady = true;
         return;
     }
-    const container = document.getElementById('heroWebGL'), video = document.getElementById('heroVideo');
+
+    const container = document.getElementById('heroWebGL');
+    const video = document.getElementById('heroVideo');
+    
     if (!container || !video) {
         window.isModelReady = true;
         return;
     }
 
-    container.classList.add('webgl-active');
-    video.play().then(() => { if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'none'; }).catch(e => console.warn(e));
+    // --- HTMLを触らずにDOMを動的生成 ---
+    if (!document.getElementById('blobStreamL')) {
+        const bl = document.createElement('div'); bl.id = 'blobStreamL'; bl.className = 'blob-data-stream left'; document.body.appendChild(bl);
+    }
+    if (!document.getElementById('blobStreamR')) {
+        const br = document.createElement('div'); br.id = 'blobStreamR'; br.className = 'blob-data-stream right'; document.body.appendChild(br);
+    }
+    let syncBtn = document.getElementById('cameraSyncBtn');
+    if (!syncBtn) {
+        syncBtn = document.createElement('div'); syncBtn.id = 'cameraSyncBtn'; syncBtn.className = 'camera-sync-trigger';
+        syncBtn.innerHTML = '<div class="sync-status"></div><span class="sync-text">[ システム同期要求 ]</span>';
+        document.body.appendChild(syncBtn);
+    }
 
-    // モバイル端末では GPU メモリ/帯域が逼迫しやすく、複数の MediaPipe モデル + WebGL 描画
-    // を同時に走らせると動画がブラウザ判断で一時停止することがある。
-    // 動画が止まったら自動で再生再開を試みる。
-    const tryResumeVideo = () => { video.play().catch(() => { }); };
-    video.addEventListener('pause', () => {
-        // 自分で意図的に止めていない場合だけ再開 (タブ非表示時の自動pauseは無視)
-        if (!document.hidden) setTimeout(tryResumeVideo, 100);
-    });
-    video.addEventListener('stalled', tryResumeVideo);
-    video.addEventListener('suspend', tryResumeVideo);
+    const blobStreamL = document.getElementById('blobStreamL');
+    const blobStreamR = document.getElementById('blobStreamR');
+    const monitorPip = document.getElementById('monitorPip');
+    const monitorVideo = document.getElementById('webcam-monitor');
+    const monitorCanvas = document.getElementById('face-mask');
+    const monitorCtx = monitorCanvas ? monitorCanvas.getContext('2d', { alpha: true }) : null;
+    if (blobStreamL) blobStreamL.classList.add('left');
+    if (blobStreamR) blobStreamR.classList.add('right');
+    if (syncBtn) {
+        syncBtn.setAttribute('role', 'button');
+        syncBtn.setAttribute('tabindex', '0');
+    }
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
-    // モバイルではDPRを抑えてピクセル処理量を軽減（描画負荷の主因のひとつ）
-    const _isMobile = window.innerWidth <= 820;
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, _isMobile ? 1.5 : 2));
-    renderer.setClearColor(0x000000, 0);
-    Object.assign(renderer.domElement.style, { position: 'absolute', inset: '0', zIndex: '10', pointerEvents: 'none' });
+    // --- WebGL Core Setup ---
+    const renderer = new THREE.WebGLRenderer({ antialias: false, alpha: true, powerPreference: 'high-performance' });
+    const coreCount = navigator.hardwareConcurrency || 4;
+    const pixelRatioCap = window.innerWidth < 820 || coreCount <= 4 ? 1 : 1.1;
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, pixelRatioCap));
+    renderer.setSize(container.clientWidth, container.clientHeight);
     container.appendChild(renderer.domElement);
-    video.style.opacity = '0';
 
-    let W = container.clientWidth, H = container.clientHeight, uiScale = 1.0;
-    const scene = new THREE.Scene(), camera = new THREE.OrthographicCamera(W / -2, W / 2, H / 2, H / -2, 0.1, 1000); camera.position.z = 100;
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
+    camera.position.z = 110;
+
+    // --- ★ CPU Spring Physics Particle System (tech93準拠) ---
+    const density = window.innerWidth < 820 ? 84 : (coreCount <= 4 ? 112 : 124);
+    const count = density * density;
+    
+    const geometry = new THREE.BufferGeometry();
+    const posArr = new Float32Array(count * 3);
+    const basePos = new Float32Array(count * 3);
+    const velArr = new Float32Array(count * 3);
+    const uvArr = new Float32Array(count * 2);
+    
+    for (let i = 0; i < count; i++) {
+        const x = (i % density) / density;
+        const y = Math.floor(i / density) / density;
+        
+        const px = (x - 0.5) * 160;
+        const py = -(y - 0.5) * 160;
+        
+        posArr[i * 3] = px; posArr[i * 3 + 1] = py; posArr[i * 3 + 2] = 0;
+        basePos[i * 3] = px; basePos[i * 3 + 1] = py; basePos[i * 3 + 2] = 0;
+        velArr[i * 3] = 0; velArr[i * 3 + 1] = 0; velArr[i * 3 + 2] = 0;
+        uvArr[i * 2] = x; uvArr[i * 2 + 1] = 1.0 - y;
+    }
+    
+    geometry.setAttribute('position', new THREE.BufferAttribute(posArr, 3));
+    geometry.setAttribute('uv', new THREE.BufferAttribute(uvArr, 2));
+    const positionAttr = geometry.attributes.position;
+    const activeParticleMask = new Uint8Array(count);
+    const activeParticles = [];
+    const worldToGrid = density / 160;
+    let lastPhysicsTime = 0;
 
     const videoTex = new THREE.VideoTexture(video);
-    videoTex.minFilter = THREE.LinearFilter; videoTex.magFilter = THREE.LinearFilter; videoTex.format = THREE.RGBAFormat;
-    // 動画plane だけグレースケール化する ShaderMaterial。UI (楕円・緑bbox) は色が残る
-    const videoMat = new THREE.ShaderMaterial({
-        uniforms: { tVideo: { value: videoTex } },
-        vertexShader: `varying vec2 vUv; void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`,
-        fragmentShader: `uniform sampler2D tVideo; varying vec2 vUv; void main() { vec4 c = texture2D(tVideo, vUv); float gray = dot(c.rgb, vec3(0.299, 0.587, 0.114)); gl_FragColor = vec4(vec3(gray * 1.05), c.a); }`
+    videoTex.minFilter = THREE.LinearFilter;
+    videoTex.magFilter = THREE.LinearFilter;
+    videoTex.format = THREE.RGBAFormat;
+
+    const partMat = new THREE.ShaderMaterial({
+        uniforms: {
+            tVideo: { value: videoTex },
+            uHand: { value: new THREE.Vector2(9999, 9999) },
+            uHandActive: { value: 0.0 }
+        },
+        vertexShader: `
+            uniform sampler2D tVideo;
+            uniform vec2 uHand;
+            uniform float uHandActive;
+            varying float vLuma;
+            varying float vHand;
+            
+            void main() {
+                vec4 c = texture2D(tVideo, uv);
+                float luma = dot(c.rgb, vec3(0.299, 0.587, 0.114));
+                vLuma = luma;
+                
+                vec3 pos = position;
+                vec2 handDelta = pos.xy - uHand;
+                float handDistSq = dot(handDelta, handDelta);
+                vHand = uHandActive * smoothstep(5476.0, 0.0, handDistSq);
+                pos.z += luma * 18.0; 
+                pos.z += vHand * (10.0 + sin(handDistSq * 0.0028) * 5.0);
+                
+                vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
+                /* 手の近くでは粒を大きくして反応を見えやすくする */
+                gl_PointSize = (310.0 / -mvPosition.z) * (luma * 1.2 + 0.35 + vHand * 1.15);
+                gl_Position = projectionMatrix * mvPosition;
+            }
+        `,
+        fragmentShader: `
+            varying float vLuma;
+            varying float vHand;
+            void main() {
+                vec2 pt = gl_PointCoord - vec2(0.5);
+                if (dot(pt, pt) > 0.25) discard;
+                vec3 color = vec3(vLuma * 0.85 + 0.12 + vHand * 0.78);
+                gl_FragColor = vec4(color, 0.82 + vHand * 0.18);
+            }
+        `,
+        transparent: true,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false
     });
-    const videoPlane = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), videoMat);
-    scene.add(videoPlane);
+    
+    const particles = new THREE.Points(geometry, partMat);
+    scene.add(particles);
 
-    const renderTarget = new THREE.WebGLRenderTarget(W, H, { format: THREE.RGBAFormat });
-    const postScene = new THREE.Scene(), postCamera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
-    // post-process はカラーのまま (UI の緑アクセントを保持)
-    const distortionMat = new THREE.ShaderMaterial({ uniforms: { tDiffuse: { value: renderTarget.texture }, time: { value: 0 }, amount: { value: 0.012 }, frequency: { value: 3.5 } }, transparent: true, blending: THREE.NoBlending, vertexShader: `varying vec2 vUv; void main() { vUv = uv; gl_Position = vec4(position, 1.0); }`, fragmentShader: `uniform sampler2D tDiffuse; uniform float time; uniform float amount; uniform float frequency; varying vec2 vUv; void main() { vec2 p = vUv; p.x += sin(p.y * frequency + time * 1.5) * amount; p.y += cos(p.x * frequency + time * 1.2) * amount; gl_FragColor = texture2D(tDiffuse, clamp(p, 0.0, 1.0)); }` });
-    postScene.add(new THREE.Mesh(new THREE.PlaneGeometry(2, 2), distortionMat));
+    // --- AI Engines Initialization ---
+    let handLandmarker, beeDetector, plantDetector, faceDetector, webcamFaceDetector, personDetector;
+    const visionPath = "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.3";
 
-    const uiGroup = new THREE.Group(); scene.add(uiGroup);
-    const lineGeo = new THREE.PlaneGeometry(1, 1);
-    function setLineMesh(m, x1, y1, x2, y2, w) { const dx = x2 - x1, dy = y2 - y1, len = Math.sqrt(dx * dx + dy * dy) || 0.001; m.scale.set(len, w, 1); m.position.set((x1 + x2) / 2, (y1 + y2) / 2, 0); m.rotation.z = Math.atan2(dy, dx); }
-
-    // 線画ベースのトラッカー（サイト全体のミニマルな線画スタイル＝コーナーブラケット＋クロスヘアに統一）
-    // ── マテリアルはすべてのブロブで共有（オリジナル同様）。ホバー切替は2マテリアルの参照差し替えで行う。
-    const dotMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.92, side: THREE.DoubleSide });
-    const dotMatDim = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.55, side: THREE.DoubleSide });
-    const lineMatStrong = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.7 });
-    const lineMatHover = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.95 });
-    const lineMatSoft = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.5 });
-
-    // メディアアート風の楕円ワイヤフレーム — 細い線で生き物のような有機的フォルムを描く
-    const makeEllipseLoop = (rx, ry, segments = 48) => {
-        const p = new Float32Array(segments * 3);
-        for (let i = 0; i < segments; i++) {
-            const t = (i / segments) * Math.PI * 2;
-            p[i * 3] = Math.cos(t) * rx;
-            p[i * 3 + 1] = Math.sin(t) * ry;
-            p[i * 3 + 2] = 0;
-        }
-        const g = new THREE.BufferGeometry();
-        g.setAttribute('position', new THREE.BufferAttribute(p, 3));
-        return g;
-    };
-    // 3 段階のサイズの楕円（メイン用）
-    const ellipseGeoLg = makeEllipseLoop(22, 14, 56);  // 大: 楕円 (横長)
-    const ellipseGeoMd = makeEllipseLoop(14, 18, 48);  // 中: 楕円 (縦長 / 90度回転で交差)
-    const ellipseGeoSm = makeEllipseLoop(8, 8, 32);    // 小: 円
-    const ellipseGeoLimb = makeEllipseLoop(7, 5, 28);  // 手足用
-
-    // モバイルではブロブ数も減らして GPU 描画を抑える (もともと最大同時数も多くない)
-    const MAX_BLOBS = window.innerWidth <= 820 ? 6 : 8;
-    const blobs = [], traceLines = [];
-
-    for (let i = 0; i < MAX_BLOBS; i++) {
-        const g = new THREE.Group();
-
-        // Eye marker: 3 重の楕円ワイヤフレーム + 中央点
-        const eyeGroup = new THREE.Group();
-        const dot = new THREE.Mesh(new THREE.CircleGeometry(1.4, 16), dotMat);
-        // outerRing = 大楕円 (ホバーで拡大), innerRing = 中楕円 (ゆっくり回転), small = 小円
-        const outerRing = new THREE.LineLoop(ellipseGeoLg, lineMatStrong);
-        const innerRing = new THREE.LineLoop(ellipseGeoMd, lineMatSoft);
-        const smallRing = new THREE.LineLoop(ellipseGeoSm, lineMatSoft);
-        innerRing.rotation.z = Math.PI / 4; // 斜めに重ねて花弁のような形に
-        eyeGroup.add(outerRing, innerRing, smallRing, dot);
-        g.add(eyeGroup);
-
-        // Limb marker: 小さな楕円 + 微細な点
-        const limbGroup = new THREE.Group();
-        const sq = new THREE.LineLoop(ellipseGeoLimb, lineMatSoft);
-        const dot2 = new THREE.Mesh(new THREE.CircleGeometry(0.8, 12), dotMatDim);
-        limbGroup.add(sq, dot2);
-        g.add(limbGroup);
-
-        uiGroup.add(g);
-        blobs.push({ g, eyeGroup, limbGroup, innerRing, outerRing, smallRing, sq, tx: 0, ty: 0, cx: 0, cy: 0, label: '', group: '', part: '', conf: 0, hover: 0 });
-
-        // 接続線は破線風 (細く+低不透明度) でメディアアート的なネットワーク感を出す
-        const tl = new THREE.Mesh(lineGeo, new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.14, side: THREE.DoubleSide }));
-        uiGroup.add(tl); traceLines.push(tl);
-    }
-
-    let mx = -9999, my = -9999;
-    window.addEventListener('mousemove', e => {
-        const rect = container.getBoundingClientRect();
-        mx = e.clientX - rect.left - W / 2; my = -(e.clientY - rect.top - H / 2);
-    });
-
-    // Skeleton lines — Float32Arrayを事前確保し、毎フレームのアロケーション(GC圧)を排除
-    const POSE_CONNECTIONS = [[0, 1], [1, 2], [2, 3], [3, 7], [0, 4], [4, 5], [5, 6], [6, 8], [9, 10], [11, 12], [11, 13], [13, 15], [15, 17], [15, 19], [15, 21], [17, 19], [12, 14], [14, 16], [16, 18], [16, 20], [16, 22], [18, 20], [11, 23], [12, 24], [23, 24], [23, 25], [25, 27], [27, 29], [29, 31], [31, 27], [24, 26], [26, 28], [28, 30], [30, 32], [32, 28]];
-    const SKEL_MAX_VERTS = POSE_CONNECTIONS.length * 2;
-    const skelPosArr = new Float32Array(SKEL_MAX_VERTS * 3);
-    const skelGeo = new THREE.BufferGeometry();
-    skelGeo.setAttribute('position', new THREE.BufferAttribute(skelPosArr, 3));
-    skelGeo.setDrawRange(0, 0);
-    const skeletonLines = new THREE.LineSegments(skelGeo, new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.5 }));
-    skeletonLines.frustumCulled = false;
-    uiGroup.add(skeletonLines);
-
-    // Animal/bounding boxes — メディアアート風に緑のアクセント色で細く描画
-    const BOX_VERT_COUNT = 16;
-    const animalBoxes = [];
-    const boxLineMat = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.6 });
-    for (let i = 0; i < 4; i++) {
-        const arr = new Float32Array(BOX_VERT_COUNT * 3);
-        const geo = new THREE.BufferGeometry();
-        geo.setAttribute('position', new THREE.BufferAttribute(arr, 3));
-        const line = new THREE.LineSegments(geo, boxLineMat);
-        line.frustumCulled = false;
-        line.userData.posArr = arr;
-        line.visible = false;
-        uiGroup.add(line);
-        animalBoxes.push(line);
-    }
-
-    // Tracking Panel (DOMオーバーレイ) — スキャン風のモノクローム情報パネル
-    // グループアイコンと意味のある数値を表示し「今何を追跡しているか」を直感的に把握できる
-    const calloutEl = document.createElement('div');
-    calloutEl.className = 'hero-callout';
-    calloutEl.innerHTML = `
-        <div class="hero-callout__card">
-            <div class="hero-callout__header">
-                <span class="hero-callout__icon" aria-hidden="true">◎</span>
-                <span class="hero-callout__label">TRACKING</span>
-                <span class="hero-callout__status">LIVE</span>
-            </div>
-            <div class="hero-callout__divider"></div>
-            <div class="hero-callout__body">
-                <div class="hero-callout__row">
-                    <span class="hero-callout__key">TYPE</span>
-                    <span class="hero-callout__type">--</span>
-                </div>
-                <div class="hero-callout__row">
-                    <span class="hero-callout__key">LABEL</span>
-                    <span class="hero-callout__species">--</span>
-                </div>
-                <div class="hero-callout__row">
-                    <span class="hero-callout__key">CONF</span>
-                    <span class="hero-callout__conf">--%</span>
-                </div>
-            </div>
-            <div class="hero-callout__scan-bar"><span class="hero-callout__scan-line"></span></div>
-        </div>
-    `;
-    container.appendChild(calloutEl);
-    const calloutType = calloutEl.querySelector('.hero-callout__type');
-    const calloutSpecies = calloutEl.querySelector('.hero-callout__species');
-    const calloutConf = calloutEl.querySelector('.hero-callout__conf');
-    const calloutIcon = calloutEl.querySelector('.hero-callout__icon');
-
-    // グループ別のアイコン文字
-    const GROUP_ICONS = { 'HUMAN': '◉', 'ANIMAL': '◈', 'INSECT': '◆', 'PLANT': '◇', 'TARGET': '◎' };
-
-    // メイン対象の座標・信頼度を示すサブパネル — DOM ベースで GPU 負荷ゼロ
-    const dataCloudEl = document.createElement('div');
-    dataCloudEl.className = 'hero-data-cloud';
-    dataCloudEl.innerHTML = `
-        <div class="hero-data-cloud__header">
-            <span class="hero-data-cloud__title">SCAN DATA</span>
-            <span class="hero-data-cloud__dot"></span>
-        </div>
-        <span class="hero-data-cloud__row hero-data-cloud__row--1"></span>
-        <span class="hero-data-cloud__row hero-data-cloud__row--2"></span>
-        <span class="hero-data-cloud__row hero-data-cloud__row--3"></span>
-        <span class="hero-data-cloud__row hero-data-cloud__row--4"></span>
-    `;
-    container.appendChild(dataCloudEl);
-    const dataRows = dataCloudEl.querySelectorAll('.hero-data-cloud__row');
-    let dataLastRefresh = 0;
-    const refreshDataCloud = (mainTarget, now) => {
-        // 250ms ごとに数値を更新 (頻繁に変えすぎると読めない)
-        if (now - dataLastRefresh < 250) return;
-        dataLastRefresh = now;
-        const conf = Math.round((mainTarget.conf ?? 0) * 100);
-        const xr = ((mainTarget.cx + W / 2) / W).toFixed(2);
-        const yr = ((-mainTarget.cy + H / 2) / H).toFixed(2);
-        const fps = Math.round(1000 / Math.max(1, now - (refreshDataCloud._lastNow || now - 300)));
-        refreshDataCloud._lastNow = now;
-        dataRows[0].textContent = `POS  ${xr} / ${yr}`;
-        dataRows[1].textContent = `CONF ${conf}%`;
-        dataRows[2].textContent = `FPS  ${Math.min(fps, 60).toString().padStart(2, ' ')}`;
-        dataRows[3].textContent = `GRP  ${(mainTarget.group || '---').toUpperCase()}`;
-    };
-
-    // ===== 初期状態では false にしておく =====
-    window.isModelReady = false;
-
-    let poseLandmarker, objectDetector, objectDetectorBee, objectDetectorPlant, isReady = false;
-
-    // モバイル判定 (画面幅 + UA)。モバイルでは Lite モデル + Pose のみに絞り、
-    // GPU 帯域を WebGL 描画と動画再生のために確保する。
-    const isMobileDevice = (() => {
-        if (window.innerWidth <= 820) return true;
-        const ua = navigator.userAgent || '';
-        return /iPhone|iPod|Android.*Mobile|Mobile.*Firefox|IEMobile/i.test(ua);
-    })();
-
-    import("https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.3").then(async mod => {
-        const vision = await mod.FilesetResolver.forVisionTasks("https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.3/wasm");
-
-        // モバイルでは GPU delegate が不安定なケースがあるので CPU にフォールバック可能にする
-        const poseModel = isMobileDevice
-            ? "https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task"
-            : "https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_full/float16/1/pose_landmarker_full.task";
-        const objModel = isMobileDevice
-            ? "https://storage.googleapis.com/mediapipe-models/object_detector/efficientdet_lite0/float16/1/efficientdet_lite0.tflite"
-            : "https://storage.googleapis.com/mediapipe-models/object_detector/efficientdet_lite2/float16/1/efficientdet_lite2.tflite";
-
+    async function setupEngines() {
         try {
-            // --- 1. 姿勢推定 (Pose) ---
-            poseLandmarker = await mod.PoseLandmarker.createFromOptions(vision, {
-                baseOptions: { modelAssetPath: poseModel, delegate: "GPU" },
-                runningMode: "VIDEO", numPoses: 1,
-                minPoseDetectionConfidence: 0.45,
-                minPosePresenceConfidence: 0.45,
-                minTrackingConfidence: 0.45
-            });
+            const mod = await import(visionPath);
+            const vision = await mod.FilesetResolver.forVisionTasks(`${visionPath}/wasm`);
 
-            // --- 2. 標準モデル (一般用) ---
-            // scoreThresholdを0.55に引き上げ: 低信頼度での誤検出(human→insect等)を抑制
-            objectDetector = await mod.ObjectDetector.createFromOptions(vision, {
-                baseOptions: { modelAssetPath: objModel, delegate: "GPU" },
-                runningMode: "VIDEO", maxResults: isMobileDevice ? 2 : 3, scoreThreshold: 0.55
-            });
-
-            // ここまで成功すればトラッキングは稼働させる
-            isReady = true;
-            window.isModelReady = true;
-        } catch (e) {
-            console.error("Standard MediaPipe models failed to load:", e);
-            window.isModelReady = true;
-            return; // 致命的エラー
-        }
-
-        // --- 3 & 4. カスタムモデル (蜂・植物) はモバイルでは読み込まない ---
-        // 理由: 同時に4つのモデルを GPU で動かすとメモリ・帯域が逼迫し、
-        // 動画再生がブラウザ判断で一時停止される (特に iOS Safari)。
-        if (isMobileDevice) {
-            console.log("Mobile detected — skipping custom bee/plant detectors to keep video playing smoothly.");
-            objectDetectorBee = null;
-            objectDetectorPlant = null;
-        } else {
-            // GPU 失敗時は CPU にフォールバックする共通ヘルパー
-            const loadCustomDetector = async (path, label, maxResults, threshold) => {
-                for (const delegate of ["GPU", "CPU"]) {
+            const createVisionTask = async (label, factory, options) => {
+                try {
+                    return await factory.createFromOptions(vision, options);
+                } catch (gpuError) {
                     try {
-                        const det = await mod.ObjectDetector.createFromOptions(vision, {
-                            baseOptions: { modelAssetPath: path, delegate },
-                            runningMode: "VIDEO", maxResults, scoreThreshold: threshold
-                        });
-                        console.log(`✅ ${label} loaded (${delegate}).`);
-                        return det;
-                    } catch (e) {
-                        console.warn(`⚠️ ${label} (${delegate}) failed:`, e.message || e);
+                        const cpuOptions = {
+                            ...options,
+                            baseOptions: { ...options.baseOptions, delegate: "CPU" }
+                        };
+                        return await factory.createFromOptions(vision, cpuOptions);
+                    } catch (cpuError) {
+                        console.warn(`${label} loading failed:`, cpuError);
+                        return null;
                     }
                 }
-                console.warn(`❌ ${label} could not be loaded with any delegate.`);
-                return null;
             };
 
-            objectDetectorBee = await loadCustomDetector(
-                "models/bee_detector.tflite", "Bee detector", 2, 0.40
-            );
-            objectDetectorPlant = await loadCustomDetector(
-                "models/plant_detector.tflite", "Plant detector", 2, 0.40
-            );
+            const handOptions = {
+                baseOptions: { modelAssetPath: "https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task", delegate: "GPU" },
+                runningMode: "VIDEO", numHands: 1
+            };
+
+            const beeOptions = {
+                baseOptions: { modelAssetPath: "./models/bee_detector.tflite", delegate: "GPU" },
+                runningMode: "VIDEO", scoreThreshold: 0.35, maxResults: 2
+            };
+
+            const plantOptions = {
+                baseOptions: { modelAssetPath: "./models/plant_detector.tflite", delegate: "GPU" },
+                runningMode: "VIDEO", scoreThreshold: 0.35, maxResults: 2
+            };
+
+            const faceOptions = {
+                baseOptions: { modelAssetPath: "https://storage.googleapis.com/mediapipe-models/face_detector/blaze_face_short_range/float16/1/blaze_face_short_range.tflite", delegate: "GPU" },
+                runningMode: "VIDEO", minDetectionConfidence: 0.4
+            };
+
+            const personOptions = {
+                baseOptions: { modelAssetPath: "https://storage.googleapis.com/mediapipe-models/object_detector/efficientdet_lite0/float16/1/efficientdet_lite0.tflite", delegate: "GPU" },
+                runningMode: "VIDEO", scoreThreshold: 0.4, maxResults: 3
+            };
+
+            handLandmarker = await createVisionTask("HandLandmarker", mod.HandLandmarker, handOptions);
+            webcamFaceDetector = await createVisionTask("Webcam FaceDetector", mod.FaceDetector, faceOptions);
+            faceDetector = await createVisionTask("Hero FaceDetector", mod.FaceDetector, faceOptions);
+            personDetector = await createVisionTask("PersonDetector", mod.ObjectDetector, personOptions);
+            beeDetector = await createVisionTask("BeeDetector", mod.ObjectDetector, beeOptions);
+            plantDetector = await createVisionTask("PlantDetector", mod.ObjectDetector, plantOptions);
+
+            window.isModelReady = true;
+        } catch (e) {
+            console.error("AI Model Loading Error:", e);
+            window.isModelReady = true;
+        }
+    }
+
+    // --- HUD Trackers Setup ---
+    const hudGroup = new THREE.Group();
+    scene.add(hudGroup);
+    
+    const hudContainer = document.createElement('div');
+    hudContainer.className = 'hud-container';
+    container.appendChild(hudContainer);
+
+    const bracketMat = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.6 });
+    const leadMat = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.3 });
+    const trailMat = new THREE.LineBasicMaterial({ color: 0xcccccc, transparent: true, opacity: 0.4, blending: THREE.AdditiveBlending });
+    
+    const trackers = [];
+    const TOTAL_TRACKERS = 8;
+    const TRAIL_LENGTH = 15;
+
+    for (let i = 0; i < TOTAL_TRACKERS; i++) {
+        const bracketGeo = new THREE.BufferGeometry();
+        const bracketPos = new Float32Array(48); 
+        bracketGeo.setAttribute('position', new THREE.BufferAttribute(bracketPos, 3));
+        const br = new THREE.LineSegments(bracketGeo, bracketMat);
+        br.visible = false; hudGroup.add(br);
+
+        const leadGeo = new THREE.BufferGeometry();
+        const leadPos = new Float32Array(9); 
+        leadGeo.setAttribute('position', new THREE.BufferAttribute(leadPos, 3));
+        const leadLine = new THREE.Line(leadGeo, leadMat);
+        leadLine.visible = false; hudGroup.add(leadLine);
+
+        const trailGeo = new THREE.BufferGeometry();
+        const trailPos = new Float32Array(TRAIL_LENGTH * 3);
+        trailGeo.setAttribute('position', new THREE.BufferAttribute(trailPos, 3));
+        const trailLine = new THREE.Line(trailGeo, trailMat);
+        trailLine.visible = false; hudGroup.add(trailLine);
+
+        const panel = document.createElement('div');
+        panel.className = 'hud-panel cyber-hud';
+        panel.innerHTML = `
+            <div class="hud-panel__header">
+                <span class="hud-num">0${i+1}</span>
+                <span class="hud-type-label">TGT_SCAN</span>
+            </div>
+            <div class="hud-panel__body">
+                <div>X : <span class="hud-val hud-x">000.00</span></div>
+                <div>Y : <span class="hud-val hud-y">000.00</span></div>
+                <div>VEL <span class="hud-val hud-vel">00.00</span></div>
+                <div>CONF <span class="hud-val hud-conf">00.0</span></div>
+            </div>
+        `;
+        hudContainer.appendChild(panel);
+
+        trackers.push({
+            active: false, life: 0,
+            tx: 0, ty: 0, tw: 0, th: 0, 
+            cx: 0, cy: 0, cw: 0, ch: 0, 
+            prevX: 0, prevY: 0, velSmooth: 0, conf: 0, targetType: "UNKNOWN",
+            hudVisible: false,
+            bracket: br, bracketPos: bracketPos, leadLine: leadLine, leadPos: leadPos,
+            trailLine: trailLine, trailPos: trailPos, dom: panel,
+            elType: panel.querySelector('.hud-type-label'), elX: panel.querySelector('.hud-x'), 
+            elY: panel.querySelector('.hud-y'), elVel: panel.querySelector('.hud-vel'), elConf: panel.querySelector('.hud-conf')
+        });
+    }
+
+    let webcamVideo = document.createElement('video');
+    let webcamReady = false;
+    let latestHandPoint = null;
+    let latestFaceDetections = [];
+    let lastHandInferenceTime = 0;
+    let lastMaskInferenceTime = 0;
+    const handScrollState = {
+        active: false,
+        lastX: 0,
+        lastY: 0,
+        lastTime: 0
+    };
+    const loggedDetectorErrors = new Set();
+    webcamVideo.autoplay = true;
+    webcamVideo.muted = true;
+    webcamVideo.playsInline = true;
+    webcamVideo.setAttribute('autoplay', '');
+    webcamVideo.setAttribute('muted', '');
+    webcamVideo.setAttribute('playsinline', '');
+
+    function logDetectorErrorOnce(label, error) {
+        if (loggedDetectorErrors.has(label)) return;
+        loggedDetectorErrors.add(label);
+        console.warn(`${label} inference skipped:`, error);
+    }
+
+    function syncCanvasSize(canvas) {
+        const nextWidth = Math.max(1, Math.round(canvas.clientWidth));
+        const nextHeight = Math.max(1, Math.round(canvas.clientHeight));
+        if (canvas.width !== nextWidth || canvas.height !== nextHeight) {
+            canvas.width = nextWidth;
+            canvas.height = nextHeight;
+            return true;
+        }
+        return false;
+    }
+
+    function mapVideoBoxToCanvas(box, sourceVideo, canvas) {
+        const sourceW = sourceVideo.videoWidth || 1;
+        const sourceH = sourceVideo.videoHeight || 1;
+        const scale = Math.max(canvas.width / sourceW, canvas.height / sourceH);
+        const drawW = sourceW * scale;
+        const drawH = sourceH * scale;
+        const offsetX = (canvas.width - drawW) / 2;
+        const offsetY = (canvas.height - drawH) / 2;
+
+        return {
+            x: offsetX + box.originX * scale,
+            y: offsetY + box.originY * scale,
+            w: box.width * scale,
+            h: box.height * scale
+        };
+    }
+
+    function landmarkToParticlePoint(landmark) {
+        return {
+            x: ((1.0 - landmark.x) - 0.5) * 160,
+            y: -(landmark.y - 0.5) * 160
+        };
+    }
+
+    function getLandmarkCenter(landmarks, indexes) {
+        const center = indexes.reduce((acc, index) => {
+            acc.x += landmarks[index].x;
+            acc.y += landmarks[index].y;
+            return acc;
+        }, { x: 0, y: 0 });
+
+        center.x /= indexes.length;
+        center.y /= indexes.length;
+        return center;
+    }
+
+    function buildHandPoint(landmarks, now) {
+        const tip = landmarkToParticlePoint(landmarks[8]);
+        const palmCenter = getLandmarkCenter(landmarks, [0, 5, 9, 13, 17]);
+        const palm = landmarkToParticlePoint(palmCenter);
+        const extendedFingers = [
+            [8, 6],
+            [12, 10],
+            [16, 14],
+            [20, 18]
+        ].reduce((countExtended, [tipIndex, pipIndex]) => {
+            return countExtended + (landmarks[tipIndex].y < landmarks[pipIndex].y - 0.025 ? 1 : 0);
+        }, 0);
+
+        const previous = latestHandPoint;
+        const dt = previous ? Math.max(16, now - previous.time) : 33;
+        const vx = previous ? (tip.x - previous.x) / (dt / 16.67) : 0;
+        const vy = previous ? (tip.y - previous.y) / (dt / 16.67) : 0;
+        const motion = Math.min(48, Math.sqrt(vx * vx + vy * vy));
+
+        return {
+            x: tip.x,
+            y: tip.y,
+            palmX: palm.x,
+            palmY: palm.y,
+            centerX: palmCenter.x,
+            centerY: palmCenter.y,
+            extendedFingers,
+            scrollActive: extendedFingers >= 3,
+            motion,
+            time: now,
+            effectPoints: [
+                { x: tip.x, y: tip.y, strength: 1.15 },
+                { x: palm.x, y: palm.y, strength: 0.75 }
+            ]
+        };
+    }
+
+    function canGestureScrollPage() {
+        const active = document.activeElement;
+        if (!active) return true;
+        return !active.isContentEditable && !['INPUT', 'TEXTAREA', 'SELECT'].includes(active.tagName);
+    }
+
+    function updateHandScroll(handPoint, now) {
+        if (!handPoint || !handPoint.scrollActive || !canGestureScrollPage()) {
+            handScrollState.active = false;
+            return;
         }
 
-    }).catch(e => {
-        console.error("MediaPipe Vision init failed:", e);
-        window.isModelReady = true;
-    });
+        if (!handScrollState.active || now - handScrollState.lastTime > 240) {
+            handScrollState.active = true;
+            handScrollState.lastX = handPoint.centerX;
+            handScrollState.lastY = handPoint.centerY;
+            handScrollState.lastTime = now;
+            return;
+        }
 
-    function onResize() {
-        W = container.clientWidth; H = container.clientHeight;
-        renderer.setSize(W, H); renderTarget.setSize(W, H);
-        camera.left = -W / 2; camera.right = W / 2; camera.top = H / 2; camera.bottom = -H / 2;
-        camera.updateProjectionMatrix();
-        // モバイルでは UI を縮小し、画面に収まるよう調整
-        const vw = window.innerWidth;
-        uiScale = vw <= 480 ? 0.42 : (vw <= 820 ? 0.55 : 1.0);
+        const dx = handPoint.centerX - handScrollState.lastX;
+        const dy = handPoint.centerY - handScrollState.lastY;
+        const isVerticalGesture = Math.abs(dy) > 0.006 && Math.abs(dy) > Math.abs(dx) * 0.7;
+
+        if (isVerticalGesture) {
+            const viewportScale = window.innerHeight || 800;
+            const scrollAmount = Math.max(-90, Math.min(90, -dy * viewportScale * 2.6));
+            window.scrollBy({ top: scrollAmount, left: 0, behavior: 'auto' });
+        }
+
+        handScrollState.lastX = handPoint.centerX;
+        handScrollState.lastY = handPoint.centerY;
+        handScrollState.lastTime = now;
     }
-    window.addEventListener('resize', onResize); onResize();
 
-    // 認識対象のグループ分類（人・動物・虫）— 検出モデルがCOCO以外のクラスを返した場合にも対応
-    const HUMAN_CATS = new Set(['person', 'human']);
-    const ANIMAL_CATS = new Set([
-        'bird', 'cat', 'dog', 'horse', 'sheep', 'cow', 'elephant', 'bear', 'zebra', 'giraffe',
-        'rabbit', 'mouse', 'squirrel', 'fox', 'deer', 'monkey', 'fish', 'turtle', 'lizard', 'snake'
-    ]);
-    // 自作モデルのラベル名に合わせて幅広くカバー
-    const INSECT_CATS = new Set([
-        'bee', 'honey-bee', 'honey bee', 'honeybee', 'insect', 'butterfly',
-        'wasp', 'bumblebee', 'apis', 'apidae'
-    ]);
-    const PLANT_CATS = new Set([
-        'potted plant', 'plant', 'flower', 'nemophila', 'tree', 'leaf',
-        'houseplant', 'flowerpot', 'vegetation', 'flora', 'grass', 'bush',
-        'tracheophyta', 'angiosperm'
-    ]);
-    const classifyTarget = (cat) => {
-        if (HUMAN_CATS.has(cat)) return 'HUMAN';
-        if (ANIMAL_CATS.has(cat)) return 'ANIMAL';
-        if (INSECT_CATS.has(cat)) return 'INSECT';
-        if (PLANT_CATS.has(cat)) return 'PLANT';
-        // 部分一致でフォールバック（カスタムモデルのラベル名が完全に一致しないケースに対応）
-        if (cat.includes('bee') || cat.includes('apis')) return 'INSECT';
-        if (cat.includes('plant') || cat.includes('flower') || cat.includes('flora')) return 'PLANT';
-        return null;
-    };
+    function addActiveParticle(index) {
+        if (activeParticleMask[index]) return;
+        activeParticleMask[index] = 1;
+        activeParticles.push(index);
+    }
 
-    let lastTime = -1;
+    function activateParticlesAround(point, radius) {
+        const centerX = Math.round((point.x + 80) * worldToGrid);
+        const centerY = Math.round((80 - point.y) * worldToGrid);
+        const radiusCells = Math.ceil(radius * worldToGrid) + 2;
+        const minX = Math.max(0, centerX - radiusCells);
+        const maxX = Math.min(density - 1, centerX + radiusCells);
+        const minY = Math.max(0, centerY - radiusCells);
+        const maxY = Math.min(density - 1, centerY + radiusCells);
+
+        for (let gy = minY; gy <= maxY; gy++) {
+            const row = gy * density;
+            for (let gx = minX; gx <= maxX; gx++) {
+                const index = row + gx;
+                const i3 = index * 3;
+                const dx = basePos[i3] - point.x;
+                const dy = basePos[i3 + 1] - point.y;
+                if (dx * dx + dy * dy <= radius * radius) {
+                    addActiveParticle(index);
+                }
+            }
+        }
+    }
+    
+    const showSyncBtnInterval = setInterval(() => {
+        if (window.isModelReady && syncBtn) {
+            clearInterval(showSyncBtnInterval);
+            setTimeout(() => { syncBtn.classList.add('is-visible'); }, 2000);
+        }
+    }, 500);
+
+    if (syncBtn) {
+        const startCameraSync = async () => {
+            if (webcamReady) return;
+            const textSpan = syncBtn.querySelector('.sync-text');
+            if (textSpan) textSpan.textContent = "[ 同期中... ]";
+            try {
+                if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                    throw new Error("getUserMedia is not available in this context.");
+                }
+
+                const stream = await navigator.mediaDevices.getUserMedia({
+                    video: {
+                        width: { ideal: 640 },
+                        height: { ideal: 480 },
+                        facingMode: "user"
+                    },
+                    audio: false
+                });
+                webcamVideo.srcObject = stream;
+
+                // 追加: 右下のビデオにもストリームをアタッチし、PIPを表示
+                if (monitorPip && monitorVideo) {
+                    monitorVideo.muted = true;
+                    monitorVideo.playsInline = true;
+                    monitorVideo.srcObject = stream;
+                    await Promise.allSettled([webcamVideo.play(), monitorVideo.play()]);
+                    monitorPip.classList.add('is-visible');
+                } else {
+                    await webcamVideo.play();
+                }
+
+                webcamReady = true;
+                syncBtn.classList.remove('is-visible');
+                if (textSpan) textSpan.textContent = "[ 同期完了 ]";
+            } catch (e) {
+                if (textSpan) textSpan.textContent = "[ 同期エラー ]";
+                syncBtn.classList.add('is-visible');
+                console.warn("Camera sync failed:", e);
+            }
+        };
+
+        syncBtn.addEventListener('click', startCameraSync);
+        syncBtn.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                startCameraSync();
+            }
+        });
+    }
+
+    setupEngines();
+
+    function updateBracketCoords(arr, x, y, w, h, len) {
+        const l = x - w / 2, r = x + w / 2, top = y + h / 2, bottom = y - h / 2;
+        let i = 0;
+        arr[i++] = l; arr[i++] = top; arr[i++] = 0; arr[i++] = l + len; arr[i++] = top; arr[i++] = 0;
+        arr[i++] = l; arr[i++] = top; arr[i++] = 0; arr[i++] = l; arr[i++] = top - len; arr[i++] = 0;
+        arr[i++] = r; arr[i++] = top; arr[i++] = 0; arr[i++] = r - len; arr[i++] = top; arr[i++] = 0;
+        arr[i++] = r; arr[i++] = top; arr[i++] = 0; arr[i++] = r; arr[i++] = top - len; arr[i++] = 0;
+        arr[i++] = l; arr[i++] = bottom; arr[i++] = 0; arr[i++] = l + len; arr[i++] = bottom; arr[i++] = 0;
+        arr[i++] = l; arr[i++] = bottom; arr[i++] = 0; arr[i++] = l; arr[i++] = bottom + len; arr[i++] = 0;
+        arr[i++] = r; arr[i++] = bottom; arr[i++] = 0; arr[i++] = r - len; arr[i++] = bottom; arr[i++] = 0;
+        arr[i++] = r; arr[i++] = bottom; arr[i++] = 0; arr[i++] = r; arr[i++] = bottom + len; arr[i++] = 0;
+    }
+
     let lastInferenceTime = 0;
-    // PC でも推論間隔を緩めて GPU 余力を WebGL 描画 + 動画に振り分ける
-    const INFERENCE_INTERVAL = window.innerWidth <= 820 ? 700 : 360;
-
-    // 自作カスタムモデル (蜂・植物) は GPU 負荷を抑えるためターン制で交互に実行する。
-    // 直近の検出結果は次のターンまでキャッシュして表示を継続させる。
-    let customDetectorTurn = 0; // 0 = bee, 1 = plant
-    let lastBeeRes = { detections: [] };
-    let lastPlantRes = { detections: [] };
-
     let frameCount = 0;
+    let inferenceCycle = 0; 
+    let heroVisible = true;
+    const heroProjectVec = new THREE.Vector3();
+    const blobHistoryL = [], blobHistoryR = [];
+    const PHI = 1.6180339887, SILVER = 1.4142135623;
+    const HERO_INFERENCE_INTERVAL = 140;
+    const HAND_INFERENCE_INTERVAL = 55;
+    const FACE_MASK_INTERVAL = 140;
+    const PHYSICS_INTERVAL = 33;
 
-    // 画面外・タブ非表示時はループ本体を停止（重い推論と描画を止めて、ヒーローが見えている時だけ動かす）
-    let inView = true;
-    if ('IntersectionObserver' in window) {
-        const obs = new IntersectionObserver((entries) => {
-            for (const en of entries) inView = en.isIntersecting;
-        }, { threshold: 0.05 });
-        obs.observe(container);
-    }
-
-    function animate() {
-        requestAnimationFrame(animate);
-        // タブ非表示／ヒーロー外なら早期return（ブラウザがrAFを呼び続けるが、本体処理はスキップ）
-        if (document.hidden || !inView) return;
+    function render() {
+        requestAnimationFrame(render);
+        if (document.hidden) return;
 
         const now = performance.now();
         frameCount++;
 
-        let dW = W, dH = H;
+        let W = container.clientWidth, H = container.clientHeight;
+        if (frameCount % 15 === 1) {
+            const rect = container.getBoundingClientRect();
+            heroVisible = rect.bottom > 0 && rect.top < window.innerHeight;
+        }
 
-        if (video.readyState >= 2) {
-            const vW = video.videoWidth || 1920, vH = video.videoHeight || 1080, vA = vW / vH, cA = W / H;
-            if (cA > vA) dH = W / vA; else dW = H * vA;
-            videoPlane.scale.set(dW, dH, 1);
+        // --- AI Inference (Round-robin) ---
+        if (heroVisible && window.isModelReady && video.readyState >= 2 && now - lastInferenceTime > HERO_INFERENCE_INTERVAL) {
+            try {
+                trackers.forEach(t => { if (t.life > 0) t.life--; });
+                let trackerIdx = 0;
 
-            if (isReady && video.currentTime !== lastTime && (now - lastInferenceTime > INFERENCE_INTERVAL)) {
-                lastInferenceTime = now;
-                lastTime = video.currentTime;
-
-                const targets = [];
-                let skelN = 0; // スケルトン頂点数カウンタ（毎フレームリセット）
-
-                // ========================================
-                // A) 検出器を順に実行 — 蜂モデルは人がいない時のみ走らせる
-                // ========================================
-                const poseRes = poseLandmarker.detectForVideo(video, now);
-                const objResStd = objectDetector.detectForVideo(video, now);
-
-                // 確実に人がいる時は蜂モデルを呼ばない (誤検出回避 + 推論コスト削減)
-                // Pose検出を最優先: ランドマークが存在すれば即「人あり」と確定
-                let humanPresent = false;
-                let poseConfirmed = false;
-                if (poseRes.landmarks && poseRes.landmarks.length > 0) {
-                    const p = poseRes.landmarks[0];
-                    // 鼻 / 肩 / 腰 のうち2つ以上が高信頼で見えていれば「人がいる」
-                    const keys = [0, 11, 12, 23, 24];
-                    const visible = keys.reduce((n, i) => n + ((p[i] && (p[i].visibility ?? 0) > 0.4) ? 1 : 0), 0);
-                    if (visible >= 2) { humanPresent = true; poseConfirmed = true; }
-                }
-                // Poseで確定していなければ標準検出器のperson結果で補完
-                if (!humanPresent) {
-                    humanPresent = (objResStd.detections || []).some(d =>
-                        (d.categories[0]?.categoryName || '').toLowerCase() === 'person' &&
-                        (d.categories[0]?.score ?? 0) > 0.6
-                    );
-                }
-                // ターン制で自作モデルを交互実行 (各モデルは2サイクルに1回 ≒ 600ms ごと)
-                // 蜂は人がいる時にキャッシュも含めてクリア (古い誤検出が残らないように)
-                if (humanPresent) {
-                    lastBeeRes = { detections: [] };
-                }
-                // タイムスタンプを各モデルで 1ms ずつオフセット (MediaPipe内部の重複タイムスタンプ拒否を回避)
-                if (customDetectorTurn === 0) {
-                    if (objectDetectorBee && !humanPresent) {
-                        try {
-                            lastBeeRes = objectDetectorBee.detectForVideo(video, now + 1);
-                        } catch (e) {
-                            // タイムスタンプ系エラーは静かにスキップ
-                            if (!String(e).includes('timestamp')) console.warn("Bee detect error:", e);
-                            lastBeeRes = { detections: [] };
+                if (inferenceCycle === 0) {
+                    trackerIdx = 0;
+                    if (beeDetector) {
+                        const beeRes = beeDetector.detectForVideo(video, now);
+                        if (beeRes && beeRes.detections) {
+                            beeRes.detections.forEach(det => {
+                                if (trackerIdx >= 4) return;
+                                const t = trackers[trackerIdx++];
+                                t.active = true; t.life = 10; t.targetType = "BEE";
+                                const bb = det.boundingBox;
+                                // 物理空間(-80~+80)へのマッピング
+                                t.tx = ((bb.originX + bb.width / 2) / video.videoWidth - 0.5) * 160;
+                                t.ty = -((bb.originY + bb.height / 2) / video.videoHeight - 0.5) * 160;
+                                t.tw = (bb.width / video.videoWidth) * 160; t.th = (bb.height / video.videoHeight) * 160;
+                                t.conf = det.categories[0].score;
+                                if (t.cw === 0) { t.cx = t.tx; t.cy = t.ty; t.cw = t.tw; t.ch = t.th; t.prevX = t.tx; t.prevY = t.ty; }
+                            });
                         }
                     }
+                    if (plantDetector) {
+                        const plantRes = plantDetector.detectForVideo(video, now);
+                        if (plantRes && plantRes.detections) {
+                            plantRes.detections.forEach(det => {
+                                if (trackerIdx >= 4) return;
+                                const t = trackers[trackerIdx++];
+                                t.active = true; t.life = 10; t.targetType = "PLNT";
+                                const bb = det.boundingBox;
+                                t.tx = ((bb.originX + bb.width / 2) / video.videoWidth - 0.5) * 160;
+                                t.ty = -((bb.originY + bb.height / 2) / video.videoHeight - 0.5) * 160;
+                                t.tw = (bb.width / video.videoWidth) * 160; t.th = (bb.height / video.videoHeight) * 160;
+                                t.conf = det.categories[0].score;
+                                if (t.cw === 0) { t.cx = t.tx; t.cy = t.ty; t.cw = t.tw; t.ch = t.th; t.prevX = t.tx; t.prevY = t.ty; }
+                            });
+                        }
+                    }
+                    inferenceCycle = 1;
                 } else {
-                    if (objectDetectorPlant) {
-                        try {
-                            lastPlantRes = objectDetectorPlant.detectForVideo(video, now + 2);
-                        } catch (e) {
-                            if (!String(e).includes('timestamp')) console.warn("Plant detect error:", e);
-                            lastPlantRes = { detections: [] };
+                    trackerIdx = 4;
+                    if (faceDetector) {
+                        const faceRes = faceDetector.detectForVideo(video, now);
+                        if (faceRes && faceRes.detections) {
+                            faceRes.detections.forEach(det => {
+                                if (trackerIdx >= 8) return;
+                                const t = trackers[trackerIdx++];
+                                t.active = true; t.life = 10; t.targetType = "FACE";
+                                const bb = det.boundingBox;
+                                t.tx = ((bb.originX + bb.width / 2) / video.videoWidth - 0.5) * 160;
+                                t.ty = -((bb.originY + bb.height / 2) / video.videoHeight - 0.5) * 160;
+                                t.tw = (bb.width / video.videoWidth) * 160; t.th = (bb.height / video.videoHeight) * 160;
+                                t.conf = det.categories ? det.categories[0].score : 0.85; 
+                                if (t.cw === 0) { t.cx = t.tx; t.cy = t.ty; t.cw = t.tw; t.ch = t.th; t.prevX = t.tx; t.prevY = t.ty; }
+                            });
+                        }
+                    }
+                    if (personDetector) {
+                        const personRes = personDetector.detectForVideo(video, now);
+                        if (personRes && personRes.detections) {
+                            personRes.detections.forEach(det => {
+                                if (!det.categories || det.categories[0].categoryName !== "person") return;
+                                if (trackerIdx >= 8) return;
+                                const t = trackers[trackerIdx++];
+                                t.active = true; t.life = 10; t.targetType = "PRSN";
+                                const bb = det.boundingBox;
+                                t.tx = ((bb.originX + bb.width / 2) / video.videoWidth - 0.5) * 160;
+                                t.ty = -((bb.originY + bb.height / 2) / video.videoHeight - 0.5) * 160;
+                                t.tw = (bb.width / video.videoWidth) * 160; t.th = (bb.height / video.videoHeight) * 160;
+                                t.conf = det.categories[0].score;
+                                if (t.cw === 0) { t.cx = t.tx; t.cy = t.ty; t.cw = t.tw; t.ch = t.th; t.prevX = t.tx; t.prevY = t.ty; }
+                            });
+                        }
+                    }
+                    inferenceCycle = 0;
+                }
+            } catch (e) {
+                logDetectorErrorOnce("Hero detector", e);
+                inferenceCycle = (inferenceCycle + 1) % 2;
+            }
+            lastInferenceTime = now;
+        }
+
+// --- ★ CPU Particle Physics Loop & Face Masking ---
+        if (webcamReady && webcamVideo.readyState >= 2) {
+            
+            // 1. 顔の黒塗り処理 (右下キャンバス)
+            if (monitorCanvas && monitorCtx) {
+                let shouldRedrawMask = syncCanvasSize(monitorCanvas);
+
+                if (webcamFaceDetector && now - lastMaskInferenceTime > FACE_MASK_INTERVAL) {
+                    try {
+                        const faceRes = webcamFaceDetector.detectForVideo(webcamVideo, now);
+                        latestFaceDetections = faceRes && faceRes.detections ? faceRes.detections : [];
+                        lastMaskInferenceTime = now;
+                        shouldRedrawMask = true;
+                    } catch (e) {
+                        latestFaceDetections = [];
+                        lastMaskInferenceTime = now;
+                        shouldRedrawMask = true;
+                        logDetectorErrorOnce("Webcam face detector", e);
+                    }
+                }
+
+                if (shouldRedrawMask) {
+                    monitorCtx.clearRect(0, 0, monitorCanvas.width, monitorCanvas.height);
+                }
+
+                if (shouldRedrawMask && latestFaceDetections.length) {
+                    monitorCtx.fillStyle = 'black';
+                    latestFaceDetections.forEach(det => {
+                        const bb = det.boundingBox;
+                        const rect = mapVideoBoxToCanvas(bb, webcamVideo, monitorCanvas);
+                        
+                        // 顔を確実に隠すために少し大きめに塗りつぶす
+                        const paddingX = rect.w * 0.15;
+                        const paddingY = rect.h * 0.15;
+                        monitorCtx.fillRect(rect.x - paddingX, rect.y - paddingY, rect.w + paddingX * 2, rect.h + paddingY * 2);
+                    });
+                }
+            }
+
+            // 2. 手の座標取得とパーティクルの波打ち処理
+            if (handLandmarker) {
+                if (now - lastHandInferenceTime > HAND_INFERENCE_INTERVAL) {
+                    try {
+                        const handResults = handLandmarker.detectForVideo(webcamVideo, now);
+                        if (handResults && handResults.landmarks && handResults.landmarks.length > 0) {
+                            latestHandPoint = buildHandPoint(handResults.landmarks[0], now);
+                            updateHandScroll(latestHandPoint, now);
+                        } else {
+                            latestHandPoint = null;
+                            updateHandScroll(null, now);
+                        }
+                        lastHandInferenceTime = now;
+                    } catch (e) {
+                        latestHandPoint = null;
+                        updateHandScroll(null, now);
+                        lastHandInferenceTime = now;
+                        logDetectorErrorOnce("HandLandmarker", e);
+                    }
+                }
+
+                if (latestHandPoint) {
+                    partMat.uniforms.uHand.value.set(latestHandPoint.x, latestHandPoint.y);
+                    partMat.uniforms.uHandActive.value = 1.0;
+                } else {
+                    partMat.uniforms.uHandActive.value = 0.0;
+                }
+
+                const handEffectPoints = latestHandPoint ? latestHandPoint.effectPoints : [];
+                const handMotion = latestHandPoint ? latestHandPoint.motion : 0;
+
+                // 物理シミュレーションのパラメータ
+                const influenceRadius = 48.0 + Math.min(18.0, handMotion * 1.15);
+                const radiusSq = influenceRadius * influenceRadius;
+                const springForce = 0.11;
+                const friction = 0.86;
+                const time = now * 0.01; // 波の進行スピード
+
+                if (now - lastPhysicsTime > PHYSICS_INTERVAL) {
+                    if (handEffectPoints.length) {
+                        for (let h = 0; h < handEffectPoints.length; h++) {
+                            activateParticlesAround(handEffectPoints[h], influenceRadius);
                         }
                     }
                 }
-                customDetectorTurn = 1 - customDetectorTurn;
-                const objResBee = lastBeeRes;
-                const objResPlant = lastPlantRes;
 
-                // ========================================
-                // B) 姿勢推定（Pose）の解析
-                // ========================================
-                if (poseRes.landmarks && poseRes.landmarks.length > 0) {
-                    const pose = poseRes.landmarks[0]; // 最初の人物
+                if (activeParticles.length && now - lastPhysicsTime > PHYSICS_INTERVAL) {
+                    lastPhysicsTime = now;
+                    let writeIndex = 0;
 
-                    // 頭部位置の推定: 正面 → 鼻 / 横顔・後ろ姿 → 耳の重み付き中点 / 完全な後頭部 → 肩の中点から上方外挿
-                    const nose = pose[0], lEar = pose[7], rEar = pose[8], lSh = pose[11], rSh = pose[12];
-                    let headX = null, headY = null, headConf = 0;
-                    if (nose && (nose.visibility ?? 0) > 0.5) {
-                        headX = nose.x; headY = nose.y; headConf = nose.visibility;
-                    } else {
-                        const lv = (lEar && (lEar.visibility ?? 0) > 0.35) ? (lEar.visibility ?? 0) : 0;
-                        const rv = (rEar && (rEar.visibility ?? 0) > 0.35) ? (rEar.visibility ?? 0) : 0;
-                        if (lv + rv > 0) {
-                            headX = (lEar.x * lv + rEar.x * rv) / (lv + rv);
-                            headY = (lEar.y * lv + rEar.y * rv) / (lv + rv);
-                            headConf = Math.max(lv, rv);
-                        } else if (lSh && rSh && (lSh.visibility ?? 0) > 0.4 && (rSh.visibility ?? 0) > 0.4) {
-                            // 完全な後ろ姿: 肩の中点から肩幅 × 0.7 だけ上に頭部があると仮定
-                            const sx = (lSh.x + rSh.x) / 2, sy = (lSh.y + rSh.y) / 2;
-                            const shoulderWidth = Math.hypot(lSh.x - rSh.x, lSh.y - rSh.y);
-                            headX = sx;
-                            headY = sy - shoulderWidth * 0.7;
-                            // 推定値のため、肩のvisibilityを少し割り引いて使う
-                            headConf = Math.min(lSh.visibility, rSh.visibility) * 0.85;
+                    for (let listIndex = 0; listIndex < activeParticles.length; listIndex++) {
+                        const particleIndex = activeParticles[listIndex];
+                        const i3 = particleIndex * 3;
+                        let px = posArr[i3];
+                        let py = posArr[i3 + 1];
+                        let pz = posArr[i3 + 2];
+
+                        const bx = basePos[i3];
+                        const by = basePos[i3 + 1];
+                        const bz = basePos[i3 + 2];
+
+                        let vx = velArr[i3];
+                        let vy = velArr[i3 + 1];
+                        let vz = velArr[i3 + 2];
+                        let influenced = false;
+
+                        // 手の座標からの波打ち効果（Ripple Effect）
+                        for (let h = 0; h < handEffectPoints.length; h++) {
+                            const point = handEffectPoints[h];
+                            const dx = px - point.x;
+                            const dy = py - point.y;
+                            const distSq = dx * dx + dy * dy;
+                            if (distSq < radiusSq) {
+                                influenced = true;
+                                const dist = Math.sqrt(distSq);
+                                const safeDist = Math.max(dist, 0.001);
+                                const falloff = (1.0 - dist / influenceRadius);
+                                const wave = Math.sin(dist * 0.24 - time * 2.2);
+                                const pulse = falloff * falloff * point.strength * (1.0 + Math.min(1.2, handMotion * 0.035));
+                                const radial = pulse * 2.8;
+                                const swirl = Math.cos(time + dist * 0.08) * pulse * 1.5;
+
+                                vx += (dx / safeDist) * radial - (dy / safeDist) * swirl;
+                                vy += (dy / safeDist) * radial + (dx / safeDist) * swirl;
+                                vz += (18.0 + wave * 20.0) * pulse; // Z軸方向(手前/奥)に大きく波打つ
+                            }
+                        }
+
+                        // 元の位置に戻るバネの力（Spring）
+                        vx += (bx - px) * springForce;
+                        vy += (by - py) * springForce;
+                        vz += (bz - pz) * springForce;
+
+                        // 摩擦による減衰（Friction）
+                        vx *= friction;
+                        vy *= friction;
+                        vz *= friction;
+
+                        const nx = Math.max(-110, Math.min(110, px + vx));
+                        const ny = Math.max(-110, Math.min(110, py + vy));
+                        const nz = Math.max(-45, Math.min(45, pz + vz));
+                        const settled = !influenced &&
+                            Math.abs(vx) + Math.abs(vy) + Math.abs(vz) < 0.018 &&
+                            Math.abs(nx - bx) + Math.abs(ny - by) + Math.abs(nz - bz) < 0.08;
+
+                        if (settled) {
+                            activeParticleMask[particleIndex] = 0;
+                            velArr[i3] = 0; velArr[i3 + 1] = 0; velArr[i3 + 2] = 0;
+                            posArr[i3] = bx; posArr[i3 + 1] = by; posArr[i3 + 2] = bz;
+                        } else {
+                            velArr[i3] = vx; velArr[i3 + 1] = vy; velArr[i3 + 2] = vz;
+                            posArr[i3] = nx; posArr[i3 + 1] = ny; posArr[i3 + 2] = nz;
+                            activeParticles[writeIndex++] = particleIndex;
                         }
                     }
-                    if (headX !== null) {
-                        targets.push({ x: headX, y: headY, type: 'person', group: 'HUMAN', part: 'eye', conf: headConf });
-                    }
 
-                    // 手足は visibility 閾値を 0.4 に下げて後ろ姿でも捕捉しやすく
-                    if (pose[15] && (pose[15].visibility ?? 0) > 0.4) targets.push({ x: pose[15].x, y: pose[15].y, type: 'person', group: 'HUMAN', part: 'hand', conf: pose[15].visibility });
-                    if (pose[16] && (pose[16].visibility ?? 0) > 0.4) targets.push({ x: pose[16].x, y: pose[16].y, type: 'person', group: 'HUMAN', part: 'hand', conf: pose[16].visibility });
-                    if (pose[27] && (pose[27].visibility ?? 0) > 0.4) targets.push({ x: pose[27].x, y: pose[27].y, type: 'person', group: 'HUMAN', part: 'foot', conf: pose[27].visibility });
-                    if (pose[28] && (pose[28].visibility ?? 0) > 0.4) targets.push({ x: pose[28].x, y: pose[28].y, type: 'person', group: 'HUMAN', part: 'foot', conf: pose[28].visibility });
-
-                    // スケルトン線の描画
-                    for (let k = 0; k < POSE_CONNECTIONS.length; k++) {
-                        const i = POSE_CONNECTIONS[k][0], j = POSE_CONNECTIONS[k][1];
-                        const p1 = pose[i], p2 = pose[j];
-                        if (p1 && p2 && (p1.visibility ?? 0) > 0.5 && (p2.visibility ?? 0) > 0.5 && skelN + 2 <= SKEL_MAX_VERTS) {
-                            const o = skelN * 3;
-                            skelPosArr[o] = (p1.x - 0.5) * dW;
-                            skelPosArr[o + 1] = -(p1.y - 0.5) * dH;
-                            skelPosArr[o + 2] = 0;
-                            skelPosArr[o + 3] = (p2.x - 0.5) * dW;
-                            skelPosArr[o + 4] = -(p2.y - 0.5) * dH;
-                            skelPosArr[o + 5] = 0;
-                            skelN += 2;
-                        }
-                    }
-                }
-                skelGeo.attributes.position.needsUpdate = true;
-                skelGeo.setDrawRange(0, skelN);
-
-                // ========================================
-                // C) オブジェクト検出 — 標準モデル＋蜂モデル＋植物モデルの結果をマージ
-                // ========================================
-                // 蜂モデルは A) で humanPresent==false の時のみ走っているので、
-                // ここでは追加フィルタは不要 (低コスト)
-                // poseConfirmed==true の場合は objResStd の 'person' 検出を除外
-                // (Poseの結果を優先し、objDetector が person → insect 等と誤分類しても上書きされるのを防ぐ)
-                const filteredStdDetections = (objResStd.detections || []).filter(d => {
-                    if (!poseConfirmed) return true;
-                    // Pose確定済みの場合、标準検出器の非動物クラスを無視
-                    const c = (d.categories[0]?.categoryName || '').toLowerCase();
-                    // HUMAN/ANIMAL/INSECT/PLANT 以外はすでに grp=null でフィルタされるが、
-                    // INSECTやANIMALとして検出されたものが実は人物の場合を防ぐため
-                    // humanPresent時はINSECTカテゴリの検出を除外する
-                    return !INSECT_CATS.has(c);
-                });
-
-                const allDetections = [
-                    ...filteredStdDetections,
-                    ...(objResBee.detections || []),
-                    ...(objResPlant.detections || [])
-                ];
-
-                let aIdx = 0;
-                allDetections.forEach(det => {
-                    const cat = (det.categories[0]?.categoryName || '').toLowerCase();
-                    const score = det.categories[0]?.score ?? 0;
-                    const grp = classifyTarget(cat);
-
-                    if (!grp) return;
-                    // poseConfirmed時にHUMAN以外のグループで低信頼度の検出は無視
-                    if (poseConfirmed && grp !== 'HUMAN' && grp !== 'PLANT' && score < 0.65) return;
-
-                    const bb = det.boundingBox;
-                    const bx = bb.originX;
-                    const by = bb.originY;
-                    const bw = bb.width;
-                    const bh = bb.height;
-
-                    // 中心座標（正規化）
-                    const cx = (bx + bw / 2) / vW;
-                    const cy = (by + bh / 2) / vH;
-
-                    // メインポイント（動物はやや上、虫は中央など）
-                    const eyeY = grp === 'INSECT' ? cy : (by + bh * 0.25) / vH;
-                    targets.push({ x: cx, y: eyeY, type: cat, group: grp, part: 'eye', conf: score });
-
-                    // 昆虫グループ（蜂）ならお尻側にもポイントを追加
-                    if (grp === 'INSECT') {
-                        targets.push({ x: cx, y: (by + bh * 0.8) / vH, type: cat, group: grp, part: 'rear', conf: score });
-                    }
-
-                    // 足もとのポイント（人間はPoseで処理済みなのでスキップ）
-                    if (grp !== 'HUMAN') {
-                        targets.push({ x: (bx + bw * 0.25) / vW, y: (by + bh * 0.85) / vH, type: cat, group: grp, part: 'foot', conf: score });
-                        targets.push({ x: (bx + bw * 0.75) / vW, y: (by + bh * 0.85) / vH, type: cat, group: grp, part: 'foot', conf: score });
-                    }
-
-                    // Bounding Box (角のブラケット) の描画 — 人間以外のみ
-                    if (grp !== 'HUMAN' && aIdx < animalBoxes.length) {
-                        const x1 = (bx / vW - 0.5) * dW, y1 = -(by / vH - 0.5) * dH;
-                        const x2 = ((bx + bw) / vW - 0.5) * dW, y2 = -((by + bh) / vH - 0.5) * dH;
-                        const L = Math.max(20, Math.min(Math.abs(x2 - x1) * 0.25, Math.abs(y1 - y2) * 0.25));
-                        const a = animalBoxes[aIdx].userData.posArr;
-
-                        // 頂点データ更新（4隅 × 2本 = 8セグメント × 2頂点 = 16頂点、各3成分）
-                        a[0] = x1; a[1] = y1; a[2] = 0;
-                        a[3] = x1 + L; a[4] = y1; a[5] = 0;
-                        a[6] = x1; a[7] = y1; a[8] = 0;
-                        a[9] = x1; a[10] = y1 - L; a[11] = 0;
-                        a[12] = x2; a[13] = y1; a[14] = 0;
-                        a[15] = x2 - L; a[16] = y1; a[17] = 0;
-                        a[18] = x2; a[19] = y1; a[20] = 0;
-                        a[21] = x2; a[22] = y1 - L; a[23] = 0;
-                        a[24] = x1; a[25] = y2; a[26] = 0;
-                        a[27] = x1 + L; a[28] = y2; a[29] = 0;
-                        a[30] = x1; a[31] = y2; a[32] = 0;
-                        a[33] = x1; a[34] = y2 + L; a[35] = 0;
-                        a[36] = x2; a[37] = y2; a[38] = 0;
-                        a[39] = x2 - L; a[40] = y2; a[41] = 0;
-                        a[42] = x2; a[43] = y2; a[44] = 0;
-                        a[45] = x2; a[46] = y2 + L; a[47] = 0;
-
-                        animalBoxes[aIdx].geometry.attributes.position.needsUpdate = true;
-                        animalBoxes[aIdx].visible = true; aIdx++;
-                    }
-                });
-                for (; aIdx < animalBoxes.length; aIdx++) animalBoxes[aIdx].visible = false;
-
-                for (let i = 0; i < MAX_BLOBS; i++) {
-                    if (targets[i]) {
-                        blobs[i].g.visible = true;
-                        blobs[i].tx = (targets[i].x - 0.5) * dW;
-                        blobs[i].ty = -(targets[i].y - 0.5) * dH;
-                        blobs[i].label = targets[i].type;
-                        blobs[i].group = targets[i].group || '';
-                        blobs[i].part = targets[i].part;
-                        blobs[i].conf = targets[i].conf ?? 0;
-                    } else {
-                        blobs[i].g.visible = false;
-                    }
+                    activeParticles.length = writeIndex;
+                    positionAttr.needsUpdate = true;
                 }
             }
         }
+        
+        // --- HUD Trackers Visual Update & DOM Projection ---
+        trackers.forEach((t, i) => {
+            if (t.life > 0) {
+                t.bracket.visible = true; t.leadLine.visible = true; t.trailLine.visible = true;
+                
+                const dx = t.tx - t.prevX, dy = t.ty - t.prevY;
+                const instVel = Math.sqrt(dx * dx + dy * dy);
+                t.velSmooth = (t.velSmooth * PHI + instVel) / (PHI + 1);
+                t.prevX = t.tx; t.prevY = t.ty;
 
-        let mainTarget = null;
+                t.cx = (t.cx * PHI + t.tx) / (PHI + 1);
+                t.cy = (t.cy * PHI + t.ty) / (PHI + 1);
+                t.cw += (t.tw - t.cw) * 0.15; t.ch += (t.th - t.ch) * 0.15;
 
-        blobs.forEach((b) => {
-            if (!b.g.visible) return;
+                for (let j = (TRAIL_LENGTH - 1) * 3; j >= 3; j -= 3) {
+                    t.trailPos[j] = t.trailPos[j - 3]; t.trailPos[j + 1] = t.trailPos[j - 2]; t.trailPos[j + 2] = t.trailPos[j - 1];
+                }
+                t.trailPos[0] = t.cx; t.trailPos[1] = t.cy; t.trailPos[2] = 0;
+                t.trailLine.geometry.attributes.position.needsUpdate = true;
 
-            // スムーズな追従
-            b.cx += (b.tx - b.cx) * 0.15;
-            b.cy += (b.ty - b.cy) * 0.15;
-            b.g.position.set(b.cx, b.cy, 0);
+                const bLen = Math.max(8, t.cw * 0.1);
+                updateBracketCoords(t.bracketPos, t.cx, t.cy, t.cw, t.ch, bLen);
+                t.bracket.geometry.attributes.position.needsUpdate = true;
 
-            // 吹き出し(Callout)を表示するターゲットを決定
-            if (!mainTarget && b.part === 'eye') mainTarget = b;
+                const signX = (i % 2 === 0) ? 1 : -1, signY = (i < 4) ? 1 : -1;
+                const offsetX = (t.cw / 2 + 15) * signX, offsetY = (t.ch / 2 + 10) * signY;
+                const p2x = t.cx + offsetX, p3x = t.cx + offsetX, p3y = t.cy + offsetY * SILVER;
 
-            const dist = Math.hypot(b.cx - mx, b.cy - my);
-            const isHover = dist < 60 * uiScale;
-            b.hover += ((isHover ? 1 : 0) - b.hover) * 0.2;
+                t.leadPos[0] = t.cx; t.leadPos[1] = t.cy; t.leadPos[2] = 0;
+                t.leadPos[3] = p2x;  t.leadPos[4] = t.cy; t.leadPos[5] = 0;
+                t.leadPos[6] = p3x;  t.leadPos[7] = p3y; t.leadPos[8] = 0;
+                t.leadLine.geometry.attributes.position.needsUpdate = true;
 
-            // パーツごとの表示切り替え
-            if (b.part === 'eye') {
-                // メインターゲット: 楕円が緩やかに回転して有機的な動きに
-                b.eyeGroup.visible = true;
-                b.limbGroup.visible = false;
-                b.innerRing.rotation.z += 0.012;
-                b.smallRing.rotation.z -= 0.022;
-                const s = (1 + b.hover * 0.35) * uiScale;
-                b.outerRing.scale.set(s, s, 1);
-                b.outerRing.material = isHover ? lineMatHover : lineMatStrong;
+                // ★ PerspectiveCamera に基づく完璧なUI追従計算 ★
+                const vec = heroProjectVec.set(p3x, p3y, 0);
+                vec.project(camera); // 3D座標を2Dのスクリーン座標（-1 ~ +1）に変換
+                
+                let domX = (vec.x * 0.5 + 0.5) * W + (signX > 0 ? 10 : -130); 
+                let domY = (-(vec.y * 0.5) + 0.5) * H - 10;
+                
+                domX = Math.max(10, Math.min(W - 130, domX)); 
+                domY = Math.max(10, Math.min(H - 90, domY));
+                
+                t.dom.style.transform = `translate(${domX}px, ${domY}px)`;
+                if (!t.hudVisible) {
+                    t.dom.classList.add('is-visible');
+                    t.hudVisible = true;
+                }
+
+                if (frameCount % 4 === i % 4) {
+                    t.elType.textContent = `TGT_${t.targetType}`; 
+                    t.elX.textContent = t.cx.toFixed(2);
+                    t.elY.textContent = t.cy.toFixed(2);
+                    t.elVel.textContent = (t.velSmooth * 20).toFixed(2);
+                    t.elConf.textContent = (t.conf * 100).toFixed(1);
+                    
+                    if (blobStreamL && blobStreamR) {
+                        const hex = Math.random().toString(16).substr(2, 4).toUpperCase();
+                        const blobLineHTML = `<div class="blob-line">[${hex}] ${t.targetType} <span class="highlight">${t.cx.toFixed(1)}, ${t.cy.toFixed(1)}</span></div>`;
+                        if (signX > 0) {
+                            blobHistoryL.push(blobLineHTML);
+                            if (blobHistoryL.length > 25) blobHistoryL.shift();
+                            blobStreamL.innerHTML = blobHistoryL.join('');
+                        } else {
+                            blobHistoryR.push(blobLineHTML);
+                            if (blobHistoryR.length > 25) blobHistoryR.shift();
+                            blobStreamR.innerHTML = blobHistoryR.join('');
+                        }
+                    }
+                }
             } else {
-                // 手足は小さな楕円のみ
-                b.eyeGroup.visible = false;
-                b.limbGroup.visible = true;
-                b.sq.rotation.z += 0.008;
-                b.sq.scale.set(uiScale, uiScale, 1);
+                t.bracket.visible = false; t.leadLine.visible = false; t.trailLine.visible = false;
+                if (t.hudVisible) {
+                    t.dom.classList.remove('is-visible');
+                    t.hudVisible = false;
+                }
+                t.cw = 0; t.ch = 0;
             }
         });
 
-        if (mainTarget) {
-            calloutEl.classList.add('is-visible');
-            const isMobile = window.innerWidth <= 820;
-            const offX = isMobile ? 14 : 28;
-            const offY = isMobile ? 10 : 18;
-            const cw = calloutEl.offsetWidth || (isMobile ? 110 : 150);
-            const ch = calloutEl.offsetHeight || 56;
-            let domX = mainTarget.cx + W / 2 + offX;
-            let domY = -mainTarget.cy + H / 2 - offY;
-            // コンテナ内に収まるようクランプ（モバイルで吹き出しがはみ出さない）
-            domX = Math.max(8, Math.min(W - cw - 8, domX));
-            domY = Math.max(8, Math.min(H - ch - 8, domY));
-            calloutEl.style.transform = `translate(${domX}px, ${domY}px)`;
-
-            calloutType.textContent = mainTarget.group || 'TARGET';
-            calloutSpecies.textContent = (mainTarget.label || '--').toUpperCase();
-            // アイコンをグループに合わせて変更
-            if (calloutIcon) calloutIcon.textContent = GROUP_ICONS[mainTarget.group] || GROUP_ICONS['TARGET'];
-            // AIが推定した「その種類である確率」を％表示（推論サイクル単位で更新）
-            const pct = Math.max(0, Math.min(100, Math.round((mainTarget.conf ?? 0) * 100)));
-            calloutConf.textContent = `${pct}%`;
-
-            // データクラウド (緑の浮遊数値) をメインターゲットの上方に配置
-            dataCloudEl.classList.add('is-visible');
-            const cloudX = Math.max(8, Math.min(W - 120, mainTarget.cx + W / 2 - 60));
-            const cloudY = Math.max(8, Math.min(H - 80, -mainTarget.cy + H / 2 - 80));
-            dataCloudEl.style.transform = `translate(${cloudX}px, ${cloudY}px)`;
-            refreshDataCloud(mainTarget, now);
-        } else {
-            calloutEl.classList.remove('is-visible');
-            dataCloudEl.classList.remove('is-visible');
-        }
-
-        const activeBlobs = blobs.filter(b => b.g.visible);
-        traceLines.forEach(tl => tl.visible = false);
-        if (activeBlobs.length > 1) {
-            for (let i = 0; i < activeBlobs.length; i++) {
-                const a = activeBlobs[i].g.position, b = activeBlobs[(i + 1) % activeBlobs.length].g.position;
-                traceLines[i].visible = true;
-                setLineMesh(traceLines[i], a.x, a.y, b.x, b.y, 4.0 * uiScale);
-            }
-        }
-
-        distortionMat.uniforms.time.value = now * 0.001;
-        renderer.setRenderTarget(renderTarget); renderer.render(scene, camera);
-        renderer.setRenderTarget(null); renderer.render(postScene, postCamera);
-
-        // num-bg-canvas へのコピーは10フレームに1回（drawImage from WebGL canvasは同期的にflushされ重い）
-        if (frameCount % 10 === 0) {
-            const numCanvases = document.querySelectorAll('.num-bg-canvas');
-            if (numCanvases.length > 0) {
-                const rw = renderer.domElement.width, rh = renderer.domElement.height;
-                for (let i = 0; i < numCanvases.length; i++) {
-                    const c = numCanvases[i];
-                    if (!c.ctx || c.width !== rw) {
-                        c.width = rw;
-                        c.height = rh;
-                        c.ctx = c.getContext('2d', { alpha: false });
-                    }
-                    c.ctx.drawImage(renderer.domElement, 0, 0, c.width, c.height);
-                }
-            }
-        }
-    } animate();
+        renderer.render(scene, camera);
+    }
+    render();
 }
 
 /* ============================================================================
- * 4. Data Table (Skills)
+ * 4. Data Table (Skills) のソートとページネーション
  * ============================================================================ */
 function initMiaTable() {
     const wrap = document.getElementById("mia-table-wrap");
@@ -1462,7 +1574,8 @@ function initMiaTable() {
 
     function applySort() {
         filtered.sort((a, b) => {
-            let av = a[sortCol], bv = b[sortCol];
+            let av = a[sortCol];
+            let bv = b[sortCol];
             if (typeof av === "string") av = av.toLowerCase();
             if (typeof bv === "string") bv = bv.toLowerCase();
             if (av < bv) return sortDir === "asc" ? -1 : 1;
@@ -1506,7 +1619,6 @@ function initMiaTable() {
             const actualStart = filtered.length === 0 ? 0 : startIdx + 1;
             pageInfo.textContent = `Showing ${actualStart}–${actualEnd} of ${filtered.length}`;
         }
-
         if (prevBtn) prevBtn.disabled = currentPage === 1;
         if (nextBtn) nextBtn.disabled = currentPage === totalPages;
 
@@ -1518,7 +1630,6 @@ function initMiaTable() {
                 if (i === currentPage) btn.classList.add("is-active");
                 btn.textContent = i;
                 btn.setAttribute("aria-label", `Page ${i}`);
-
                 btn.addEventListener("click", () => {
                     currentPage = i;
                     applyPagination();
@@ -1528,21 +1639,30 @@ function initMiaTable() {
         }
     }
 
-    if (prevBtn) prevBtn.addEventListener("click", () => { if (currentPage > 1) { currentPage--; applyPagination(); } });
-    if (nextBtn) nextBtn.addEventListener("click", () => { if (currentPage < Math.ceil(filtered.length / itemsPerPage)) { currentPage++; applyPagination(); } });
+    if (prevBtn) prevBtn.addEventListener("click", () => {
+        if (currentPage > 1) {
+            currentPage--;
+            applyPagination();
+        }
+    });
+
+    if (nextBtn) nextBtn.addEventListener("click", () => {
+        if (currentPage < Math.ceil(filtered.length / itemsPerPage)) {
+            currentPage++;
+            applyPagination();
+        }
+    });
 
     applyPagination();
 }
 
-
 /* ============================================================================
- * 5. Footer Logo (背景・重複パス削除・完全アウトライン化・シャープ化)
+ * 5. Footer Logo Marquee & SoundCloud Widget
  * ============================================================================ */
-
 function initFooterLogoCSS() {
     const track = document.getElementById('footerMarqueeTrack');
     if (!track) return;
-
+    
     const svgCode = `
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="150 240 910 140">
         <g fill-rule="evenodd" stroke-linejoin="miter" stroke-miterlimit="10">
@@ -1552,130 +1672,79 @@ function initFooterLogoCSS() {
             <path d="M435.570129,277.999695 C435.570068,268.707367 435.570068,259.915039 435.570068,250.461975 C439.201050,250.461975 442.471344,250.369385 445.734924,250.478134 C459.352722,250.931931 473.071350,250.562378 486.562561,252.131714 C510.842224,254.955963 528.543335,273.874847 531.032898,298.214752 C532.879211,316.265289 530.132080,333.069794 517.082764,346.855957 C507.982849,356.469696 496.457794,361.871216 483.574402,362.649414 C467.852203,363.599121 452.028992,362.875397 435.570221,362.875397 C435.570221,334.960449 435.570221,306.730072 435.570129,277.999695 M465.459961,346.827484 C470.283295,346.621094 475.284576,347.147034 479.886292,346.028717 C486.072296,344.525360 492.816010,342.938965 497.796661,339.301758 C512.492310,328.569977 513.459412,312.772736 510.844635,296.501923 C508.859436,284.148926 502.028351,275.010864 490.089508,270.524872 C478.800812,266.283173 466.977814,267.073029 455.260254,267.323944 C455.260254,294.039612 455.260254,320.269531 455.260254,346.827454 C458.551575,346.827454 461.521851,346.827454 465.459961,346.827484 z"/>
             <path d="M545.023132,329.000000 C545.023132,302.683929 545.023132,276.867859 545.023132,250.758942 C551.399841,250.758942 557.510925,250.758942 563.976562,250.758942 C563.976562,288.104919 563.976562,325.499176 563.976562,363.214691 C557.881287,363.214691 551.807861,363.214691 545.023132,363.214691 C545.023132,351.985535 545.023132,340.742767 545.023132,329.000000 z"/>
             <path d="M594.413208,265.411255 C617.556152,243.275940 653.545105,244.418228 674.256348,265.007446 C692.135620,282.781403 695.465942,304.673401 687.713684,327.793060 C680.495728,349.319458 664.185425,361.318268 641.824158,364.080353 C617.379944,367.099670 595.272217,355.635986 584.790894,335.593994 C573.335266,313.688995 576.015747,287.062286 591.533325,268.665741 C592.391785,267.648041 593.282837,266.657837 594.413208,265.411255 M665.840149,283.779572 C657.443237,270.168610 644.705750,265.519775 629.547913,267.129242 C615.688049,268.600922 605.926331,276.206360 600.659180,289.239380 C597.334961,297.464905 596.936890,306.034912 598.003723,314.736115 C599.831055,329.641693 610.052490,341.892761 623.905701,345.792999 C638.334351,349.855225 654.754517,345.280060 663.049866,333.849976 C674.380798,318.236969 674.389648,301.496765 665.840149,283.779572 z"/>
-            
             <path d="M 744,372 L 744,250 L 762,250 L 799.5,332.43 L 799.5,250 L 817.5,250 L 855,332.43 L 855,250 L 873,250 L 873,372 L 855,372 L 817.5,289.57 L 817.5,372 L 799.5,372 L 762,289.57 L 762,372 Z"/>
-            
             <path d="M 902,372 L 902,250 L 920,250 L 920,372 Z"/>
             <path d="M 946,372 L 990.5,250 L 1008.5,250 L 1053,372 L 1033,372 L 999.5,280.1 L 966,372 Z"/>
         </g>
-    </svg>
-    `;
-
-    // 1つの「セット」を生成
+    </svg>`;
+    
     let itemHTML = `<div class="footer-marquee-item">${svgCode}</div>`;
-    let singleSet = itemHTML.repeat(6); // 1セット6個（画面幅を十分埋める数）
-
-    // そのセットを2つ繋げることで、-50% 移動したときに完璧に重なる
+    let singleSet = itemHTML.repeat(6);
     track.innerHTML = singleSet + singleSet;
 }
 
-/* ============================================================================
-   Initialization (確実なDOM読み込み順序の保証)
-   ============================================================================ */
-function initShimmer() {
-    if (window.__videoTextMask) return;
-    const mask = new VideoTextMask();
-    window.__videoTextMask = mask;
-    window.addEventListener('beforeunload', () => mask.destroy());
-}
-
-// 初期化実行
-document.addEventListener('DOMContentLoaded', () => {
-    initUI();
-    initFooterLogoCSS();
-    setTimeout(initShimmer, 300);
-});
-
-// ============================================================================
-// SoundCloud Widget API — 核攻撃版 seekTo (モバイル強制突破)
-// 5段階の同時攻撃で seekTo を無理やり通す。
-// ============================================================================
 function initSoundCloudWidget() {
     const iframe = document.getElementById('heroSCWidget');
     if (!iframe) return;
-
+    
     const loadSC = new Promise((resolve, reject) => {
-        if (window.SC) { resolve(); return; }
+        if (window.SC) {
+            resolve();
+            return;
+        }
         const script = document.createElement('script');
         script.src = "https://w.soundcloud.com/player/api.js";
         script.onload = resolve;
         script.onerror = reject;
         document.head.appendChild(script);
     });
-
+    
     loadSC.then(() => {
         const widget = SC.Widget(iframe);
-        const SEEK_TARGET = 102000; // 1:42 = 102,000ms
+        const SEEK_TARGET = 102000;
         const TOLERANCE = 3000;
         let hasSeeked = false;
-        let seekArmed = true;   // シーク処理を有効にするフラグ（ループ毎にtrue）
         let pollingTimer = null;
-
-        // ── hasSeeked をリセットして再シーク可能にする ──
-        const resetSeekState = () => {
-            hasSeeked = false;
-            seekArmed = true;
-        };
-
-        // ── 共通: getPosition で検証しつつ seekTo ──
+        
         const verifyAndSeek = () => {
             if (hasSeeked) return;
             widget.getPosition((pos) => {
                 if (pos >= SEEK_TARGET - TOLERANCE) {
                     hasSeeked = true;
-                    if (pollingTimer) { clearInterval(pollingTimer); pollingTimer = null; }
+                    if (pollingTimer) {
+                        clearInterval(pollingTimer);
+                        pollingTimer = null;
+                    }
                 } else {
                     widget.seekTo(SEEK_TARGET);
                 }
             });
         };
-
-        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-        // Strategy 0: FINISH 時にリセット
-        // 曲が終了→ループで再生が0:00に戻るとき、hasSeeked を
-        // リセットして次の再生でも時間指定が効くようにする
-        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        
         widget.bind(SC.Widget.Events.FINISH, () => {
-            resetSeekState();
+            hasSeeked = false;
         });
-
-        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-        // Strategy 1: READY 時に先行シーク
-        // デスクトップでは Play 前でも初期位置がセットされる場合がある
-        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        
         widget.bind(SC.Widget.Events.READY, () => {
             widget.seekTo(SEEK_TARGET);
         });
-
-        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-        // Strategy 2: PLAY 直後に即座シーク + 段階的リトライ
-        // バッファが溜まるのを待って繰り返しシークを叩き込む
-        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        
         widget.bind(SC.Widget.Events.PLAY, () => {
-            // 再生開始時に位置を確認し、先頭付近なら hasSeeked をリセット
             widget.getPosition((pos) => {
                 if (pos < SEEK_TARGET - TOLERANCE) {
-                    // 先頭付近から再生 → ループまたは手動リプレイ
-                    resetSeekState();
+                    hasSeeked = false;
                 }
-
                 if (hasSeeked) return;
-
-                // 即座にシーク
+                
                 widget.seekTo(SEEK_TARGET);
-
-                // 段階的リトライ (バッファ待ちで間隔を広げる)
-                const delays = [50, 100, 200, 400, 600, 1000, 1500, 2000, 3000, 5000, 8000];
-                delays.forEach((d) => {
-                    setTimeout(() => { if (!hasSeeked) verifyAndSeek(); }, d);
+                const checkDelays = [50, 100, 200, 400, 600, 1000, 1500, 2000, 3000];
+                checkDelays.forEach(delay => {
+                    setTimeout(() => {
+                        if (!hasSeeked) verifyAndSeek();
+                    }, delay);
                 });
-
-                // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-                // Strategy 4: pause → seekTo → play 強制シーケンス
-                // モバイルで「一時停止中ならシーク可能」な場合がある
-                // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+                
                 setTimeout(() => {
-                    if (hasSeeked) return;
                     widget.getPosition((innerPos) => {
                         if (innerPos < SEEK_TARGET - TOLERANCE) {
                             widget.pause();
@@ -1683,7 +1752,6 @@ function initSoundCloudWidget() {
                                 widget.seekTo(SEEK_TARGET);
                                 setTimeout(() => {
                                     widget.play();
-                                    // 再開後にもう一度検証
                                     setTimeout(verifyAndSeek, 500);
                                 }, 150);
                             }, 150);
@@ -1693,29 +1761,27 @@ function initSoundCloudWidget() {
             });
         });
 
-        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-        // Strategy 3: PLAY_PROGRESS 監視で位置矯正
-        // 再生位置を常時監視し、ターゲット以前なら即座にシーク
-        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         widget.bind(SC.Widget.Events.PLAY_PROGRESS, (data) => {
             if (hasSeeked) return;
             if (data.currentPosition < SEEK_TARGET - TOLERANCE) {
                 widget.seekTo(SEEK_TARGET);
             } else if (data.currentPosition >= SEEK_TARGET - TOLERANCE) {
                 hasSeeked = true;
-                if (pollingTimer) { clearInterval(pollingTimer); pollingTimer = null; }
+                if (pollingTimer) {
+                    clearInterval(pollingTimer);
+                    pollingTimer = null;
+                }
             }
         });
 
-        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-        // Strategy 6: SEEK イベント監視
-        // seekTo が実際にイベント発火したかを監視
-        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         widget.bind(SC.Widget.Events.SEEK, () => {
             widget.getPosition((pos) => {
                 if (pos >= SEEK_TARGET - TOLERANCE) {
                     hasSeeked = true;
-                    if (pollingTimer) { clearInterval(pollingTimer); pollingTimer = null; }
+                    if (pollingTimer) {
+                        clearInterval(pollingTimer);
+                        pollingTimer = null;
+                    }
                 }
             });
         });
@@ -1725,11 +1791,22 @@ function initSoundCloudWidget() {
     });
 }
 
+function initShimmer() {
+    if (window.__videoTextMask) return;
+    const mask = new VideoTextMask();
+    window.__videoTextMask = mask;
+    
+    window.addEventListener('beforeunload', () => {
+        mask.destroy();
+    });
+}
 
+window.addEventListener('DOMContentLoaded', () => {
+    initUI();
+    initFooterLogoCSS();
+    setTimeout(initShimmer, 300);
+});
 
-// ============================================================================
-// 初期化の実行部分 (ファイルの最下部をこちらに差し替えてください)
-// ============================================================================
 window.addEventListener('load', () => {
     initSoundCloudWidget();
     initWebGL();
