@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<!--
+======================================================================
+【HTML初心者向け詳細ガイド＆目次】
+
+◆ HTMLとは？
+HTML（エイチティーエムエル：HyperText Markup Language）は、Webページの「骨組み」を作るための言葉（マークアップ言語）です。
+家を建てる時の「柱」や「壁」を作る作業に似ています。
+例えば、「ここは見出しです」「ここは画像です」「ここはリンクです」といったように、
+コンピュータに文章の役割や構造を伝えるためのタグ（< >で囲まれた記号）を使って記述します。
+
+◆ このファイル（index.html）の役割
+このファイルは、MIA Portfolio（わたしのポートフォリオサイト）の「顔」となるメインページ（トップページ）の構造を定義しています。
+Webブラウザ（ChromeやSafariなど）は、まずこのファイルの中身を読み込んで、画面に何を表示すべきかを理解します。
+
+◆ HTMLコードの基本的な見方
+- <タグ名> と </タグ名> で囲まれた部分が1つのセット（要素）になります。
+- < !-- と -- > で囲まれた部分は「コメント」と呼ばれ、ブラウザの画面には表示されません。開発者のためのメモ書きです。
+
+======================================================================
+【目次 (Table of Contents)】
+
+1. 文書宣言と基本設定 (<head>の中身)
+   - 文字化けを防ぐ設定、スマホ対応の設定、検索エンジンやSNS向けの設定（OGPなど）
+   - CSS（デザイン）やJavaScript（動き）のファイルの読み込み
+
+2. 画面に表示される中身 (<body>の中身)
+   - 2-1. カーソル装飾とローディング画面 (div.cursor-dot, div.loader など)
+   - 2-2. ヘッダーとナビゲーション (header#header, div#navOverlay)
+          ロゴ、現在時刻、メニューボタンと、開いたときのメニュー画面
+   - 2-3. Intro（はじめに）セクション (section#intro)
+          ファーストビュー。動画や肩書き、スクロールを促す表示など
+   - 2-4. About（私について）セクション (section#about)
+          プロフィール、アプローチ、実績の数字など
+   - 2-5. Process（仕事の流れ）セクション (section#how)
+          相談から納品までの4ステップの解説
+   - 2-6. Works（制作実績）セクション (section#works)
+          過去の作品一覧。Web、写真、映像、3DCGなどのカテゴリ分け
+   - 2-7. Price（料金）セクション (section#price)
+          Web制作、写真・映像制作の目安料金
+   - 2-8. Skills（できること）セクション (section#skills)
+          使用可能なツールや言語の一覧表
+   - 2-9. FAQ（よくある質問）セクション (section#faq)
+          よくある質問と回答のアコーディオン（開閉式）
+   - 2-10. Contact（お問い合わせ）セクション (section#contact)
+          メールアドレスやSNSへのリンク
+   - 2-11. フッター (footer)
+          コピーライト（著作権表示）と画面トップへ戻るボタン
+
+======================================================================
+-->
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MIA Portfolio — Creative Artist</title>
+    <meta name="description" content="Creative Artist based in Shimane, Japan — Web Design, Photo & Videography">
+
+    <link rel="icon" type="image/png" sizes="32x32" href="img/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="img/apple-touch-icon.png">
+
+    <meta property="og:site_name" content="MIA Portfolio">
+    <meta property="og:title" content="MIA Portfolio — Creative Artist">
+    <meta property="og:description" content="Creative Artist based in Japan — Web design, Photo & Videography">
+    <meta property="og:url" content="https://mia-0203.com/">
+    <meta property="og:image" content="img/mia-portfolio-ogp.png">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gen-interface-jp@0.1.2/400.css">
+    <link rel="stylesheet" href="top.css">
+
+    <script src="js/top.min.js" defer></script>
+</head>
+
+<body>
+    <div class="cursor-dot" id="cursorDot"></div>
+    <div class="cursor-ring" id="cursorRing"></div>
+
+    <div class="loader" id="loader">
+        <div class="loader__inner">
+            <div class="loader__label">
+                <span class="loader__label-en">Loading</span>
+                <span class="loader__label-ja">読み込み中</span>
+            </div>
+            <div class="loader__count">
+                <span class="loader__num" id="loaderNum">0</span><span class="loader__percent">%</span>
+            </div>
+            <div class="loader__bar">
+                <div class="loader__bar-fill" id="loaderBar"></div>
+            </div>
+            <div class="loader__meta">
+                <span>MIA Portfolio</span>
+                <span>'26</span>
+            </div>
+        </div>
+    </div>
+
+    <header id="header">
+        <div class="header__row">
+            <a href="#" class="header__logo" aria-label="MIA Home">
+                <img src="https://cdn.prod.website-files.com/69ba5f78c4557199bf44aebb/69ba6cb4a6e9a82bc5a7916b_logo.jpg"
+                    alt="MIA" class="header__logo-img">
+            </a>
+
+            <div class="header__meta" aria-hidden="true">
+                <span class="header__meta-item"><span class="header__meta-label">(Local)</span><span
+                        class="header__meta-value" id="localTime">--:--:--</span></span>
+                <span class="header__meta-item"><span class="header__meta-label">(Where)</span><span
+                        class="header__meta-value">35.4722°N Shimane, JP</span></span>
+                <span class="header__meta-item"><span class="header__meta-label">(Since)</span><span
+                        class="header__meta-value">2025</span></span>
+            </div>
+
+            <button class="header__menu-btn" id="menuBtn" aria-label="メニューを開く">
+                <span class="header__menu-label">Menu</span>
+                <span class="header__menu-lines"><span></span><span></span></span>
+            </button>
+        </div>
+    </header>
+
+    <div class="nav-overlay" id="navOverlay">
+        <div class="nav-overlay__inner">
+            <div class="nav-overlay__top">
+                <span class="nav-overlay__label">(Navigation)</span>
+                <button class="nav-overlay__close" id="closeBtn" aria-label="閉じる">
+                    <span class="nav-overlay__close-label">Close</span>
+                    <span class="nav-overlay__close-x"><span></span><span></span></span>
+                </button>
+            </div>
+
+            <nav class="nav-overlay__nav">
+                <ul>
+                    <li><a href="#intro" class="nav-link"><span class="nav-link__en">Intro</span><span
+                                class="nav-link__ja">はじめに</span></a></li>
+                    <li><a href="#about" class="nav-link"><span class="nav-link__en">About</span><span
+                                class="nav-link__ja">私について</span></a></li>
+                    <li><a href="#how" class="nav-link"><span class="nav-link__en">Process</span><span
+                                class="nav-link__ja">仕事の流れ</span></a></li>
+                    <li><a href="#works" class="nav-link"><span class="nav-link__en">Works</span><span
+                                class="nav-link__ja">制作実績</span></a></li>
+                    <li><a href="#price" class="nav-link"><span class="nav-link__en">Price</span><span
+                                class="nav-link__ja">料金</span></a></li>
+                    <li><a href="#skills" class="nav-link"><span class="nav-link__en">Skills</span><span
+                                class="nav-link__ja">できること</span></a></li>
+                    <li><a href="#faq" class="nav-link"><span class="nav-link__en">FAQ</span><span
+                                class="nav-link__ja">よくある質問</span></a></li>
+                </ul>
+            </nav>
+
+            <div class="nav-overlay__footer">
+                <div class="nav-overlay__footer-col">
+                    <span class="nav-overlay__footer-label">(Social)</span>
+                    <a href="https://www.instagram.com/mia_film__" target="_blank"
+                        rel="noopener noreferrer">Instagram<span class="nav-overlay__arrow">↗</span></a>
+                    <a href="https://x.com/mia_film__" target="_blank" rel="noopener noreferrer">X (Twitter)<span
+                            class="nav-overlay__arrow">↗</span></a>
+                </div>
+                <div class="nav-overlay__footer-col">
+                    <span class="nav-overlay__footer-label">(Based in)</span>
+                    <span>Shimane, Japan</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section id="intro" class="intro">
+        <div class="intro__grid">
+            <div class="intro__left">
+                <div class="intro__tagline">
+                    <span class="intro__tagline-en">(A Creative Artist based in Shimane, Japan)</span>
+                </div>
+
+                <h1 class="intro__title">
+                    <span class="intro__title-line">
+                        <span class="intro__title-word" data-reveal>Design</span>
+                        <span class="intro__title-amp">&</span>
+                        <span class="intro__title-word" data-reveal>Capture</span>
+                    </span>
+                    <span class="intro__title-line intro__title-line--italic">
+                        <span class="intro__title-word" data-reveal>with</span>
+                        <span class="intro__title-word intro__title-word--accent" data-reveal>story<span
+                                class="intro__title-dot">.</span></span>
+                    </span>
+                </h1>
+
+                <p class="intro__desc">
+                    Webデザインとポートレート写真・映像制作を中心に、<br>
+                    丁寧に一つひとつの作品を仕上げています。
+                </p>
+            </div>
+
+            <div class="intro__right">
+                <div class="intro__portrait">
+                    <div class="intro__portrait-inner" id="heroWebGL">
+                        <video id="heroVideo" class="intro__portrait-video" autoplay muted loop crossorigin="anonymous"
+                            playsinline preload="metadata" aria-hidden="true">
+                            <source src="video/hero.mp4" type="video/mp4">
+                        </video>
+                        <img src="img/hero-fallback.webp" alt="MIA Portrait" class="intro__portrait-img"
+                            onerror="this.style.display='none'">
+                        <div class="intro__portrait-corner intro__portrait-corner--tl"></div>
+                        <div class="intro__portrait-corner intro__portrait-corner--tr"></div>
+                        <div class="intro__portrait-corner intro__portrait-corner--bl"></div>
+                        <div class="intro__portrait-corner intro__portrait-corner--br"></div>
+                    </div>
+                    <div class="intro__portrait-caption">
+                        <div class="intro__portrait-meta">
+                            <span class="meta-line">Video: model - midori, shot on iPhone17Pro</span>
+                            <span class="meta-line">Music: Runaway / NoCopyrightSounds</span>
+                        </div>
+
+                        <div class="hero-sc-container">
+                            <iframe id="heroSCWidget" width="100%" height="20" scrolling="no" frameborder="no"
+                                allow="autoplay"
+                                src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/nocopyrightsounds/runaway&color=%23313131&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&show_teaser=false&visual=false">
+                            </iframe>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="intro__bar">
+            <div class="intro__bar-col">
+                <span class="intro__bar-label">(Born)</span>
+                <span class="intro__bar-value">2005 / Tottori</span>
+            </div>
+            <div class="intro__bar-col">
+                <span class="intro__bar-label">(Field)</span>
+                <span class="intro__bar-value">Web · Photo · Video</span>
+            </div>
+            <div class="intro__bar-col">
+                <span class="intro__bar-label">(Available)</span>
+                <span class="intro__bar-value"><span class="intro__bar-dot"></span>Accepting projects</span>
+            </div>
+            <div class="intro__bar-col intro__bar-col--scroll">
+                <span class="intro__bar-label">(Scroll)</span>
+                <span class="intro__bar-value">↓</span>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="section about">
+        <div class="container">
+            <header class="section__head">
+                <span class="section__num">(02)</span>
+                <h2 class="section__title">
+                    <span class="section__title-en">About</span>
+                    <span class="section__title-ja">私について</span>
+                </h2>
+                <span class="section__line"></span>
+            </header>
+
+            <div class="about__grid">
+                <div class="about__lead">
+                    <p class="about__lead-en">
+                        <em>mia</em>です！独学のクリエイティブ・アーティストとして、Webデザイン、ポートレート撮影、Cinematicな映像制作を手がけています。
+                    </p>
+                </div>
+
+                <div class="about__body">
+                    <div class="about__body-col">
+                        <h3 class="about__body-title">(Profile)</h3>
+                        <p class="about__body-text">
+                            2005年、鳥取県に生まれる。2025年より独学でデザインの勉強を始め、現在はポートレート写真とWebサイト制作を中心に活動中。「人間の創造できるものはすべて実現可能」を座右の銘に、丁寧に一つひとつの作品を仕上げています。
+                        </p>
+                    </div>
+                    <div class="about__body-col">
+                        <h3 class="about__body-title">(Approach)</h3>
+                        <p class="about__body-text">
+                            クライアント様の想いや空気感を汲み取り、見た目の美しさだけでなく、使い心地や読み心地までを含めた全体の体験を整えることを意識しています。丁寧な対話から生まれる、ちいさくて確かなものを。
+                        </p>
+                    </div>
+                </div>
+
+                <ul class="about__stats">
+                    <li class="about__stat">
+                        <span class="about__stat-num">2025</span>
+                        <span class="about__stat-label">デザイン独学開始</span>
+                    </li>
+                    <li class="about__stat">
+                        <span class="about__stat-num">15<span class="about__stat-unit">+</span></span>
+                        <span class="about__stat-label">習得ツール / Tools</span>
+                    </li>
+                    <li class="about__stat">
+                        <span class="about__stat-num">03</span>
+                        <span class="about__stat-label">専門領域 / Fields</span>
+                    </li>
+                    <li class="about__stat">
+                        <span class="about__stat-num">∞</span>
+                        <span class="about__stat-label">探究する心</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section id="how" class="section process">
+        <div class="container">
+            <header class="section__head">
+                <span class="section__num">(03)</span>
+                <h2 class="section__title">
+                    <span class="section__title-en">Process</span>
+                    <span class="section__title-ja">仕事の流れ</span>
+                </h2>
+                <span class="section__line"></span>
+            </header>
+
+            <div class="process__intro">
+                <p class="process__intro-text">
+                    ご相談から納品まで、<br>
+                    4つのステップで丁寧に進めていきます。
+                </p>
+            </div>
+
+            <ol class="process__list">
+                <li class="process__item left">
+                    <div class="process__item-num">
+                        <canvas class="num-bg-canvas"></canvas>
+                        <div class="process__item-num-text">01</div>
+                    </div>
+                    <div class="process__item-body">
+                        <h3 class="process__item-title">
+                            <span class="process__item-title-en">Consultation</span>
+                            <span class="process__item-title-ja">内容の確認と相談</span>
+                        </h3>
+                        <p class="process__item-desc">
+                            クライアント様のご依頼内容を丁寧にヒアリングし、納期や細かな流れを一緒に確認します。まずはお気軽にお話を聞かせてください。
+                        </p>
+                        <div class="process__item-tags">
+                            <span>Hearing</span>
+                            <span>Scheduling</span>
+                        </div>
+                    </div>
+                </li>
+
+                <li class="process__item right">
+                    <div class="process__item-num">
+                        <canvas class="num-bg-canvas"></canvas>
+                        <div class="process__item-num-text">02</div>
+                    </div>
+                    <div class="process__item-body">
+                        <h3 class="process__item-title">
+                            <span class="process__item-title-en">Planning</span>
+                            <span class="process__item-title-ja">プロトタイプ・撮影準備</span>
+                        </h3>
+                        <p class="process__item-desc">
+                            Webサイトの構成案や、撮影場所・コンテ・衣装などの準備を進めます。完成イメージのすり合わせを丁寧に行います。
+                        </p>
+                        <div class="process__item-tags">
+                            <span>Wireframe</span>
+                            <span>Storyboard</span>
+                        </div>
+                    </div>
+                </li>
+
+                <li class="process__item left">
+                    <div class="process__item-num">
+                        <canvas class="num-bg-canvas"></canvas>
+                        <div class="process__item-num-text">03</div>
+                    </div>
+                    <div class="process__item-body">
+                        <h3 class="process__item-title">
+                            <span class="process__item-title-en">Production</span>
+                            <span class="process__item-title-ja">制作・撮影の実施</span>
+                        </h3>
+                        <p class="process__item-desc">
+                            デザインを形に落とし込み、写真や動画の撮影を行います。途中経過もこまめに共有し、安心して進めていただけるようにします。
+                        </p>
+                        <div class="process__item-tags">
+                            <span>Design</span>
+                            <span>Shoot</span>
+                            <span>Edit</span>
+                        </div>
+                    </div>
+                </li>
+
+                <li class="process__item right">
+                    <div class="process__item-num">
+                        <canvas class="num-bg-canvas"></canvas>
+                        <div class="process__item-num-text">04</div>
+                    </div>
+                    <div class="process__item-body">
+                        <h3 class="process__item-title">
+                            <span class="process__item-title-en">Delivery</span>
+                            <span class="process__item-title-ja">完成・納品</span>
+                        </h3>
+                        <p class="process__item-desc">
+                            Webサイトの公開、または完成データでの納品となります。納品後のちょっとした修正もお気軽にご相談ください。
+                        </p>
+                        <div class="process__item-tags">
+                            <span>Launch</span>
+                            <span>Handoff</span>
+                        </div>
+                    </div>
+                </li>
+            </ol>
+        </div>
+    </section>
+
+    <section id="works" class="section works">
+        <div class="container">
+            <header class="section__head">
+                <span class="section__num">(04)</span>
+                <h2 class="section__title">
+                    <span class="section__title-en">Works</span>
+                    <span class="section__title-ja">制作実績</span>
+                </h2>
+                <span class="section__line"></span>
+            </header>
+
+            <div class="works__intro">
+                <p class="works__intro-text">
+                    これまでに制作した主な作品をご紹介します。<br>
+                    <span class="works__intro-muted">A selection of recent projects.</span>
+                </p>
+                <div class="works__filter" role="tablist">
+                    <button class="works__filter-btn is-active" data-filter="all">All</button>
+                    <button class="works__filter-btn" data-filter="web">Web</button>
+                    <button class="works__filter-btn" data-filter="photo">Photo</button>
+                    <button class="works__filter-btn" data-filter="video">Video</button>
+                </div>
+            </div>
+
+            <div class="works__grid">
+                <article class="work" data-category="web">
+                    <a class="work__link" href="https://atelier-adp.com" target="_blank" rel="noopener noreferrer">
+                        <div class="work__head">
+                            <span class="work__index">Selected 01</span>
+                            <span class="work__year">2026/3/6</span>
+                        </div>
+                        <div class="work__image">
+                            <img src="img/works1.webp" alt="Atelier-adp" loading="lazy">
+                            <div class="work__image-overlay">
+                                <span class="work__image-label">View Website <span class="work__arrow">↗</span></span>
+                            </div>
+                        </div>
+                        <div class="work__info">
+                            <div class="work__info-top">
+                                <h3 class="work__name">画塾「アトリエadp」</h3>
+                                <span class="work__category">Web Design</span>
+                            </div>
+                            <p class="work__desc">クライアント: 岡崎奈津子様<br>イラスト: かりた
+                                @__karitaro__<br><br>2015年につくられたウェブサイトをリニューアルしました。完全にレスポンシブ対応しており、スマホ・タブレット・PCで閲覧することができます。iPhoneSEのような小さい画面にも対応しており、多くの人に見てもらえるようにデザインしました。
+                            </p>
+                            <div class="work__tags">
+                                <span>#Renewal</span>
+                                <span>#Studio</span>
+                            </div>
+                        </div>
+                    </a>
+                </article>
+
+                <article class="work work--coming" data-category="web">
+                    <a class="work__link" href="https://mia-0203.com" target="_blank" rel="noopener noreferrer">
+                        <div class="work__head">
+                            <span class="work__index">Selected 02</span>
+                            <span class="work__year">2026</span>
+                        </div>
+                        <div class="work__image">
+                            <img src="img/works2.webp" alt="MIA Portfolio" loading="lazy">
+                            <div class="work__image-overlay">
+                                <span class="work__image-label">View Website <span class="work__arrow">↗</span></span>
+                            </div>
+                        </div>
+                        <div class="work__info">
+                            <div class="work__info-top">
+                                <h3 class="work__name">MIA Portfolio</h3>
+                                <span class="work__category">Web design</span>
+                            </div>
+                            <p class="work__desc">自分のポートフォリオサイトをつくりました</p>
+                            <div class="work__tags">
+                                <span>#Portfolio</span>
+                                <span>#Three.js</span>
+                                <span>#WebGL</span>
+                                <span>#Mediapipe</span>
+                            </div>
+                        </div>
+                    </a>
+                </article>
+
+            </div>
+            <div class="works__more">
+                <a href="#contact" class="works__more-link">
+                    <span>もっと見たい方はお気軽にご連絡ください</span>
+                    <span class="works__more-arrow">→</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section id="price" class="section price">
+        <div class="container">
+            <header class="section__head">
+                <span class="section__num">(05)</span>
+                <h2 class="section__title">
+                    <span class="section__title-en">Price</span>
+                    <span class="section__title-ja">料金</span>
+                </h2>
+                <span class="section__line"></span>
+            </header>
+
+            <div class="price__grid">
+                <div class="price__block">
+                    <div class="price__block-head">
+                        <span class="price__block-num">01</span>
+                        <h3 class="price__block-title">Web サイト制作</h3>
+                        <p class="price__block-desc">ホームページのデザインから公開まで一貫して行います。</p>
+                    </div>
+                    <ul class="price__list">
+                        <li class="price__item">
+                            <span class="price__item-name">トップページ</span>
+                            <span class="price__item-dots"></span>
+                            <span class="price__item-price">¥30,000～</span></span>
+                        </li>
+                        <li class="price__item">
+                            <span class="price__item-name">追加ページ</span>
+                            <span class="price__item-dots"></span>
+                            <span class="price__item-price">¥5,000～</span>
+                        </li>
+                        <li class="price__item">
+                            <span class="price__item-name">公開後の修正・更新</span>
+                            <span class="price__item-dots"></span>
+                            <span class="price__item-price">¥500～<span class="price__item-unit">/箇所</span></span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="price__block">
+                    <div class="price__block-head">
+                        <span class="price__block-num">02</span>
+                        <h3 class="price__block-title">写真・映像制作</h3>
+                        <p class="price__block-desc">ポートレート写真とCinematicな映像が専門分野です。</p>
+                    </div>
+                    <ul class="price__list">
+                        <li class="price__item">
+                            <span class="price__item-name">写真撮影</span>
+                            <span class="price__item-dots"></span>
+                            <span class="price__item-price">¥5000～</span></span>
+                        </li>
+                        <li class="price__item">
+                            <span class="price__item-name">映像制作</span>
+                            <span class="price__item-dots"></span>
+                            <span class="price__item-price">¥50,000～</span></span>
+                        </li>
+                        <li class="price__item">
+                            <span class="price__item-name">Web素材撮影(動画込み)</span>
+                            <span class="price__item-dots"></span>
+                            <span class="price__item-price">¥20,000～</span></span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <p class="price__note">
+                <span class="price__note-label">(Note)</span>
+                上記はあくまで目安です。撮影場所や規模により変動します。お気軽にご相談ください。
+            </p>
+        </div>
+    </section>
+
+    <section id="skills" class="section table-section">
+        <div class="container">
+            <header class="section__head">
+                <span class="section__num">(06)</span>
+                <h2 class="section__title">
+                    <span class="section__title-en">Skills</span>
+                    <span class="section__title-ja">できること</span>
+                </h2>
+                <span class="section__line"></span>
+            </header>
+
+            <div class="mia-table-wrap fade-in" id="mia-table-wrap">
+                <div class="mia-table-toolbar">
+                    <span class="mia-table-toolbar__title">すべてのスキル</span>
+                    <span class="mia-table-toolbar__count" id="tbl-count">15個</span>
+                    <div class="mia-table-search">
+                        <span class="mia-table-search__icon">
+                            <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2"
+                                fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                            </svg>
+                        </span>
+                        <input class="mia-table-search__input" type="search" placeholder="Search..." id="tbl-search"
+                            aria-label="Search">
+                    </div>
+                </div>
+
+                <table class="mia-table" id="mia-table" aria-label="Skills">
+                    <thead>
+                        <tr>
+                            <th class="col-check" scope="col"><input type="checkbox" class="mia-table-check"
+                                    aria-label="Select all rows"></th>
+                            <th scope="col" data-col="software" class="is-sorted">ツール・言語 <span
+                                    class="mia-table__sort-icon">↑</span></th>
+                            <th scope="col" data-col="field">分野</th>
+                            <th scope="col" data-col="status">ステータス</th>
+                            <th scope="col" data-col="projects" class="mia-table__cell--num">制作実績<span
+                                    class="mia-table__sort-icon">↕</span></th>
+                            <th scope="col" data-col="score" class="mia-table__cell--num">レベル<span
+                                    class="mia-table__sort-icon">↕</span></th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbl-body">
+                        <tr data-id="1">
+                            <td class="col-check" data-label="Select"><input type="checkbox" class="mia-table-check">
+                            </td>
+                            <td data-label="ツール・言語">
+                                <div class="mia-table-software">
+                                    <div class="mia-table-icon icon-studio"></div>
+                                    <div class="mia-table-software__info"><span
+                                            class="mia-table-software__name">STUDIO</span></div>
+                                </div>
+                            </td>
+                            <td data-label="分野">Web Design</td>
+                            <td data-label="ステータス"><span class="mia-badge mia-badge--active"><span
+                                        class="mia-badge__dot"></span>学習中</span></td>
+                            <td class="mia-table__cell--num" data-label="制作実績">1</td>
+                            <td class="mia-table__cell--num" data-label="レベル">
+                                <div class="mia-table-score">
+                                    <div class="mia-table-score__bar">
+                                        <div class="mia-table-score__fill" style="width:50%"></div>
+                                    </div><span class="mia-table-score__num">50</span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr data-id="2">
+                            <td class="col-check" data-label="Select"><input type="checkbox" class="mia-table-check">
+                            </td>
+                            <td data-label="ツール・言語">
+                                <div class="mia-table-software">
+                                    <div class="mia-table-icon icon-illustrator"></div>
+                                    <div class="mia-table-software__info"><span class="mia-table-software__name">Adobe
+                                            Illustrator</span></div>
+                                </div>
+                            </td>
+                            <td data-label="分野">Graphic Design</td>
+                            <td data-label="ステータス"><span class="mia-badge mia-badge--active"><span
+                                        class="mia-badge__dot"></span>学習中</span></td>
+                            <td class="mia-table__cell--num" data-label="制作実績">0</td>
+                            <td class="mia-table__cell--num" data-label="レベル">
+                                <div class="mia-table-score">
+                                    <div class="mia-table-score__bar">
+                                        <div class="mia-table-score__fill" style="width:10%"></div>
+                                    </div><span class="mia-table-score__num">10</span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr data-id="3">
+                            <td class="col-check" data-label="Select"><input type="checkbox" class="mia-table-check">
+                            </td>
+                            <td data-label="ツール・言語">
+                                <div class="mia-table-software">
+                                    <div class="mia-table-icon icon-photoshop"></div>
+                                    <div class="mia-table-software__info"><span class="mia-table-software__name">Adobe
+                                            Photoshop</span></div>
+                                </div>
+                            </td>
+                            <td data-label="分野">Photography</td>
+                            <td data-label="ステータス"><span class="mia-badge mia-badge--active"><span
+                                        class="mia-badge__dot"></span>学習中</span></td>
+                            <td class="mia-table__cell--num" data-label="制作実績">0</td>
+                            <td class="mia-table__cell--num" data-label="レベル">
+                                <div class="mia-table-score">
+                                    <div class="mia-table-score__bar">
+                                        <div class="mia-table-score__fill" style="width:60%"></div>
+                                    </div><span class="mia-table-score__num">60</span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr data-id="4">
+                            <td class="col-check" data-label="Select"><input type="checkbox" class="mia-table-check">
+                            </td>
+                            <td data-label="ツール・言語">
+                                <div class="mia-table-software">
+                                    <div class="mia-table-icon icon-html"></div>
+                                    <div class="mia-table-software__info"><span
+                                            class="mia-table-software__name">HTML</span></div>
+                                </div>
+                            </td>
+                            <td data-label="分野">Web Coding</td>
+                            <td data-label="ステータス"><span class="mia-badge mia-badge--active"><span
+                                        class="mia-badge__dot"></span>学習中</span></td>
+                            <td class="mia-table__cell--num" data-label="制作実績">1</td>
+                            <td class="mia-table__cell--num" data-label="レベル">
+                                <div class="mia-table-score">
+                                    <div class="mia-table-score__bar">
+                                        <div class="mia-table-score__fill" style="width:30%"></div>
+                                    </div><span class="mia-table-score__num">30</span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr data-id="5">
+                            <td class="col-check" data-label="Select"><input type="checkbox" class="mia-table-check">
+                            </td>
+                            <td data-label="ツール・言語">
+                                <div class="mia-table-software">
+                                    <div class="mia-table-icon icon-css"></div>
+                                    <div class="mia-table-software__info"><span
+                                            class="mia-table-software__name">CSS</span></div>
+                                </div>
+                            </td>
+                            <td data-label="分野">Web Coding</td>
+                            <td data-label="ステータス"><span class="mia-badge mia-badge--active"><span
+                                        class="mia-badge__dot"></span>学習中</span></td>
+                            <td class="mia-table__cell--num" data-label="制作実績">1</td>
+                            <td class="mia-table__cell--num" data-label="レベル">
+                                <div class="mia-table-score">
+                                    <div class="mia-table-score__bar">
+                                        <div class="mia-table-score__fill" style="width:20%"></div>
+                                    </div><span class="mia-table-score__num">20</span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr data-id="6">
+                            <td class="col-check" data-label="Select"><input type="checkbox" class="mia-table-check">
+                            </td>
+                            <td data-label="ツール・言語">
+                                <div class="mia-table-software">
+                                    <div class="mia-table-icon icon-figma"></div>
+                                    <div class="mia-table-software__info"><span
+                                            class="mia-table-software__name">Figma</span></div>
+                                </div>
+                            </td>
+                            <td data-label="分野">UI/UX Design</td>
+                            <td data-label="ステータス"><span class="mia-badge mia-badge--active"><span
+                                        class="mia-badge__dot"></span>学習中</span></td>
+                            <td class="mia-table__cell--num" data-label="制作実績">0</td>
+                            <td class="mia-table__cell--num" data-label="レベル">
+                                <div class="mia-table-score">
+                                    <div class="mia-table-score__bar">
+                                        <div class="mia-table-score__fill" style="width:45%"></div>
+                                    </div><span class="mia-table-score__num">45</span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr data-id="7">
+                            <td class="col-check" data-label="Select"><input type="checkbox" class="mia-table-check">
+                            </td>
+                            <td data-label="ツール・言語">
+                                <div class="mia-table-software">
+                                    <div class="mia-table-icon icon-premiere"></div>
+                                    <div class="mia-table-software__info"><span class="mia-table-software__name">Adobe
+                                            Premiere Pro</span></div>
+                                </div>
+                            </td>
+                            <td data-label="分野">Video Editing</td>
+                            <td data-label="ステータス"><span class="mia-badge mia-badge--active"><span
+                                        class="mia-badge__dot"></span>学習中</span></td>
+                            <td class="mia-table__cell--num" data-label="制作実績">0</td>
+                            <td class="mia-table__cell--num" data-label="レベル">
+                                <div class="mia-table-score">
+                                    <div class="mia-table-score__bar">
+                                        <div class="mia-table-score__fill" style="width:60%"></div>
+                                    </div><span class="mia-table-score__num">60</span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr data-id="8">
+                            <td class="col-check" data-label="Select"><input type="checkbox" class="mia-table-check">
+                            </td>
+                            <td data-label="ツール・言語">
+                                <div class="mia-table-software">
+                                    <div class="mia-table-icon icon-javascript"></div>
+                                    <div class="mia-table-software__info"><span
+                                            class="mia-table-software__name">JavaScript</span></div>
+                                </div>
+                            </td>
+                            <td data-label="分野">Web Coding</td>
+                            <td data-label="ステータス"><span class="mia-badge mia-badge--active"><span
+                                        class="mia-badge__dot"></span>学習中</span></td>
+                            <td class="mia-table__cell--num" data-label="制作実績">1</td>
+                            <td class="mia-table__cell--num" data-label="レベル">
+                                <div class="mia-table-score">
+                                    <div class="mia-table-score__bar">
+                                        <div class="mia-table-score__fill" style="width:5%"></div>
+                                    </div><span class="mia-table-score__num">5</span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr data-id="9">
+                            <td class="col-check" data-label="Select"><input type="checkbox" class="mia-table-check">
+                            </td>
+                            <td data-label="ツール・言語">
+                                <div class="mia-table-software">
+                                    <div class="mia-table-icon icon-lightroom"></div>
+                                    <div class="mia-table-software__info"><span class="mia-table-software__name">Adobe
+                                            Lightroom</span></div>
+                                </div>
+                            </td>
+                            <td data-label="分野">Photography</td>
+                            <td data-label="ステータス"><span class="mia-badge mia-badge--active"><span
+                                        class="mia-badge__dot"></span>学習中</span></td>
+                            <td class="mia-table__cell--num" data-label="制作実績">0</td>
+                            <td class="mia-table__cell--num" data-label="レベル">
+                                <div class="mia-table-score">
+                                    <div class="mia-table-score__bar">
+                                        <div class="mia-table-score__fill" style="width:60%"></div>
+                                    </div><span class="mia-table-score__num">60</span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr data-id="10">
+                            <td class="col-check" data-label="Select"><input type="checkbox" class="mia-table-check">
+                            </td>
+                            <td data-label="ツール・言語">
+                                <div class="mia-table-software">
+                                    <div class="mia-table-icon icon-aftereffects"></div>
+                                    <div class="mia-table-software__info"><span class="mia-table-software__name">Adobe
+                                            After Effects</span></div>
+                                </div>
+                            </td>
+                            <td data-label="分野">Motion Graphics</td>
+                            <td data-label="ステータス"><span class="mia-badge mia-badge--active"><span
+                                        class="mia-badge__dot"></span>学習中</span></td>
+                            <td class="mia-table__cell--num" data-label="制作実績">0</td>
+                            <td class="mia-table__cell--num" data-label="レベル">
+                                <div class="mia-table-score">
+                                    <div class="mia-table-score__bar">
+                                        <div class="mia-table-score__fill" style="width:0%"></div>
+                                    </div><span class="mia-table-score__num">0</span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr data-id="11">
+                            <td class="col-check" data-label="Select"><input type="checkbox" class="mia-table-check">
+                            </td>
+                            <td data-label="ツール・言語">
+                                <div class="mia-table-software">
+                                    <div class="mia-table-icon icon-react"></div>
+                                    <div class="mia-table-software__info"><span
+                                            class="mia-table-software__name">React</span></div>
+                                </div>
+                            </td>
+                            <td data-label="分野">Web Development</td>
+                            <td data-label="ステータス"><span class="mia-badge mia-badge--active"><span
+                                        class="mia-badge__dot"></span>学習中</span></td>
+                            <td class="mia-table__cell--num" data-label="制作実績">0</td>
+                            <td class="mia-table__cell--num" data-label="レベル">
+                                <div class="mia-table-score">
+                                    <div class="mia-table-score__bar">
+                                        <div class="mia-table-score__fill" style="width:0%"></div>
+                                    </div><span class="mia-table-score__num">0</span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr data-id="12">
+                            <td class="col-check" data-label="Select"><input type="checkbox" class="mia-table-check">
+                            </td>
+                            <td data-label="ツール・言語">
+                                <div class="mia-table-software">
+                                    <div class="mia-table-icon icon-threejs"></div>
+                                    <div class="mia-table-software__info"><span
+                                            class="mia-table-software__name">Three.js</span></div>
+                                </div>
+                            </td>
+                            <td data-label="分野">3D Web</td>
+                            <td data-label="ステータス"><span class="mia-badge mia-badge--active"><span
+                                        class="mia-badge__dot"></span>学習中</span></td>
+                            <td class="mia-table__cell--num" data-label="制作実績">0</td>
+                            <td class="mia-table__cell--num" data-label="レベル">
+                                <div class="mia-table-score">
+                                    <div class="mia-table-score__bar">
+                                        <div class="mia-table-score__fill" style="width:0%"></div>
+                                    </div><span class="mia-table-score__num">0</span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr data-id="13">
+                            <td class="col-check" data-label="Select"><input type="checkbox" class="mia-table-check">
+                            </td>
+                            <td data-label="ツール・言語">
+                                <div class="mia-table-software">
+                                    <div class="mia-table-icon icon-blender"></div>
+                                    <div class="mia-table-software__info"><span
+                                            class="mia-table-software__name">Blender</span></div>
+                                </div>
+                            </td>
+                            <td data-label="分野">3D Modeling</td>
+                            <td data-label="ステータス"><span class="mia-badge mia-badge--active"><span
+                                        class="mia-badge__dot"></span>学習中</span></td>
+                            <td class="mia-table__cell--num" data-label="制作実績">0</td>
+                            <td class="mia-table__cell--num" data-label="レベル">
+                                <div class="mia-table-score">
+                                    <div class="mia-table-score__bar">
+                                        <div class="mia-table-score__fill" style="width:0%"></div>
+                                    </div><span class="mia-table-score__num">0</span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr data-id="14">
+                            <td class="col-check" data-label="Select"><input type="checkbox" class="mia-table-check">
+                            </td>
+                            <td data-label="ツール・言語">
+                                <div class="mia-table-software">
+                                    <div class="mia-table-icon icon-davinci"></div>
+                                    <div class="mia-table-software__info"><span class="mia-table-software__name">DaVinci
+                                            Resolve</span></div>
+                                </div>
+                            </td>
+                            <td data-label="分野">Color Grading</td>
+                            <td data-label="ステータス"><span class="mia-badge mia-badge--active"><span
+                                        class="mia-badge__dot"></span>学習中</span></td>
+                            <td class="mia-table__cell--num" data-label="制作実績">0</td>
+                            <td class="mia-table__cell--num" data-label="レベル">
+                                <div class="mia-table-score">
+                                    <div class="mia-table-score__bar">
+                                        <div class="mia-table-score__fill" style="width:10%"></div>
+                                    </div><span class="mia-table-score__num">10</span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr data-id="15">
+                            <td class="col-check" data-label="Select"><input type="checkbox" class="mia-table-check">
+                            </td>
+                            <td data-label="ツール・言語">
+                                <div class="mia-table-software">
+                                    <div class="mia-table-icon icon-notion"></div>
+                                    <div class="mia-table-software__info"><span
+                                            class="mia-table-software__name">Notion</span></div>
+                                </div>
+                            </td>
+                            <td data-label="分野">Management</td>
+                            <td data-label="ステータス"><span class="mia-badge mia-badge--active"><span
+                                        class="mia-badge__dot"></span>学習中</span></td>
+                            <td class="mia-table__cell--num" data-label="制作実績">1</td>
+                            <td class="mia-table__cell--num" data-label="レベル">
+                                <div class="mia-table-score">
+                                    <div class="mia-table-score__bar">
+                                        <div class="mia-table-score__fill" style="width:30%"></div>
+                                    </div><span class="mia-table-score__num">30</span>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="mia-table-pagination">
+                    <span class="mia-table-pagination__info" id="tbl-page-info">Showing 1–5 of 15</span>
+                    <div class="mia-table-pagination__controls">
+                        <button class="mia-table-page-btn" id="tbl-prev" aria-label="Previous page" disabled>‹</button>
+                        <button class="mia-table-page-btn" id="tbl-next" aria-label="Next page">›</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="faq" class="section faq">
+        <div class="container">
+            <header class="section__head">
+                <span class="section__num">(07)</span>
+                <h2 class="section__title">
+                    <span class="section__title-en">FAQ</span>
+                    <span class="section__title-ja">よくある質問</span>
+                </h2>
+                <span class="section__line"></span>
+            </header>
+
+            <ul class="faq__list">
+                <li class="faq__item">
+                    <button class="faq__q" aria-expanded="false">
+                        <span class="faq__q-num">(Q)</span>
+                        <span class="faq__q-text">とりあえず相談だけでも良いですか？</span>
+                        <span class="faq__q-toggle" aria-hidden="true"></span>
+                    </button>
+                    <div class="faq__a">
+                        <div class="faq__a-inner">
+                            <span class="faq__a-label">(A)</span>
+                            <p class="faq__a-text">はい、もちろんです！ まずはお気軽に、あなたの想いやお悩みを聞かせてください。無理な営業などは一切ありません。</p>
+                        </div>
+                    </div>
+                </li>
+                <li class="faq__item">
+                    <button class="faq__q" aria-expanded="false">
+                        <span class="faq__q-num">(Q)</span>
+                        <span class="faq__q-text">依頼の際、準備するものはありますか？</span>
+                        <span class="faq__q-toggle" aria-hidden="true"></span>
+                    </button>
+                    <div class="faq__a">
+                        <div class="faq__a-inner">
+                            <span class="faq__a-label">(A)</span>
+                            <p class="faq__a-text">まずは手ぶらでご相談いただいて大丈夫です。Webサイト制作の際は、掲載する画像・動画の撮影も可能です（追加料金あり）。</p>
+                        </div>
+                    </div>
+                </li>
+                <li class="faq__item">
+                    <button class="faq__q" aria-expanded="false">
+                        <span class="faq__q-num">(Q)</span>
+                        <span class="faq__q-text">Webサイト納品の形式はどうなっていますか？</span>
+                        <span class="faq__q-toggle" aria-hidden="true"></span>
+                    </button>
+                    <div class="faq__a">
+                        <div class="faq__a-inner">
+                            <span class="faq__a-label">(A)</span>
+                            <p class="faq__a-text">ノーコードツール「STUDIO」もしくは「HTML・CSS・JavaScript」で納品します。ご希望の形式に合わせて対応可能です。
+                            </p>
+                        </div>
+                    </div>
+                </li>
+                <li class="faq__item">
+                    <button class="faq__q" aria-expanded="false">
+                        <span class="faq__q-num">(Q)</span>
+                        <span class="faq__q-text">サイト公開後の修正や更新に料金はかかりますか？</span>
+                        <span class="faq__q-toggle" aria-hidden="true"></span>
+                    </button>
+                    <div class="faq__a">
+                        <div class="faq__a-inner">
+                            <span class="faq__a-label">(A)</span>
+                            <p class="faq__a-text">1箇所あたり500円～で対応いたします。大きなリニューアルの場合は別途お見積りいたします。</p>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </section>
+
+    <section id="contact" class="contact">
+        <div class="container">
+            <header class="section__head">
+                <span class="section__num">(08)</span>
+                <h2 class="section__title">
+                    <span class="section__title-en">Contact</span>
+                    <span class="section__title-ja">Contact</span>
+                </h2>
+                <span class="section__line"></span>
+            </header>
+
+            <div class="contact__grid">
+                <aside class="contact__aside">
+                    <p class="contact__lead">
+                        お気軽にご相談ください。<br>
+                        3日以内に返信いたします。
+                    </p>
+                    <dl class="contact__info">
+                        <dt>(Email)</dt>
+                        <dd><a href="mailto:mi0203x@gmail.com">mi0203x.wokr@gmail.com</a></dd>
+                        <dt>(Response)</dt>
+                        <dd>通常 1〜3日以内</dd>
+                        <dt>(Based in)</dt>
+                        <dd>Shimane, Japan</dd>
+                    </dl>
+                </aside>
+
+                <form class="contact__form" action="https://formspree.io/f/mzdyarqv" method="POST">
+                    <div class="form-group">
+                        <label class="form-label">作りたいもの <span class="form-required">*</span></label>
+                        <div class="form-check-grid">
+                            <label class="form-check">
+                                <input type="checkbox" name="interest[]" value="ホームページ">
+                                <span class="form-check-box"></span>
+                                <span>ホームページ</span>
+                            </label>
+                            <label class="form-check">
+                                <input type="checkbox" name="interest[]" value="写真">
+                                <span class="form-check-box"></span>
+                                <span>写真</span>
+                            </label>
+                            <label class="form-check">
+                                <input type="checkbox" name="interest[]" value="動画">
+                                <span class="form-check-box"></span>
+                                <span>動画</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="name">お名前 <span class="form-required">*</span></label>
+                        <input type="text" id="name" name="name" class="form-input" placeholder="山田 太郎" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="email">メールアドレス <span class="form-required">*</span></label>
+                        <input type="email" id="email" name="email" class="form-input" placeholder="you@example.com"
+                            required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="phone">電話番号</label>
+                        <input type="tel" id="phone" name="phone" class="form-input" placeholder="000-1234-5678">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="message">Contact内容</label>
+                        <textarea id="message" name="message" class="form-textarea"
+                            placeholder="気になることなどあればご自由にご記入ください。" rows="6"></textarea>
+                    </div>
+
+                    <button type="submit" class="form-submit">
+                        <span class="form-submit-bg"></span>
+                        <span class="form-submit-text">
+                            <span>送信する</span>
+                            <span class="form-submit-arrow">→</span>
+                        </span>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="footer__top">
+            <div class="footer__logo">
+                <div id="footerLogo" class="footer-marquee">
+                    <div class="footer-marquee-track" id="footerMarqueeTrack">
+                    </div>
+                </div>
+                <img src="https://cdn.prod.website-files.com/69ba5f78c4557199bf44aebb/69ba6cb4a6e9a82bc5a7916b_logo.jpg"
+                    alt="MIA" class="footer__logo-img" style="display:none;">
+            </div>
+
+            <div class="footer__cols">
+                <div class="footer__col">
+                    <span class="footer__col-label">(Navigation)</span>
+                    <ul>
+                        <li><a href="#intro">Intro</a></li>
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#how">Process</a></li>
+                        <li><a href="#works">Works</a></li>
+                    </ul>
+                </div>
+                <div class="footer__col">
+                    <span class="footer__col-label">(More)</span>
+                    <ul>
+                        <li><a href="#price">Price</a></li>
+                        <li><a href="#skills">Skills</a></li>
+                        <li><a href="#faq">FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="footer__col">
+                    <span class="footer__col-label">(Social)</span>
+                    <ul>
+                        <li><a href="https://www.instagram.com/mia_film__" target="_blank"
+                                rel="noopener noreferrer">Instagram ↗</a></li>
+                        <li><a href="https://x.com/mia_film__" target="_blank" rel="noopener noreferrer">X (Twitter)
+                                ↗</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer__bottom">
+            <span class="footer__copy">© 2026 MIA All Rights Reserved.</span>
+            <span class="footer__time"><span class="footer__time-label">(Local)</span><span
+                    id="footerTime">--:--:--</span> JST</span>
+            <a href="#intro" class="footer__top-btn">
+                <span>Back to top</span>
+                <span class="footer__top-arrow">↑</span>
+            </a>
+        </div>
+    </footer>
+</body>
+
+</html>
