@@ -688,9 +688,15 @@ const initUI = () => {
  * 軽量化対応: インターバルの見直し・Canvasコピーの間引き
  * ============================================================================ */
 async function initWebGL() {
-    if (typeof THREE === 'undefined') return;
+    if (typeof THREE === 'undefined') {
+        window.isModelReady = true;
+        return;
+    }
     const container = document.getElementById('heroWebGL'), video = document.getElementById('heroVideo');
-    if (!container || !video) return;
+    if (!container || !video) {
+        window.isModelReady = true;
+        return;
+    }
 
     container.classList.add('webgl-active');
     video.play().then(() => { if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'none'; }).catch(e => console.warn(e));
