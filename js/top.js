@@ -389,6 +389,8 @@ const initUI = () => {
         let current = 0;
         const target = 100;
         document.body.style.overflow = 'hidden';
+        
+        const startTime = Date.now(); // ★追加: ローディング開始時間を記録
 
         const finishLoader = () => {
             current = target;
@@ -401,9 +403,17 @@ const initUI = () => {
         };
 
         const updateLoader = () => {
-            if (current >= 99 && !window.isModelReady) {
+            const elapsedTime = Date.now() - startTime; // ★追加: 経過時間を計算
+            const isTimeout = elapsedTime > 8000; // ★追加: 8秒でタイムアウトとする
+
+            if (current >= 99 && !window.isModelReady && !isTimeout) {
                 setTimeout(updateLoader, 100);
                 return;
+            }
+            
+            // ★追加: タイムアウトで突破した場合はフラグをtrueにしておく
+            if (current >= 99 && isTimeout) {
+                window.isModelReady = true;
             }
             
             const increment = current < 90 ? 2 : 1;
@@ -653,11 +663,13 @@ async function initWebGL() {
     }
 
     // --- HTMLを触らずにDOMを動的生成 ---
-    if (!document.getElementById('blobStreamL')) {
-        const bl = document.createElement('div'); bl.id = 'blobStreamL'; bl.className = 'blob-data-stream left'; document.body.appendChild(bl);
+if (!document.getElementById('blobStreamL')) {
+        const bl = document.createElement('div'); bl.id = 'blobStreamL'; bl.className = 'blob-data-stream left'; 
+        container.appendChild(bl); // bodyではなくcontainer(動画枠)に追加
     }
     if (!document.getElementById('blobStreamR')) {
-        const br = document.createElement('div'); br.id = 'blobStreamR'; br.className = 'blob-data-stream right'; document.body.appendChild(br);
+        const br = document.createElement('div'); br.id = 'blobStreamR'; br.className = 'blob-data-stream right'; 
+        container.appendChild(br); // bodyではなくcontainer(動画枠)に追加
     }
     let syncBtn = document.getElementById('cameraSyncBtn');
     if (!syncBtn) {
@@ -668,12 +680,19 @@ async function initWebGL() {
 
     const blobStreamL = document.getElementById('blobStreamL');
     const blobStreamR = document.getElementById('blobStreamR');
+    const dataRainLeft = document.getElementById('dataRainLeft');
+    const dataRainRight = document.getElementById('dataRainRight');
     const monitorPip = document.getElementById('monitorPip');
     const monitorVideo = document.getElementById('webcam-monitor');
     const monitorCanvas = document.getElementById('face-mask');
     const monitorCtx = monitorCanvas ? monitorCanvas.getContext('2d', { alpha: true }) : null;
-    if (blobStreamL) blobStreamL.classList.add('left');
-    if (blobStreamR) blobStreamR.classList.add('right');
+    
+// ★追加: もしHTMLファイル側に直書きされていた場合でも、強制的に動画の枠内へ移動させる
+    if (blobStreamL && blobStreamL.parentNode !== container) container.appendChild(blobStreamL);
+    if (blobStreamR && blobStreamR.parentNode !== container) container.appendChild(blobStreamR);
+    if (dataRainLeft && dataRainLeft.parentNode !== container) container.appendChild(dataRainLeft);
+    if (dataRainRight && dataRainRight.parentNode !== container) container.appendChild(dataRainRight);
+    
     if (syncBtn) {
         syncBtn.setAttribute('role', 'button');
         syncBtn.setAttribute('tabindex', '0');
