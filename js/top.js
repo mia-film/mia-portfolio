@@ -773,7 +773,7 @@ if (!document.getElementById('blobStreamL')) {
                 
                 vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
                 /* 手の近くでは粒を大きくして反応を見えやすくする */
-                gl_PointSize = (310.0 / -mvPosition.z) * (luma * 1.2 + 0.35 + vHand * 1.15);
+                gl_PointSize = (180.0 / -mvPosition.z) * (luma * 1.2 + 0.35 + vHand * 1.15);
                 gl_Position = projectionMatrix * mvPosition;
             }
         `,
@@ -784,7 +784,7 @@ if (!document.getElementById('blobStreamL')) {
                 vec2 pt = gl_PointCoord - vec2(0.5);
                 if (dot(pt, pt) > 0.25) discard;
                 vec3 color = vec3(vLuma * 0.85 + 0.12 + vHand * 0.78);
-                gl_FragColor = vec4(color, 0.82 + vHand * 0.18);
+                gl_FragColor = vec4(color, 0.45 + vHand * 0.18);
             }
         `,
         transparent: true,
