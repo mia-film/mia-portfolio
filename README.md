@@ -34,15 +34,15 @@ mia-0203/
 ├── img/             # 画像ファイルディレクトリ（WebP, ICO等）
 ├── video/           # 動画ファイルディレクトリ（ヒーローセクション用）
 └── README.md        # このファイル
-
+```
 
 ## 開発ワークフロー（GitHubへのアップロード手順）
 
 プロジェクトの変更を GitHub へ反映させるための基本的な手順です。
-
+```
 ### 1. 準備（初回のみ）
 まだ Git の初期設定が済んでいない場合は、自分の情報を登録します。
-```cmd
+cmd
 git config --global user.name "Your Name"
 git config --global user.email "your_email@example.com"
 
