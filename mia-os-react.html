@@ -1,0 +1,1597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1200">
+<title>MiaOS — White Hacking Security Desktop</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&family=Zen+Kaku+Gothic+New:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --t-1:#15151a; --t-2:#3d3d48; --t-3:#73737e; --t-4:#a8a8b2;
+  --accent:#15151a; --accent-hover:#000; --accent-soft:rgba(20,20,30,0.08);
+  --success:#15151a; --warn:#73737e; --danger:#15151a;
+  --surface:rgba(255,255,255,0.62);
+  --surface-hi:rgba(255,255,255,0.88);
+  --frame:rgba(245,245,248,0.7);
+  --frame-hover:rgba(240,240,245,0.9);
+  --border:rgba(255,255,255,0.55);
+  --border-strong:rgba(255,255,255,0.75);
+  --separator:rgba(20,20,30,0.08);
+  --hair:rgba(20,20,30,0.06);
+  --glass-blur:saturate(180%) blur(40px);
+  --glass-shine:linear-gradient(180deg,rgba(255,255,255,0.55),rgba(255,255,255,0) 40%);
+  --font-ui:"Poppins","Zen Kaku Gothic New",sans-serif;
+  --font-jp:"Zen Kaku Gothic New",sans-serif;
+  --font-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+*,*:before,*:after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;width:100%;overflow:hidden;background:#fff;font-family:var(--font-ui);color:var(--t-1);font-size:13px;-webkit-font-smoothing:antialiased}
+button,input,textarea,select{font:inherit;color:inherit}
+button{cursor:pointer;background:none;border:0}
+a{color:inherit;text-decoration:none}
+::selection{background:var(--accent-soft);color:var(--t-1)}
+
+/* ===== Wallpaper ===== */
+.wallpaper{position:fixed;inset:0;background:
+  radial-gradient(38% 32% at 22% 28%, rgba(20,20,30,0.10), transparent 65%),
+  radial-gradient(34% 28% at 78% 18%, rgba(20,20,30,0.07), transparent 65%),
+  radial-gradient(42% 32% at 68% 82%, rgba(20,20,30,0.09), transparent 65%),
+  radial-gradient(30% 26% at 8% 88%, rgba(20,20,30,0.06), transparent 65%),
+  #f6f6f8;z-index:0;overflow:hidden}
+.wallpaper:after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.35;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .35 0'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='.5'/></svg>");mix-blend-mode:multiply}
+.wallpaper__mark{position:absolute;left:48px;bottom:14px;font-family:var(--font-ui);font-style:italic;font-weight:300;font-size:160px;color:rgba(20,20,30,0.09);line-height:1;letter-spacing:-0.04em;pointer-events:none;user-select:none;z-index:1}
+.wallpaper__vignette{position:absolute;left:0;right:0;bottom:0;height:160px;background:linear-gradient(180deg,rgba(20,20,30,0) 0%,rgba(20,20,30,0.06) 100%);pointer-events:none;z-index:1}
+
+/* ===== Boot ===== */
+.boot{position:fixed;inset:0;z-index:9000;background:radial-gradient(circle at 50% 50%,#1f1f26 0%,#0c0c10 70%);display:grid;place-items:center;color:#e9e9ef;transition:opacity .4s,visibility .4s}
+.boot.is-done{opacity:0;visibility:hidden;pointer-events:none}
+.boot__inner{display:flex;flex-direction:column;align-items:center;gap:32px;transform:translateY(-4%)}
+.boot__title{font-size:84px;font-weight:300;font-style:italic;letter-spacing:-0.02em;line-height:1;display:flex;align-items:baseline;color:#e9e9ef}
+.boot__cursor{display:inline-block;width:3.4px;height:71px;margin-left:5px;background:#e9e9ef;animation:blink 1.05s steps(2,end) infinite}
+@keyframes blink{0%,55%{opacity:1}56%,100%{opacity:0}}
+.boot__bar{width:240px;height:3px;border-radius:99px;background:rgba(255,255,255,0.12);overflow:hidden}
+.boot__bar-fill{height:100%;width:0;background:linear-gradient(90deg,#fff,#9a9aa4);transition:width .12s linear}
+.boot__meta{width:240px;display:flex;justify-content:space-between;font-size:10px;color:#9a9aa4;font-family:var(--font-mono);letter-spacing:.06em}
+.boot__sub{font-size:10px;color:#73737e;letter-spacing:.04em}
+.boot__sub-ja{font-size:9px;color:#5a5a64;font-family:var(--font-jp);margin-top:-22px}
+.boot__loading{font-size:9px;color:rgba(154,154,164,0.55);font-family:var(--font-mono);letter-spacing:.05em;height:14px;margin-top:32px;text-align:center}
+.boot__skip{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);font-size:9px;color:#5a5a64;letter-spacing:.18em;text-transform:uppercase;font-family:var(--font-mono)}
+
+/* ===== Menubar ===== */
+.menubar{position:fixed;top:0;left:0;right:0;height:32px;z-index:200;background:linear-gradient(180deg,rgba(255,255,255,0.7),rgba(255,255,255,0.4));backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);border-bottom:1px solid rgba(255,255,255,0.45);box-shadow:0 1px 0 rgba(255,255,255,0.6) inset,0 1px 0 rgba(20,20,30,0.06);display:flex;align-items:center;padding:0 14px;font-size:12px;font-weight:500}
+.menubar__group{display:flex;align-items:center;gap:0;position:relative}
+.menubar__brand{display:flex;align-items:center;gap:8px;padding:0 10px;height:24px;border-radius:6px;font-weight:600;letter-spacing:.02em}
+.menubar__brand-mark{width:14px;height:14px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#fff 0%,#d4d4dd 35%,#15151a 100%);box-shadow:0 0 0 1px rgba(0,0,0,0.05)}
+.menubar__item{height:24px;padding:0 10px;border-radius:6px;display:inline-flex;align-items:center;color:var(--t-1);font-weight:500;transition:background .15s,color .15s}
+.menubar__item:hover,.menubar__item.is-open{background:#15151a;color:#fff}
+.menubar__time{font-family:var(--font-mono);font-size:11px;letter-spacing:0;padding:0 10px;color:var(--t-1)}
+.menubar__spacer{flex:1}
+.menubar__dropdown{position:absolute;top:30px;min-width:240px;background:linear-gradient(180deg,rgba(255,255,255,0.92),rgba(255,255,255,0.78));backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);border:1px solid rgba(255,255,255,0.7);border-radius:10px;box-shadow:0 1px 0 rgba(255,255,255,0.8) inset,0 12px 36px rgba(20,20,30,0.22),0 30px 80px -20px rgba(20,20,30,0.3);padding:6px;font-size:13px;z-index:210}
+.menubar__dropdown .row{padding:6px 10px;border-radius:5px;display:flex;justify-content:space-between;align-items:center;color:var(--t-1);cursor:pointer}
+.menubar__dropdown .row:hover{background:linear-gradient(#15151a,#000);color:#fff}
+.menubar__dropdown .row.dim{color:var(--t-4);pointer-events:none}
+.menubar__dropdown .kbd{font-family:var(--font-mono);font-size:11px;color:var(--t-3)}
+.menubar__dropdown .row:hover .kbd{color:rgba(255,255,255,0.85)}
+.menubar__dropdown .check{width:12px;display:inline-block;text-align:center}
+.menubar__dropdown hr{border:0;border-top:1px solid var(--hair);margin:5px 4px}
+
+/* ===== Dock ===== */
+.dock-wrap{position:fixed;left:0;right:0;bottom:14px;z-index:150;display:flex;justify-content:center;pointer-events:none}
+.dock{display:flex;align-items:flex-end;gap:6px;padding:8px;background:linear-gradient(180deg,rgba(255,255,255,0.55),rgba(255,255,255,0.32));backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);border:1px solid rgba(255,255,255,0.7);border-radius:22px;box-shadow:inset 0 1px 0 rgba(255,255,255,0.85),inset 0 -1px 0 rgba(20,20,30,0.06),0 12px 32px rgba(20,20,30,0.22),0 24px 64px -12px rgba(20,20,30,0.32);pointer-events:auto}
+.dock-app{position:relative;width:54px;height:54px;border-radius:13px;display:grid;place-items:center;color:#fff;font-family:var(--font-mono);font-size:18px;font-weight:600;cursor:pointer;transition:transform .25s cubic-bezier(.2,.8,.3,1);box-shadow:inset 0 0 0 1px rgba(255,255,255,0.18),0 4px 12px rgba(0,0,0,0.12);overflow:hidden}
+.dock-app:before{content:"";position:absolute;inset:0;background:linear-gradient(rgba(255,255,255,0.35),rgba(255,255,255,0) 45%);border-radius:13px;pointer-events:none}
+.dock-app:hover{transform:scale(1.18) translateY(-6px)}
+.dock-app__indicator{position:absolute;left:50%;bottom:-7px;transform:translateX(-50%);width:5px;height:5px;border-radius:50%;background:rgba(21,21,26,0.7);opacity:0;transition:opacity .2s}
+.dock-app.is-open .dock-app__indicator{opacity:1}
+.dock-app__tooltip{position:absolute;left:50%;bottom:calc(100% + 10px);transform:translateX(-50%) translateY(4px);padding:6px 10px;background:rgba(20,20,28,0.85);color:#fff;border-radius:6px;font-size:11px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .15s,transform .15s;font-weight:500}
+.dock-app__tooltip .ja{font-family:var(--font-jp);opacity:.7;margin-left:6px;font-size:10px}
+.dock-app:hover .dock-app__tooltip{opacity:1;transform:translateX(-50%) translateY(0)}
+/* tile colors — pure grayscale */
+.dock-app[data-id=welcome]{background:linear-gradient(180deg,#3d3d45,#15151a)}
+.dock-app[data-id=terminal]{background:linear-gradient(180deg,#1a1a1f,#000)}
+.dock-app[data-id=hash]{background:linear-gradient(180deg,#5a5a62,#2a2a30)}
+.dock-app[data-id=encoder]{background:linear-gradient(180deg,#4d4d55,#1f1f24)}
+.dock-app[data-id=netinfo]{background:linear-gradient(180deg,#56565e,#26262c)}
+.dock-app[data-id=portscan]{background:linear-gradient(180deg,#6a6a72,#363640)}
+.dock-app[data-id=portref]{background:linear-gradient(180deg,#7a7a82,#42424a)}
+.dock-app[data-id=logs]{background:linear-gradient(180deg,#2f2f36,#0d0d12)}
+.dock-app[data-id=ethics]{background:linear-gradient(180deg,#84848c,#4a4a52)}
+.dock-app[data-id=finder]{background:linear-gradient(180deg,#fafafa,#cfcfd5);color:#15151a;font-size:22px}
+.dock-app[data-id=finder]:before{background:linear-gradient(rgba(255,255,255,0.85),rgba(255,255,255,0) 45%)}
+.dock-app[data-id=trash]{background:rgba(255,255,255,0.45);box-shadow:inset 0 0 0 1px rgba(20,20,30,0.1),inset 0 1px 0 rgba(255,255,255,0.7),0 4px 12px rgba(0,0,0,0.06);color:#3d3d48}
+.dock-app[data-id=trash]:before{background:linear-gradient(rgba(255,255,255,0.65),rgba(255,255,255,0) 40%)}
+.dock__sep{align-self:center;width:1px;height:42px;background:rgba(20,20,30,0.14);margin:0 4px}
+
+/* Finder app */
+.finder{display:flex;height:100%;margin:-20px -22px;font-size:13px}
+.finder__side{width:180px;border-right:1px solid var(--hair);background:rgba(252,252,254,0.7);padding:14px 8px;flex-shrink:0;overflow:auto}
+.finder__side h4{font-family:var(--font-mono);font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--t-3);margin:8px 8px 6px;font-weight:500}
+.finder__side .item{padding:6px 10px;border-radius:6px;color:var(--t-2);display:flex;align-items:center;gap:8px;font-weight:500;cursor:pointer;font-size:12.5px}
+.finder__side .item:hover{background:rgba(20,20,30,0.04);color:var(--t-1)}
+.finder__side .item.is-active{background:var(--accent-soft);color:var(--accent)}
+.finder__main{flex:1;padding:14px 18px;overflow:auto}
+.finder__head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px}
+.finder__head h3{font-size:18px;font-weight:500;letter-spacing:-0.01em}
+.finder__crumb{color:var(--t-3);font-family:var(--font-mono);font-size:11px}
+.finder__grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(98px,1fr));gap:14px;padding:6px 0}
+.finder__cell{display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;padding:6px 4px;border-radius:8px;transition:background .15s}
+.finder__cell:hover{background:rgba(20,20,30,0.04)}
+.finder__cell .ico{width:54px;height:54px;border-radius:10px;background:linear-gradient(180deg,#e8e8ee,#bcbcc4);display:grid;place-items:center;font-family:var(--font-mono);font-size:13px;font-weight:600;color:#fff;box-shadow:inset 0 0 0 1px rgba(255,255,255,0.4),0 2px 6px rgba(0,0,0,0.08)}
+.finder__cell .ico.folder{background:linear-gradient(180deg,#5a5a62,#15151a)}
+.finder__cell .ico.app{background:linear-gradient(180deg,#646464,#15151a);font-size:18px}
+.finder__cell .ico.file{background:linear-gradient(180deg,#fff,#cfcfd5);color:var(--t-1)}
+.finder__cell .name{font-size:11px;color:var(--t-1);text-align:center;line-height:1.3;word-break:break-all}
+
+/* ===== Window ===== */
+.windows{position:fixed;inset:32px 0 0;z-index:50;pointer-events:none}
+.window{position:absolute;background:linear-gradient(180deg,rgba(255,255,255,0.82),rgba(255,255,255,0.6));backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);border:1px solid rgba(255,255,255,0.7);border-radius:14px;box-shadow:inset 0 1px 0 rgba(255,255,255,0.85),inset 0 -1px 0 rgba(20,20,30,0.04),0 12px 32px rgba(20,20,30,0.22),0 60px 120px -20px rgba(20,20,30,0.32);display:flex;flex-direction:column;pointer-events:auto;overflow:hidden;animation:winIn .3s cubic-bezier(.2,.8,.3,1)}
+@keyframes winIn{from{opacity:0;transform:scale(.94) translateY(8px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.window.is-closing{animation:winOut .22s cubic-bezier(.4,0,.6,1) forwards}
+@keyframes winOut{to{opacity:0;transform:scale(.96) translateY(4px)}}
+.window__chrome{height:38px;flex-shrink:0;display:flex;align-items:center;padding:0 12px;gap:0;background:linear-gradient(rgba(255,255,255,0.6),rgba(255,255,255,0.1));border-bottom:1px solid rgba(20,20,30,0.06);user-select:none;cursor:grab}
+.window__chrome.is-dragging{cursor:grabbing}
+.tlights{flex-shrink:0;width:78px;display:flex;gap:8px}
+.tl{width:12px;height:12px;border-radius:50%;display:grid;place-items:center;cursor:pointer;box-shadow:inset 0 0 0 .5px rgba(0,0,0,0.18)}
+.tl[data-act=close]{background:#bcbcc4}
+.tl[data-act=min]{background:#cfcfd5}
+.tl[data-act=max]{background:#bcbcc4}
+.window__chrome:hover .tl[data-act=close]{background:#15151a}
+.window__chrome:hover .tl[data-act=min]{background:#3d3d48}
+.window__chrome:hover .tl[data-act=max]{background:#73737e}
+.window__chrome:hover .tl svg{stroke:#fff}
+.tl svg{width:8px;height:8px;opacity:0;transition:opacity .15s}
+.window__chrome:hover .tl svg{opacity:1}
+.window__title{flex:1;text-align:center;font-weight:600;font-size:13px;color:var(--t-1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.window__title .ja{font-family:var(--font-jp);color:var(--t-3);font-size:11px;font-weight:500;margin-left:6px}
+.window__chrome-spacer{width:78px;flex-shrink:0}
+.window__body{flex:1;background:rgba(255,255,255,0.58);overflow:auto;padding:20px 22px}
+.window__body::-webkit-scrollbar,.scroll::-webkit-scrollbar{width:9px;height:9px}
+.window__body::-webkit-scrollbar-thumb,.scroll::-webkit-scrollbar-thumb{background:rgba(20,20,30,0.18);border-radius:99px}
+
+/* ===== Common widgets ===== */
+.app-header{display:flex;flex-direction:column;gap:4px;margin-bottom:14px}
+.app-header h1{font-size:24px;font-weight:500;letter-spacing:-0.01em;color:var(--t-1);line-height:1.1}
+.app-header h1 .scale{font-size:1em}
+.app-sub{color:var(--t-3);font-size:12px;font-family:var(--font-mono);letter-spacing:.04em}
+.hr{height:1px;background:var(--separator);margin:14px 0}
+.muted{color:var(--t-3)}
+.dim{color:var(--t-4)}
+.accent{color:var(--accent)}
+.warn{color:var(--warn)}
+.danger{color:var(--danger)}
+.success{color:var(--success)}
+.label{font-family:var(--font-mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--t-3);margin-bottom:6px;display:block}
+.input,.textarea{width:100%;padding:9px 11px;border:1px solid rgba(20,20,30,0.08);background:rgba(245,245,248,0.85);color:var(--t-1);border-radius:8px;outline:none;font-size:13px;transition:background .15s,border-color .15s,box-shadow .15s}
+.input:focus,.textarea:focus{background:rgba(240,240,245,0.95);border-color:rgba(58,77,255,0.45);box-shadow:0 0 0 3px rgba(58,77,255,0.1)}
+.textarea{resize:vertical;font-family:var(--font-mono);min-height:120px;line-height:1.5}
+.textarea--mono{font-family:var(--font-mono)}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:8px;background:#15151a;color:#fff;font-size:12px;font-weight:500;transition:background .15s,transform .15s}
+.btn:hover{background:#3d3d48;transform:translateY(-1px)}
+.btn:active{background:#0a0a0c;transform:translateY(0)}
+.btn--ghost{background:transparent;color:var(--t-1);border:1px solid rgba(20,20,30,0.12)}
+.btn--ghost:hover{background:rgba(20,20,30,0.04)}
+.btn--accent{background:var(--accent)}
+.btn--accent:hover{background:var(--accent-hover)}
+.btn--danger{background:var(--danger)}
+.btn[disabled]{opacity:.4;pointer-events:none}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.kv-table{width:100%;border-collapse:collapse;font-size:12px}
+.kv-table th,.kv-table td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--hair)}
+.kv-table th{font-family:var(--font-mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--t-3);font-weight:500;background:rgba(245,245,248,0.6);position:sticky;top:0}
+.kv-table td.mono{font-family:var(--font-mono);font-size:11px}
+.tag{display:inline-flex;align-items:center;padding:2px 8px;border-radius:99px;font-family:var(--font-mono);font-size:10px;letter-spacing:.08em;background:rgba(20,20,30,0.06);color:var(--t-2)}
+.banner{padding:10px 12px;border-radius:8px;border:1px solid rgba(20,20,30,0.12);background:rgba(20,20,30,0.04);color:var(--t-2);font-size:11.5px;line-height:1.6;margin:10px 0;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.banner.warn{border-color:rgba(20,20,30,0.18);background:rgba(20,20,30,0.06);color:var(--t-2)}
+.banner.warn:before{content:"⚠ ";color:var(--t-1);font-weight:600}
+.banner.danger{border-color:rgba(20,20,30,0.3);background:rgba(20,20,30,0.08);color:var(--t-1);font-weight:500}
+.banner.danger:before{content:"! ";color:var(--t-1);font-weight:700}
+.banner b{color:var(--t-1);font-weight:600}
+.code{font-family:var(--font-mono);font-size:11.5px;line-height:1.6;background:rgba(20,20,30,0.04);padding:10px 12px;border-radius:8px;white-space:pre-wrap;word-break:break-all}
+
+/* ===== Spotlight ===== */
+.spot-back{position:fixed;inset:0;z-index:300;background:rgba(20,20,28,0.18);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:flex;justify-content:center;padding-top:18vh;opacity:0;visibility:hidden;transition:opacity .18s,visibility .18s}
+.spot-back.is-open{opacity:1;visibility:visible}
+.spot{width:560px;max-width:90vw;background:linear-gradient(180deg,rgba(255,255,255,0.92),rgba(255,255,255,0.78));backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);border:1px solid rgba(255,255,255,0.7);border-radius:14px;box-shadow:inset 0 1px 0 rgba(255,255,255,0.85),0 1px 0 rgba(255,255,255,0.4),0 30px 80px rgba(20,20,30,0.3),0 60px 120px -20px rgba(20,20,30,0.4);transform:scale(.96) translateY(-6px);transition:transform .18s cubic-bezier(.2,.8,.3,1);overflow:hidden}
+.spot-back.is-open .spot{transform:scale(1) translateY(0)}
+.spot__input{width:100%;padding:18px 22px;font-size:22px;font-style:italic;font-weight:300;font-family:var(--font-ui);background:transparent;border:0;outline:none;color:var(--t-1)}
+.spot__input::placeholder{color:var(--t-4)}
+.spot__results{max-height:50vh;overflow:auto;border-top:1px solid var(--hair)}
+.spot__row{display:grid;grid-template-columns:32px 1fr auto;align-items:center;gap:14px;padding:10px 16px;font-size:13px;cursor:pointer}
+.spot__row:hover,.spot__row.is-active{background:linear-gradient(#15151a,#000);color:#fff}
+.spot__row .ico{width:28px;height:28px;border-radius:7px;background:#15151a;color:#fff;display:grid;place-items:center;font-family:var(--font-mono);font-weight:600;font-size:11px}
+.spot__row .name{font-weight:500}
+.spot__row .ja{color:var(--t-3);font-family:var(--font-jp);margin-left:8px;font-size:11px}
+.spot__row.is-active .ja{color:rgba(255,255,255,0.78)}
+.spot__row .kbd{font-family:var(--font-mono);font-size:11px;color:var(--t-3)}
+.spot__row.is-active .kbd{color:rgba(255,255,255,0.78)}
+.spot__empty{padding:18px 22px;color:var(--t-3);font-size:12px}
+
+/* ===== Notification ===== */
+.notif{position:fixed;top:42px;right:14px;z-index:180;width:300px;background:rgba(255,255,255,0.92);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);border:1px solid rgba(255,255,255,0.55);border-radius:13px;padding:12px 14px;box-shadow:0 4px 12px rgba(20,20,30,0.12);transform:translateX(calc(100% + 30px));opacity:0;transition:transform .35s cubic-bezier(.2,.8,.3,1),opacity .35s}
+.notif.is-open{transform:translateX(0);opacity:1}
+.notif__title{display:flex;justify-content:space-between;font-size:12px;font-weight:600;color:var(--t-1)}
+.notif__time{font-family:var(--font-mono);color:var(--t-3);font-size:9px;font-weight:400}
+.notif__body{margin-top:4px;font-size:11.5px;color:var(--t-2);line-height:1.55}
+.notif__body .ja{font-family:var(--font-jp);color:var(--t-3);display:block;margin-top:4px;font-size:11px}
+
+/* ===== App-specific ===== */
+/* Terminal */
+.term{display:flex;flex-direction:column;height:100%;font-family:var(--font-mono);font-size:12px}
+.term__scroll{flex:1;overflow:auto;line-height:1.55;padding:0 4px;white-space:pre-wrap;word-break:break-word}
+.term__line{padding:0;margin:0}
+.term__prompt-line{color:var(--accent)}
+.term__input-row{display:flex;align-items:center;gap:8px;padding-top:10px;border-top:1px solid var(--hair);margin-top:8px}
+.term__prompt{color:var(--accent);font-weight:500}
+.term__input{flex:1;background:transparent;border:0;outline:none;font-family:inherit;font-size:inherit;color:var(--t-1);padding:4px 0}
+
+/* Hash Tool */
+.hash-out{display:grid;grid-template-columns:80px 1fr;gap:10px;align-items:center;margin-top:6px}
+.hash-out .lbl{font-family:var(--font-mono);font-size:11px;letter-spacing:.05em}
+.hash-out .lbl.warn{color:var(--warn)}
+.hash-out .lbl.acc{color:var(--accent)}
+.hash-out input{font-family:var(--font-mono);font-size:11px;padding:6px 9px;background:rgba(245,245,248,0.85);border:1px solid rgba(20,20,30,0.06);border-radius:6px;color:var(--t-2)}
+.cmp-status{padding:6px 10px;border-radius:6px;font-family:var(--font-mono);font-size:11px;display:inline-block}
+
+/* Encoder */
+.enc-modes{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:8px}
+.enc-modes label{display:inline-flex;align-items:center;gap:6px;cursor:pointer;font-size:12px}
+.enc-modes input{accent-color:var(--accent)}
+
+/* Net Info */
+.net-table{width:100%;font-size:11px;font-family:var(--font-mono);border-collapse:collapse}
+.net-table th,.net-table td{padding:6px 8px;text-align:left;border-bottom:1px solid var(--hair)}
+.net-table th{font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--t-3);font-weight:500;background:rgba(245,245,248,0.6)}
+.net-fam{font-weight:600}
+.net-fam.ipv4{color:var(--t-1)}
+.net-fam.ipv6{color:var(--t-2);font-style:italic}
+.net-fam.mac{color:var(--t-3);letter-spacing:.05em}
+.net-flags{color:var(--t-3);font-size:10px}
+
+/* Port Scanner */
+.ps-grid{display:grid;grid-template-columns:140px 1fr;gap:10px 14px;align-items:center;margin:10px 0}
+.ps-progress{height:4px;background:rgba(20,20,30,0.08);border-radius:99px;overflow:hidden;margin:6px 0;position:relative}
+.ps-progress__fill{height:100%;width:0;background:var(--accent);transition:width .15s}
+.ps-progress__label{position:absolute;left:50%;top:-18px;transform:translateX(-50%);font-family:var(--font-mono);font-size:10px;color:var(--t-3)}
+.ps-results{margin-top:8px}
+.ps-modal-back{position:fixed;inset:0;background:rgba(20,20,28,0.4);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);z-index:400;display:grid;place-items:center}
+.ps-modal{width:480px;max-width:92vw;background:linear-gradient(180deg,rgba(255,255,255,0.94),rgba(255,255,255,0.8));backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);border:1px solid rgba(255,255,255,0.75);border-radius:14px;padding:24px;box-shadow:inset 0 1px 0 rgba(255,255,255,0.85),0 30px 80px rgba(20,20,30,0.35)}
+.ps-modal h3{color:var(--t-1);font-size:16px;font-weight:600;margin-bottom:6px}
+.ps-modal .ja{color:var(--t-3);font-family:var(--font-jp);font-size:13px;margin-bottom:14px}
+.ps-modal .body{font-size:12px;color:var(--t-2);line-height:1.6;margin:14px 0}
+
+/* Port Reference */
+.pr-search{margin:8px 0 12px}
+.pr-table{width:100%;border-collapse:collapse;font-size:12px}
+.pr-table th,.pr-table td{padding:7px 10px;text-align:left;border-bottom:1px solid var(--hair)}
+.pr-table th{position:sticky;top:0;background:rgba(248,248,250,0.95);font-family:var(--font-mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--t-3);font-weight:500;z-index:1}
+.pr-table td.num{font-family:var(--font-mono);width:60px}
+.pr-table td.proto{font-family:var(--font-mono);width:60px;color:var(--accent)}
+.pr-table td.svc{font-family:var(--font-mono);width:140px}
+.pr-table td.note{color:var(--t-2);font-size:11.5px}
+.pr-wrap{height:calc(100% - 90px);overflow:auto;border:1px solid var(--hair);border-radius:8px}
+
+/* Log Viewer */
+.log-row{display:grid;grid-template-columns:160px 1fr 100px;gap:8px;align-items:center;margin-bottom:8px}
+.log-tools{display:flex;gap:8px;align-items:center;margin-bottom:6px;flex-wrap:wrap}
+.log-tools label{font-size:11px;color:var(--t-2);display:inline-flex;align-items:center;gap:4px}
+.log-pane{font-family:var(--font-mono);font-size:11px;line-height:1.55;background:rgba(20,20,30,0.02);border:1px solid var(--hair);border-radius:8px;padding:10px 12px;overflow:auto;height:calc(100% - 130px);white-space:pre}
+.log-line{display:flex;gap:14px}
+.log-num{color:var(--t-4);text-align:right;width:42px;flex-shrink:0;user-select:none}
+.log-content{flex:1;color:var(--t-1);white-space:pre-wrap;word-break:break-word}
+.log-status-line{margin-top:6px;font-family:var(--font-mono);font-size:11px;color:var(--accent)}
+
+/* Welcome */
+.welcome-keys{width:100%;border-collapse:collapse;font-size:12px;margin-top:6px}
+.welcome-keys td{padding:7px 10px;border-bottom:1px solid var(--hair)}
+.welcome-keys td:first-child{width:160px;font-family:var(--font-mono);color:var(--t-1)}
+.welcome-keys td:last-child{color:var(--t-2)}
+.welcome-keys td .ja{color:var(--t-3);font-family:var(--font-jp);display:block;font-size:11px;margin-top:1px}
+
+/* Ethics */
+.ethics-list{counter-reset:r;list-style:none;display:flex;flex-direction:column;gap:14px;padding:0}
+.ethics-list li{padding-left:30px;position:relative;line-height:1.65;font-size:13px;color:var(--t-1)}
+.ethics-list li:before{counter-increment:r;content:counter(r) ".";position:absolute;left:0;top:0;font-family:var(--font-mono);color:var(--accent);font-weight:600}
+.ethics-list .ja{display:block;color:var(--t-3);font-family:var(--font-jp);font-size:11.5px;margin-top:3px;line-height:1.7}
+.ethics-quote{margin-top:18px;padding-top:14px;border-top:1px solid var(--hair);color:var(--t-4);font-style:italic;font-size:12px}
+</style>
+</head>
+<body>
+<div class="wallpaper"><div class="wallpaper__mark">mia</div><div class="wallpaper__vignette"></div></div>
+<div id="root"></div>
+
+<script>
+(() => {
+'use strict';
+
+// ====================================================================
+// i18n
+// ====================================================================
+const I18N = {
+  Welcome:           {en:"Welcome",                                     ja:"ようこそ"},
+  WelcomeSub:        {en:"MiaOS — White Hacking Security Desktop",      ja:"MiaOS — ホワイトハッキング・セキュリティ・デスクトップ"},
+  BootSub:           {en:"Studio MIA — A White Hacking Security Desktop", ja:"ホワイトハッキングのためのOS"},
+  BootSkip:          {en:"press space or enter to skip",                ja:"Space / Enter でスキップ"},
+  SpotlightHint:     {en:"Search apps... (e.g. hash, encoder)",         ja:"アプリを検索... (例: hash, encoder)"},
+  SpotlightNoMatch:  {en:"no match",                                    ja:"一致するアプリがありません"},
+  FileMenu:          {en:"File",   ja:"ファイル"},
+  HelpMenu:          {en:"Help",   ja:"ヘルプ"},
+  OpenSpotlight:     {en:"Open Spotlight",            ja:"検索を開く"},
+  CloseAllWindows:   {en:"Close All Windows",         ja:"すべてのウィンドウを閉じる"},
+  NewWindow:         {en:"New Window",                ja:"新しいウィンドウ"},
+  Print:             {en:"Print...",                  ja:"印刷..."},
+  Language:          {en:"言語 / Language",           ja:"Language / 言語"},
+  EthicsTitle:       {en:"Code of Conduct",           ja:"行動規範"},
+  EthicsSub:         {en:"white hacking = using your skill to NOT break things",
+                      ja:"ホワイトハッキング = スキルを「壊さない」ために使うこと"},
+  NotifTitle:        {en:"MIA OS — Welcome",          ja:"MIA OS — ようこそ"},
+  NotifBody:         {en:"Press Cmd/Ctrl+K to open Spotlight. See ETHICS.md before scanning.",
+                      ja:"Cmd/Ctrl+K で検索を開けます。スキャン前に行動規範をご確認ください。"}
+};
+let LANG = 'en';
+const t = (k) => I18N[k] ? I18N[k][LANG] : k;
+const tx = (en, ja) => (LANG === 'ja' ? ja : en);
+
+// ====================================================================
+// App registry
+// ====================================================================
+const APPS = [
+  { id:'welcome',  title:'Welcome',         titleJa:'ようこそ',     icon:'@',  w:780, h:520 },
+  { id:'terminal', title:'Terminal',        titleJa:'端末',         icon:'>_', w:820, h:520 },
+  { id:'hash',     title:'Hash Tool',       titleJa:'ハッシュ',     icon:'#',  w:760, h:540 },
+  { id:'encoder',  title:'Encoder',         titleJa:'エンコーダ',   icon:'{}', w:780, h:540 },
+  { id:'netinfo',  title:'Net Info',        titleJa:'ネット情報',   icon:'()', w:780, h:540 },
+  { id:'portscan', title:'Port Scanner',    titleJa:'ポート調査',   icon:'::', w:800, h:580 },
+  { id:'portref',  title:'Port Reference',  titleJa:'ポート一覧',   icon:'?',  w:760, h:560 },
+  { id:'logs',     title:'Log Viewer',      titleJa:'ログ閲覧',     icon:'/',  w:820, h:580 },
+  { id:'ethics',   title:'Code of Conduct', titleJa:'行動規範',     icon:'!',  w:760, h:560 },
+];
+// Extras kept from the original mia-os-react: Finder + Trash. Not part of Cmd+1-9.
+const EXTRAS = [
+  { id:'finder',   title:'Finder',          titleJa:'ファインダ',   icon:'☺',  w:760, h:520 },
+  { id:'trash',    title:'Trash',           titleJa:'ゴミ箱',       icon:'',   w:0,   h:0  },
+];
+const APP_BY_ID = Object.fromEntries([...APPS, ...EXTRAS].map(a => [a.id, a]));
+
+// ====================================================================
+// Utilities
+// ====================================================================
+const $ = (sel, root=document) => root.querySelector(sel);
+const el = (tag, attrs={}, ...children) => {
+  const e = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) {
+    if (k === 'class') e.className = v;
+    else if (k === 'style' && typeof v === 'object') Object.assign(e.style, v);
+    else if (k.startsWith('on') && typeof v === 'function') e.addEventListener(k.slice(2).toLowerCase(), v);
+    else if (v === true) e.setAttribute(k, '');
+    else if (v === false || v == null) {}
+    else e.setAttribute(k, v);
+  }
+  for (const c of children) {
+    if (c == null || c === false) continue;
+    e.appendChild(typeof c === 'string' ? document.createTextNode(c) : c);
+  }
+  return e;
+};
+const escapeHtml = (s) => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+// ====================================================================
+// Hashing — MD5 (RFC 1321) + WebCrypto for SHA-1/256
+// ====================================================================
+function md5(input) {
+  // Compact MD5 implementation (string in, hex out, UTF-8 encoded)
+  const bytes = new TextEncoder().encode(input);
+  const len = bytes.length;
+  const wordCount = (((len + 8) >>> 6) + 1) << 4;
+  const x = new Uint32Array(wordCount);
+  for (let i = 0; i < len; i++) x[i >> 2] |= bytes[i] << ((i & 3) << 3);
+  x[len >> 2] |= 0x80 << ((len & 3) << 3);
+  x[wordCount - 2] = len << 3;
+  let a = 0x67452301, b = 0xefcdab89, c = 0x98badcfe, d = 0x10325476;
+  const S = [7,12,17,22, 5,9,14,20, 4,11,16,23, 6,10,15,21];
+  const K = new Uint32Array(64);
+  for (let i = 0; i < 64; i++) K[i] = Math.floor(Math.abs(Math.sin(i + 1)) * 4294967296);
+  const rol = (n, s) => (n << s) | (n >>> (32 - s));
+  for (let i = 0; i < x.length; i += 16) {
+    let A = a, B = b, C = c, D = d;
+    for (let j = 0; j < 64; j++) {
+      let F, g;
+      if (j < 16)      { F = (B & C) | (~B & D); g = j; }
+      else if (j < 32) { F = (D & B) | (~D & C); g = (5*j + 1) & 15; }
+      else if (j < 48) { F = B ^ C ^ D;          g = (3*j + 5) & 15; }
+      else             { F = C ^ (B | ~D);       g = (7*j) & 15; }
+      const tmp = D; D = C; C = B;
+      B = (B + rol((A + F + K[j] + x[i + g]) | 0, S[(j>>4)*4 + (j&3)])) | 0;
+      A = tmp;
+    }
+    a = (a + A) | 0; b = (b + B) | 0; c = (c + C) | 0; d = (d + D) | 0;
+  }
+  const toHex = (n) => Array.from({length:4}, (_,k) => ((n >>> (k*8)) & 0xff).toString(16).padStart(2,'0')).join('');
+  return toHex(a) + toHex(b) + toHex(c) + toHex(d);
+}
+async function sha(algo, input) {
+  const buf = new TextEncoder().encode(input);
+  const hash = await crypto.subtle.digest(algo, buf);
+  return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
+
+// ====================================================================
+// Encoding
+// ====================================================================
+function encUtf8(s) { return new TextEncoder().encode(s); }
+function decUtf8(b) { return new TextDecoder('utf-8',{fatal:true}).decode(b); }
+function b64encode(s) {
+  const bytes = encUtf8(s);
+  let bin = '';
+  for (let i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i]);
+  return btoa(bin);
+}
+function b64decode(s) {
+  // strip whitespace, validate
+  const cleaned = s.replace(/\s+/g, '');
+  if (!/^[A-Za-z0-9+/]*={0,2}$/.test(cleaned)) throw new Error('invalid base64');
+  const bin = atob(cleaned);
+  const bytes = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+  return decUtf8(bytes);
+}
+function hexEncode(s) {
+  return Array.from(encUtf8(s)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
+function hexDecode(s) {
+  const cleaned = s.replace(/[\s:]+/g, '');
+  if (cleaned.length === 0 || cleaned.length % 2 !== 0 || /[^0-9a-fA-F]/.test(cleaned)) throw new Error('invalid hex');
+  const bytes = new Uint8Array(cleaned.length / 2);
+  for (let i = 0; i < bytes.length; i++) bytes[i] = parseInt(cleaned.substr(i*2, 2), 16);
+  return decUtf8(bytes);
+}
+function urlEncode(s) {
+  return encodeURIComponent(s);
+}
+function urlDecode(s) {
+  return decodeURIComponent(s.replace(/\+/g, ' '));
+}
+function rot13(s) {
+  return s.replace(/[a-zA-Z]/g, c => {
+    const a = c <= 'Z' ? 65 : 97;
+    return String.fromCharCode((c.charCodeAt(0) - a + 13) % 26 + a);
+  });
+}
+
+// ====================================================================
+// State + Window manager
+// ====================================================================
+const state = {
+  bootDone: false,
+  windows: [],          // { id, x, y, w, h, z, el, instance }
+  focusedId: null,
+  topZ: 100,
+  staggerX: 100,
+  staggerY: 90,
+  spotlightOpen: false,
+  spotlightQuery: '',
+  spotlightActive: 0,
+  notifShown: false,
+  langMenuOpen: false,
+};
+
+function nextStagger() {
+  const x = state.staggerX, y = state.staggerY;
+  state.staggerX += 30; state.staggerY += 24;
+  if (state.staggerX > 360) state.staggerX = 100;
+  if (state.staggerY > 240) state.staggerY = 90;
+  return { x, y };
+}
+
+function focusWindow(id) {
+  state.focusedId = id;
+  const w = state.windows.find(w => w.id === id);
+  if (!w) return;
+  state.topZ += 1;
+  w.z = state.topZ;
+  w.el.style.zIndex = w.z;
+  for (const ww of state.windows) ww.el.classList.toggle('is-focused', ww.id === id);
+}
+
+function openWindow(id) {
+  const meta = APP_BY_ID[id];
+  if (!meta) return;
+  const existing = state.windows.find(w => w.id === id);
+  if (existing) { focusWindow(id); return; }
+  const { x, y } = nextStagger();
+  const win = createWindowEl(meta, x, y);
+  document.querySelector('.windows').appendChild(win.el);
+  state.windows.push(win);
+  focusWindow(id);
+  updateDockIndicators();
+}
+
+function onDockClick(id) {
+  // Trash is a no-op tile (matches original mia-os-react behavior)
+  if (id === 'trash') return;
+  openWindow(id);
+}
+
+function closeWindow(id) {
+  const i = state.windows.findIndex(w => w.id === id);
+  if (i < 0) return;
+  const w = state.windows[i];
+  w.el.classList.add('is-closing');
+  setTimeout(() => {
+    w.instance && w.instance.dispose && w.instance.dispose();
+    w.el.remove();
+    state.windows.splice(state.windows.indexOf(w), 1);
+    if (state.focusedId === id) {
+      state.focusedId = state.windows.length ? state.windows[state.windows.length-1].id : null;
+    }
+    updateDockIndicators();
+  }, 220);
+}
+
+function closeAllWindows() {
+  for (const w of [...state.windows]) closeWindow(w.id);
+}
+
+function updateDockIndicators() {
+  document.querySelectorAll('.dock-app').forEach(a => {
+    const id = a.dataset.id;
+    a.classList.toggle('is-open', state.windows.some(w => w.id === id));
+  });
+}
+
+function createWindowEl(meta, x, y) {
+  const winEl = el('div', { class:'window', style:{ left:x+'px', top:y+'px', width:meta.w+'px', height:meta.h+'px' }});
+  const closeIco = '<svg viewBox="0 0 8 8" fill="none" stroke="rgba(0,0,0,0.6)" stroke-width="1"><line x1="2" y1="2" x2="6" y2="6"/><line x1="6" y1="2" x2="2" y2="6"/></svg>';
+  const minIco   = '<svg viewBox="0 0 8 8" fill="none" stroke="rgba(0,0,0,0.6)" stroke-width="1"><line x1="2" y1="4" x2="6" y2="4"/></svg>';
+  const maxIco   = '<svg viewBox="0 0 8 8" fill="none" stroke="rgba(0,0,0,0.6)" stroke-width="1"><polyline points="2 5 2 2 5 2"/><polyline points="3 6 6 6 6 3"/></svg>';
+  winEl.innerHTML = `
+    <div class="window__chrome">
+      <div class="tlights">
+        <span class="tl" data-act="close">${closeIco}</span>
+        <span class="tl" data-act="min">${minIco}</span>
+        <span class="tl" data-act="max">${maxIco}</span>
+      </div>
+      <div class="window__title">${escapeHtml(meta.title)}<span class="ja">${escapeHtml(meta.titleJa)}</span></div>
+      <div class="window__chrome-spacer"></div>
+    </div>
+    <div class="window__body"></div>
+  `;
+  const body = winEl.querySelector('.window__body');
+  const chrome = winEl.querySelector('.window__chrome');
+  // close button
+  winEl.querySelector('.tl[data-act=close]').addEventListener('click', (e) => { e.stopPropagation(); closeWindow(meta.id); });
+  winEl.querySelector('.tl[data-act=min]').addEventListener('click', (e) => { e.stopPropagation(); closeWindow(meta.id); });
+  winEl.querySelector('.tl[data-act=max]').addEventListener('click', (e) => { e.stopPropagation(); /* no-op */ });
+  // focus on click
+  winEl.addEventListener('mousedown', () => focusWindow(meta.id));
+  // drag
+  let drag = null;
+  chrome.addEventListener('mousedown', (e) => {
+    if (e.target.closest('.tl')) return;
+    chrome.classList.add('is-dragging');
+    const rect = winEl.getBoundingClientRect();
+    drag = { dx: e.clientX - rect.left, dy: e.clientY - rect.top };
+    e.preventDefault();
+  });
+  window.addEventListener('mousemove', (e) => {
+    if (!drag) return;
+    const wrap = document.querySelector('.windows').getBoundingClientRect();
+    let nx = e.clientX - wrap.left - drag.dx;
+    let ny = e.clientY - wrap.top - drag.dy;
+    nx = Math.max(0, Math.min(wrap.width - 80, nx));
+    ny = Math.max(0, Math.min(wrap.height - 30, ny));
+    winEl.style.left = nx + 'px';
+    winEl.style.top = ny + 'px';
+  });
+  window.addEventListener('mouseup', () => { if (drag) { drag = null; chrome.classList.remove('is-dragging'); }});
+
+  const winRec = { id: meta.id, el: winEl, z: 0, instance: null };
+  // Mount the app
+  const mounter = APP_MOUNTERS[meta.id];
+  winRec.instance = mounter ? mounter(body) : null;
+  return winRec;
+}
+
+// ====================================================================
+// Boot screen
+// ====================================================================
+function startBoot() {
+  const boot = el('div', { class:'boot' });
+  boot.innerHTML = `
+    <div class="boot__inner">
+      <div class="boot__title">MIA<span class="boot__cursor"></span></div>
+      <div class="boot__bar"><div class="boot__bar-fill"></div></div>
+      <div class="boot__meta"><span class="boot__pct">0%</span><span>OS '26</span></div>
+      <div class="boot__sub" data-en="Studio MIA — A White Hacking Security Desktop">Studio MIA — A White Hacking Security Desktop</div>
+      <div class="boot__sub-ja">ホワイトハッキングのためのOS</div>
+      <div class="boot__loading">preparing window manager...</div>
+    </div>
+    <div class="boot__skip">press space or enter to skip</div>
+  `;
+  document.body.appendChild(boot);
+  const fill = boot.querySelector('.boot__bar-fill');
+  const pct = boot.querySelector('.boot__pct');
+  const loading = boot.querySelector('.boot__loading');
+  const messages = [
+    [0.00,'preparing window manager...'],
+    [0.35,'loading theme...'],
+    [0.70,'warming up SHA-256 self-test...'],
+    [1.05,'registering apps...'],
+    [1.40,'checking ethics policy (see ETHICS.md)...'],
+    [1.75,'polishing the wallpaper...'],
+    [2.10,'ready -> launching desktop'],
+  ];
+  const total = 2.6;
+  const start = performance.now();
+  let done = false;
+  function finish() {
+    if (done) return; done = true;
+    boot.classList.add('is-done');
+    setTimeout(() => boot.remove(), 500);
+    state.bootDone = true;
+    onBootComplete();
+  }
+  function tick() {
+    if (done) return;
+    const t = (performance.now() - start) / 1000;
+    const p = Math.min(1, t / total);
+    fill.style.width = (p * 100) + '%';
+    pct.textContent = Math.round(p * 100) + '%';
+    let msg = messages[0][1];
+    for (const [tt, m] of messages) if (t >= tt) msg = m;
+    if (loading.textContent !== msg) loading.textContent = msg;
+    if (p >= 1) finish(); else requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+  const skip = (e) => {
+    if (e.type === 'click' || e.code === 'Space' || e.code === 'Enter' || e.code === 'Escape') {
+      finish();
+      window.removeEventListener('keydown', skip);
+      boot.removeEventListener('click', skip);
+    }
+  };
+  window.addEventListener('keydown', skip);
+  boot.addEventListener('click', skip);
+}
+
+function onBootComplete() {
+  buildShell();
+  setTimeout(() => openWindow('welcome'), 200);
+  setTimeout(showWelcomeNotif, 600);
+}
+
+// ====================================================================
+// Shell (menubar, dock, windows root)
+// ====================================================================
+function buildShell() {
+  const root = $('#root');
+  root.innerHTML = '';
+
+  // Menubar
+  const mb = el('div', { class:'menubar' });
+  mb.innerHTML = `
+    <div class="menubar__group">
+      <div class="menubar__brand"><span class="menubar__brand-mark"></span>STUDIO MIA</div>
+      <div class="menubar__item" data-menu="file">${t('FileMenu')}</div>
+      <div class="menubar__item" data-menu="help">${t('HelpMenu')}</div>
+      <div class="menubar__item" data-menu="lang">${t('Language')}</div>
+    </div>
+    <div class="menubar__spacer"></div>
+    <div class="menubar__time"></div>
+  `;
+  root.appendChild(mb);
+
+  // dropdowns wired on click
+  let openMenu = null;
+  const closeMenu = () => { if (openMenu) { openMenu.remove(); openMenu = null; mb.querySelectorAll('.menubar__item').forEach(i => i.classList.remove('is-open')); }};
+  mb.querySelectorAll('.menubar__item[data-menu]').forEach(item => {
+    item.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const id = item.dataset.menu;
+      if (openMenu && openMenu.dataset.id === id) { closeMenu(); return; }
+      closeMenu();
+      const dd = buildDropdown(id, item.getBoundingClientRect());
+      dd.dataset.id = id;
+      mb.appendChild(dd);
+      item.classList.add('is-open');
+      openMenu = dd;
+    });
+  });
+  document.addEventListener('click', () => closeMenu());
+
+  // clock
+  const clockEl = mb.querySelector('.menubar__time');
+  const updateClock = () => {
+    const d = new Date();
+    const dow = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][d.getDay()];
+    const mon = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()];
+    const dd = String(d.getDate()).padStart(2,'0');
+    const hh = String(d.getHours()).padStart(2,'0');
+    const mm = String(d.getMinutes()).padStart(2,'0');
+    clockEl.textContent = `${dow} ${dd} ${mon}   ${hh}:${mm}`;
+  };
+  updateClock();
+  setInterval(updateClock, 30000);
+
+  // Windows root
+  const winsRoot = el('div', { class:'windows' });
+  root.appendChild(winsRoot);
+
+  // Dock — 9 mia-os apps + separator + Finder + Trash (preserved from original mia-os-react)
+  const dockWrap = el('div', { class:'dock-wrap' });
+  const dock = el('div', { class:'dock' });
+  const addTile = (a, content) => {
+    const tile = el('button', { class:'dock-app', 'data-id': a.id, 'aria-label': a.title, onclick: () => onDockClick(a.id) });
+    tile.innerHTML = `${content || `<span>${escapeHtml(a.icon)}</span>`}<span class="dock-app__indicator"></span><span class="dock-app__tooltip">${escapeHtml(a.title)}<span class="ja">${escapeHtml(a.titleJa)}</span></span>`;
+    dock.appendChild(tile);
+  };
+  for (const a of APPS) addTile(a);
+  dock.appendChild(el('span', { class:'dock__sep' }));
+  addTile(EXTRAS[0]);  // Finder
+  // Trash uses an SVG icon
+  const trashSvg = `<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>`;
+  addTile(EXTRAS[1], trashSvg);
+  dockWrap.appendChild(dock);
+  root.appendChild(dockWrap);
+
+  // Spotlight backdrop
+  const spotBack = el('div', { class:'spot-back', onclick: (e) => { if (e.target === spotBack) closeSpotlight(); }});
+  const spot = el('div', { class:'spot' });
+  spot.innerHTML = `
+    <input class="spot__input" type="text" placeholder="${escapeHtml(t('SpotlightHint'))}" spellcheck="false" autocomplete="off">
+    <div class="spot__results"></div>
+  `;
+  spotBack.appendChild(spot);
+  root.appendChild(spotBack);
+
+  const spotInput = spot.querySelector('.spot__input');
+  const spotResults = spot.querySelector('.spot__results');
+  spotInput.addEventListener('input', () => { state.spotlightQuery = spotInput.value; state.spotlightActive = 0; renderSpotlightResults(); });
+  spotInput.addEventListener('keydown', (e) => {
+    const matches = filterApps(state.spotlightQuery);
+    if (e.key === 'Escape') { e.preventDefault(); closeSpotlight(); }
+    else if (e.key === 'Enter') {
+      e.preventDefault();
+      if (matches.length) { openWindow(matches[state.spotlightActive].id); closeSpotlight(); }
+    } else if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      state.spotlightActive = Math.min(matches.length - 1, state.spotlightActive + 1);
+      renderSpotlightResults();
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      state.spotlightActive = Math.max(0, state.spotlightActive - 1);
+      renderSpotlightResults();
+    }
+  });
+
+  // Notification slot
+  const notif = el('div', { class:'notif' });
+  notif.innerHTML = `<div class="notif__title"><span class="notif__title-text"></span><span class="notif__time">now</span></div><div class="notif__body"></div>`;
+  root.appendChild(notif);
+}
+
+function buildDropdown(id, anchorRect) {
+  const dd = el('div', { class:'menubar__dropdown', style:{ left: (anchorRect.left - 14) + 'px' }});
+  if (id === 'file') {
+    dd.innerHTML = `
+      <div class="row" data-act="new">${t('NewWindow')}<span class="kbd">⌘1</span></div>
+      <div class="row" data-act="spot">${t('OpenSpotlight')}<span class="kbd">⌘K</span></div>
+      <hr>
+      <div class="row dim" data-act="print">${t('Print')}</div>
+      <hr>
+      <div class="row" data-act="closeall">${t('CloseAllWindows')}<span class="kbd">⌘W</span></div>
+    `;
+    dd.addEventListener('click', (e) => {
+      const row = e.target.closest('.row[data-act]'); if (!row) return;
+      const a = row.dataset.act;
+      if (a === 'new') openWindow('welcome');
+      else if (a === 'spot') openSpotlight();
+      else if (a === 'closeall') closeAllWindows();
+    });
+  } else if (id === 'help') {
+    dd.innerHTML = `
+      <div class="row" data-act="welcome">${t('Welcome')}</div>
+      <div class="row" data-act="ethics">${t('EthicsTitle')}</div>
+    `;
+    dd.addEventListener('click', (e) => {
+      const row = e.target.closest('.row[data-act]'); if (!row) return;
+      openWindow(row.dataset.act);
+    });
+  } else if (id === 'lang') {
+    dd.innerHTML = `
+      <div class="row" data-act="en"><span><span class="check">${LANG==='en'?'✓':''}</span>English</span></div>
+      <div class="row" data-act="ja"><span><span class="check">${LANG==='ja'?'✓':''}</span>日本語</span></div>
+    `;
+    dd.addEventListener('click', (e) => {
+      const row = e.target.closest('.row[data-act]'); if (!row) return;
+      LANG = row.dataset.act;
+      try { localStorage.setItem('miaos.lang', LANG); } catch(_) {}
+      // Re-render shell + reopen all windows fresh to refresh labels
+      const openIds = state.windows.map(w => w.id);
+      closeAllWindows();
+      buildShell();
+      setTimeout(() => { openIds.forEach(id => openWindow(id)); }, 250);
+    });
+  }
+  return dd;
+}
+
+// ====================================================================
+// Spotlight
+// ====================================================================
+function openSpotlight() {
+  const back = $('.spot-back'); back.classList.add('is-open');
+  const input = $('.spot__input'); input.value = ''; state.spotlightQuery = ''; state.spotlightActive = 0;
+  renderSpotlightResults();
+  setTimeout(() => input.focus(), 50);
+  state.spotlightOpen = true;
+}
+function closeSpotlight() {
+  $('.spot-back').classList.remove('is-open');
+  state.spotlightOpen = false;
+}
+function filterApps(q) {
+  q = q.trim().toLowerCase();
+  if (!q) return APPS;
+  return APPS.filter(a => a.title.toLowerCase().includes(q) || a.titleJa.includes(q) || a.id.includes(q));
+}
+function renderSpotlightResults() {
+  const wrap = $('.spot__results');
+  wrap.innerHTML = '';
+  const matches = filterApps(state.spotlightQuery);
+  if (!matches.length) {
+    wrap.appendChild(el('div', { class:'spot__empty' }, t('SpotlightNoMatch')));
+    return;
+  }
+  matches.forEach((a, i) => {
+    const idx = APPS.findIndex(x => x.id === a.id);
+    const row = el('div', { class:'spot__row' + (i === state.spotlightActive ? ' is-active' : ''), onclick: () => { openWindow(a.id); closeSpotlight(); }});
+    row.innerHTML = `<span class="ico">${escapeHtml(a.icon)}</span><span><span class="name">${escapeHtml(a.title)}</span><span class="ja">${escapeHtml(a.titleJa)}</span></span><span class="kbd">⌘${idx+1}</span>`;
+    wrap.appendChild(row);
+  });
+}
+
+// ====================================================================
+// Notification
+// ====================================================================
+function showWelcomeNotif() {
+  if (state.notifShown) return;
+  state.notifShown = true;
+  const n = $('.notif');
+  n.querySelector('.notif__title-text').textContent = t('NotifTitle');
+  const body = n.querySelector('.notif__body');
+  body.innerHTML = '';
+  const en = el('span', {}, I18N.NotifBody.en);
+  const ja = el('span', { class:'ja' }, I18N.NotifBody.ja);
+  if (LANG === 'en') { body.appendChild(en); body.appendChild(ja); }
+  else { body.appendChild(ja); }
+  n.classList.add('is-open');
+  setTimeout(() => n.classList.remove('is-open'), 5000);
+}
+
+// ====================================================================
+// Keyboard shortcuts
+// ====================================================================
+window.addEventListener('keydown', (e) => {
+  const meta = e.metaKey || e.ctrlKey;
+  if (!state.bootDone) return;
+  if (e.key === 'Escape' && state.spotlightOpen) { e.preventDefault(); closeSpotlight(); return; }
+  if (meta && e.key.toLowerCase() === 'k') { e.preventDefault(); state.spotlightOpen ? closeSpotlight() : openSpotlight(); return; }
+  if (meta && e.key.toLowerCase() === 'w') { e.preventDefault(); if (state.focusedId) closeWindow(state.focusedId); return; }
+  if (meta && /^[1-9]$/.test(e.key)) { e.preventDefault(); const idx = parseInt(e.key, 10) - 1; if (APPS[idx]) openWindow(APPS[idx].id); }
+});
+
+// ====================================================================
+// APPS: Welcome
+// ====================================================================
+function mountWelcome(root) {
+  const en = LANG === 'en';
+  const body = en
+    ? `Welcome to MiaOS.\nA minimal desktop environment originally written in C and C++ on SDL2 + Dear ImGui, here re-implemented as vanilla JavaScript inside an iframe.\nIt bundles a set of white hacking tools — hashing, encoding, network info, a localhost-only port scanner — for learning and defensive work.\nIt is not a real kernel; it is a desktop shell.`
+    : `ようこそ MiaOS へ。\n本来は C / C++ + SDL2 + Dear ImGui で構築されたデスクトップ環境を、ここではバニラ JavaScript として iframe 内に再実装しています。\nホワイトハッキング用の小さな調査ツール群（ハッシュ、エンコーダ、ネットワーク情報、ループバック専用ポートスキャナ）を搭載。\n本物のカーネルではなく「デスクトップ・シェル」として動作します。`;
+  const rulesHead = tx('First, read the rules', 'まず行動規範を確認してください');
+  const rulesBody = en
+    ? `Open the "Code of Conduct" app from the dock or with Cmd/Ctrl+9.\nMiaOS is for defenders, learners, and authorized researchers.\nIt must not be used to attack systems you do not own.`
+    : `ドックまたは Cmd/Ctrl+9 で「行動規範」アプリを開いてください。\nMiaOS は防御者・学習者・許可されたリサーチャーのためのものです。\n所有していないシステムへの攻撃に使用してはいけません。`;
+  const keysHead = tx('Quick keys', '主なキー操作');
+  const keys = [
+    ['Cmd/Ctrl + K',   'Spotlight (search apps)',           '検索（アプリを探す）'],
+    ['Cmd/Ctrl + 1-9', 'Launch a dock app directly',        'ドックアプリを直接起動'],
+    ['Cmd/Ctrl + W',   'Close the focused window',          'フォーカス中のウィンドウを閉じる'],
+    ['Esc',            'Close Spotlight',                   '検索を閉じる'],
+  ];
+
+  root.innerHTML = `
+    <div class="app-header">
+      <h1>MiaOS</h1>
+      <div class="app-sub">${escapeHtml(t('WelcomeSub'))}</div>
+    </div>
+    <div class="hr"></div>
+    <p style="white-space:pre-line;line-height:1.7;color:var(--t-2);font-size:13px">${escapeHtml(body)}</p>
+    <p style="margin-top:14px;color:var(--accent);font-weight:500">${escapeHtml(rulesHead)}</p>
+    <p style="white-space:pre-line;line-height:1.7;color:var(--t-2);font-size:12.5px;margin-top:4px">${escapeHtml(rulesBody)}</p>
+    <p style="margin-top:14px;color:var(--t-1);font-weight:500">${escapeHtml(keysHead)}</p>
+    <table class="welcome-keys">
+      ${keys.map(([k,a,j]) => `<tr><td>${escapeHtml(k)}</td><td>${en ? escapeHtml(a) + `<span class="ja">${escapeHtml(j)}</span>` : escapeHtml(j)}</td></tr>`).join('')}
+    </table>
+  `;
+}
+
+// ====================================================================
+// APPS: Terminal
+// ====================================================================
+function mountTerminal(root) {
+  root.innerHTML = `<div class="term"><div class="term__scroll"></div><div class="term__input-row"><span class="term__prompt">mia@miaos $</span><input class="term__input" type="text" autocomplete="off" spellcheck="false"></div></div>`;
+  const scroll = root.querySelector('.term__scroll');
+  const input = root.querySelector('.term__input');
+  const history = []; let histIdx = -1;
+
+  const print = (text, cls = '') => {
+    const line = el('div', { class: 'term__line' + (cls ? ' ' + cls : '') }, text);
+    scroll.appendChild(line);
+    scroll.scrollTop = scroll.scrollHeight;
+  };
+  const printRaw = (html) => {
+    const line = el('div', { class:'term__line' });
+    line.innerHTML = html;
+    scroll.appendChild(line);
+    scroll.scrollTop = scroll.scrollHeight;
+  };
+
+  // boot lines
+  print(`MiaOS terminal v0.1  -  type 'help' for command list`, 'muted');
+  print(`white hacking sandbox shell / ホワイトハッキング用サンドボックス`, 'muted');
+  print(' ');
+
+  const commands = {
+    help: () => {
+      print(`Available commands / 利用可能なコマンド:`);
+      print(`  help              this message / このヘルプ`);
+      print(`  whoami            print current user`);
+      print(`  uname             kernel / system info`);
+      print(`  date              current local time`);
+      print(`  ls [/path]        list a fake filesystem`);
+      print(`  echo <text>       print text`);
+      print(`  hash <text>       MD5 / SHA-1 / SHA-256 of <text>`);
+      print(`  b64 <text>        base64-encode <text>`);
+      print(`  clear             clear the scrollback`);
+      print(' ');
+      print(`This is a sandboxed shell - it cannot run real system commands.`, 'muted');
+    },
+    whoami: () => print('mia'),
+    uname:  () => print('MiaOS (sandbox)  shell  v0.1'),
+    date:   () => {
+      const d = new Date();
+      const off = -d.getTimezoneOffset();
+      const sign = off >= 0 ? '+' : '-';
+      const oh = String(Math.abs(Math.floor(off / 60))).padStart(2, '0');
+      const om = String(Math.abs(off % 60)).padStart(2, '0');
+      const ts = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}:${String(d.getSeconds()).padStart(2,'0')} ${sign}${oh}${om}`;
+      print(ts);
+    },
+    ls: (args) => {
+      const p = (args[0] || '/').replace(/\/+$/, '') || '/';
+      const map = {
+        '/':           'bin/   etc/   home/   usr/   var/   tmp/',
+        '/home':       'mia/',
+        '/home/mia':   'notes.txt   tools/   reports/',
+        '/bin':        'ls   cat   echo   hash   b64   uname   whoami',
+      };
+      const out = map[p];
+      if (out) printRaw(`<span class="accent">${escapeHtml(out)}</span>`);
+      else printRaw(`<span class="danger">ls: cannot access '${escapeHtml(args[0]||'/')}': No such file or directory</span>`);
+    },
+    dir: (args) => commands.ls(args),
+    echo: (args) => print(args.join(' ')),
+    hash: async (args) => {
+      if (!args.length) { printRaw('<span class="warn">usage: hash &lt;text&gt;</span>'); return; }
+      const text = args.join(' ');
+      const m = md5(text);
+      const s1 = await sha('SHA-1', text);
+      const s2 = await sha('SHA-256', text);
+      print(`MD5    : ${m}`);
+      print(`SHA-1  : ${s1}`);
+      print(`SHA-256: ${s2}`);
+    },
+    sum: (args) => commands.hash(args),
+    b64: (args) => {
+      if (!args.length) { printRaw('<span class="warn">usage: b64 &lt;text&gt;</span>'); return; }
+      print(b64encode(args.join(' ')));
+    },
+    base64: (args) => commands.b64(args),
+    clear: () => { scroll.innerHTML = ''; },
+    cls:   () => commands.clear(),
+    exit:  () => printRaw('<span class="muted">(use the window close button or Cmd/Ctrl+W to close)</span>'),
+    quit:  () => commands.exit(),
+  };
+
+  async function run(line) {
+    if (!line.trim()) { printRaw(`<span class="term__prompt-line">mia@miaos $</span>`); return; }
+    history.push(line); if (history.length > 200) history.shift(); histIdx = -1;
+    printRaw(`<span class="term__prompt-line">mia@miaos $ ${escapeHtml(line)}</span>`);
+    const parts = line.trim().split(/\s+/);
+    const cmd = parts[0]; const args = parts.slice(1);
+    if (commands[cmd]) await commands[cmd](args);
+    else printRaw(`<span class="danger">${escapeHtml(cmd)}: command not found - try 'help'</span>`);
+  }
+  input.addEventListener('keydown', async (e) => {
+    if (e.key === 'Enter') { e.preventDefault(); const v = input.value; input.value = ''; await run(v); input.focus(); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); if (history.length) { histIdx = histIdx < 0 ? history.length - 1 : Math.max(0, histIdx - 1); input.value = history[histIdx]; }}
+    else if (e.key === 'ArrowDown') { e.preventDefault(); if (histIdx >= 0) { histIdx++; if (histIdx >= history.length) { histIdx = -1; input.value = ''; } else input.value = history[histIdx]; }}
+  });
+  setTimeout(() => input.focus(), 100);
+  return { dispose: () => {} };
+}
+
+// ====================================================================
+// APPS: Hash Tool
+// ====================================================================
+function mountHash(root) {
+  root.innerHTML = `
+    <div class="app-header">
+      <h1>${escapeHtml(tx('Hash Tool','ハッシュ計算'))}</h1>
+      <div class="app-sub">MD5 / SHA-1 / SHA-256</div>
+    </div>
+    <div class="hr"></div>
+    <span class="label">${escapeHtml(tx('Input / 入力','入力 / Input'))}</span>
+    <textarea class="textarea" id="h-in" rows="5" spellcheck="false"></textarea>
+    <div class="muted" id="h-bytes" style="font-size:11px;margin-top:4px"></div>
+    <div class="hr"></div>
+    <div class="hash-out"><span class="lbl warn">MD5</span><input id="h-md5" readonly></div>
+    <div class="hash-out"><span class="lbl warn">SHA-1</span><input id="h-sha1" readonly></div>
+    <div class="hash-out"><span class="lbl acc">SHA-256</span><input id="h-sha256" readonly></div>
+    <p class="muted" style="font-size:11px;margin-top:10px;line-height:1.6">${tx(
+      'MD5 and SHA-1 are highlighted because they are no longer collision-resistant. Use them only for non-security checksums (e.g. matching a vendor-provided value). For new work prefer SHA-256.',
+      'MD5 / SHA-1 は衝突耐性が破られているため、新規用途では SHA-256 を推奨。')}</p>
+    <div class="hr"></div>
+    <span class="label">${escapeHtml(tx('Compare two hex digests','ハッシュ照合'))}</span>
+    <div style="display:flex;gap:8px;align-items:center;margin:6px 0 10px">
+      <select class="input" id="h-algo" style="width:auto">
+        <option value="MD5">MD5 (32)</option>
+        <option value="SHA-1">SHA-1 (40)</option>
+        <option value="SHA-256" selected>SHA-256 (64)</option>
+      </select>
+    </div>
+    <div class="ps-grid" style="grid-template-columns:140px 1fr;margin:8px 0">
+      <span class="label" style="margin:0">${escapeHtml(tx('expected / 期待値','expected / 期待値'))}</span>
+      <input class="input" id="h-exp" spellcheck="false" style="font-family:var(--font-mono);font-size:11px">
+      <span class="label" style="margin:0">${escapeHtml(tx('actual / 実測値','actual / 実測値'))}</span>
+      <input class="input" id="h-act" spellcheck="false" style="font-family:var(--font-mono);font-size:11px">
+    </div>
+    <div id="h-status"></div>
+  `;
+  const inp = root.querySelector('#h-in');
+  const bytes = root.querySelector('#h-bytes');
+  const md5In = root.querySelector('#h-md5');
+  const sha1In = root.querySelector('#h-sha1');
+  const sha256In = root.querySelector('#h-sha256');
+  const algo = root.querySelector('#h-algo');
+  const exp = root.querySelector('#h-exp');
+  const act = root.querySelector('#h-act');
+  const status = root.querySelector('#h-status');
+
+  async function compute() {
+    const text = inp.value;
+    bytes.textContent = `${new TextEncoder().encode(text).length} byte(s)`;
+    md5In.value = md5(text);
+    sha1In.value = await sha('SHA-1', text);
+    sha256In.value = await sha('SHA-256', text);
+  }
+  function compare() {
+    const algoLen = { 'MD5':32, 'SHA-1':40, 'SHA-256':64 }[algo.value];
+    const e = exp.value.trim().toLowerCase().replace(/\s+/g,'');
+    const a = act.value.trim().toLowerCase().replace(/\s+/g,'');
+    if (!e || !a) { status.innerHTML = ''; return; }
+    if (e.length !== algoLen || a.length !== algoLen) {
+      status.innerHTML = `<span class="cmp-status" style="background:rgba(20,20,30,0.06);color:var(--t-2);font-style:italic">length mismatch (expected ${algoLen} hex chars)</span>`;
+      return;
+    }
+    if (e === a) status.innerHTML = `<span class="cmp-status" style="background:rgba(20,20,30,0.08);color:#15151a;font-weight:600">MATCH  /  一致</span>`;
+    else         status.innerHTML = `<span class="cmp-status" style="background:#15151a;color:#fff;font-weight:600">DIFFER /  不一致</span>`;
+  }
+  inp.addEventListener('input', compute);
+  exp.addEventListener('input', compare); act.addEventListener('input', compare); algo.addEventListener('change', compare);
+  compute();
+  return { dispose: () => {} };
+}
+
+// ====================================================================
+// APPS: Encoder
+// ====================================================================
+function mountEncoder(root) {
+  root.innerHTML = `
+    <div class="app-header">
+      <h1>${escapeHtml(tx('Encoder','エンコーダ'))}</h1>
+      <div class="app-sub">Base64 / Hex / URL / ROT13</div>
+    </div>
+    <div class="hr"></div>
+    <span class="label">${escapeHtml(tx('Mode / 方式','方式 / Mode'))}</span>
+    <div class="enc-modes">
+      <label><input type="radio" name="m" value="b64" checked>Base64</label>
+      <label><input type="radio" name="m" value="hex">Hex</label>
+      <label><input type="radio" name="m" value="url">URL</label>
+      <label><input type="radio" name="m" value="rot13">ROT13</label>
+    </div>
+    <span class="label">${escapeHtml(tx('Input / 入力','入力 / Input'))}</span>
+    <textarea class="textarea" id="e-in" rows="5" spellcheck="false"></textarea>
+    <div class="btn-row">
+      <button class="btn btn--accent" id="e-enc">${escapeHtml(tx('Encode →','符号化 →'))}</button>
+      <button class="btn" id="e-dec">${escapeHtml(tx('← Decode','← 復号'))}</button>
+      <button class="btn btn--ghost" id="e-clear">${escapeHtml(tx('Clear','クリア'))}</button>
+      <button class="btn btn--ghost" id="e-swap">${escapeHtml(tx('Swap','入替'))}</button>
+    </div>
+    <span class="label">${escapeHtml(tx('Output / 出力','出力 / Output'))}</span>
+    <textarea class="textarea" id="e-out" rows="6" readonly spellcheck="false"></textarea>
+    <div id="e-status" style="margin-top:8px;font-family:var(--font-mono);font-size:11px"></div>
+  `;
+  const $in = root.querySelector('#e-in'), $out = root.querySelector('#e-out'), $st = root.querySelector('#e-status');
+  const mode = () => root.querySelector('input[name=m]:checked').value;
+  function setStatus(text, cls) { $st.className = ''; $st.innerHTML = text ? `<span class="${cls||''}">${escapeHtml(text)}</span>` : ''; }
+  function doEncode() {
+    const text = $in.value;
+    try {
+      const m = mode();
+      let out = '';
+      if (m === 'b64') out = b64encode(text);
+      else if (m === 'hex') out = hexEncode(text);
+      else if (m === 'url') out = urlEncode(text);
+      else out = rot13(text);
+      $out.value = out;
+      setStatus(`encoded ${new TextEncoder().encode(text).length} -> ${out.length} bytes`, 'success');
+    } catch (e) { $out.value = ''; setStatus('encode failed', 'danger'); }
+  }
+  function doDecode() {
+    const text = $in.value;
+    try {
+      const m = mode();
+      let out = '';
+      if (m === 'b64') out = b64decode(text);
+      else if (m === 'hex') out = hexDecode(text);
+      else if (m === 'url') out = urlDecode(text);
+      else out = rot13(text);
+      $out.value = out;
+      setStatus(`decoded ${text.length} -> ${new TextEncoder().encode(out).length} bytes`, 'success');
+    } catch (e) { $out.value = ''; setStatus('decode failed - input is not valid for this codec', 'danger'); }
+  }
+  root.querySelector('#e-enc').addEventListener('click', doEncode);
+  root.querySelector('#e-dec').addEventListener('click', doDecode);
+  root.querySelector('#e-clear').addEventListener('click', () => { $in.value = ''; $out.value = ''; setStatus(''); });
+  root.querySelector('#e-swap').addEventListener('click', () => { const t = $in.value; $in.value = $out.value; $out.value = t; setStatus(''); });
+  return { dispose: () => {} };
+}
+
+// ====================================================================
+// APPS: Net Info
+// ====================================================================
+const NET_MOCK = [
+  ['lo0','IPv4','127.0.0.1',                                'UP RUNNING LOOPBACK MULTICAST'],
+  ['lo0','IPv6','::1',                                      'UP RUNNING LOOPBACK MULTICAST'],
+  ['lo0','IPv6','fe80::1%lo0',                              'UP RUNNING LOOPBACK MULTICAST'],
+  ['en0','MAC', 'a4:83:e7:9f:4d:21',                        'UP BROADCAST RUNNING MULTICAST'],
+  ['en0','IPv4','192.168.10.42',                            'UP BROADCAST RUNNING MULTICAST'],
+  ['en0','IPv6','fe80::18b1:c4ff:fe2a:9d12%en0',            'UP BROADCAST RUNNING MULTICAST'],
+  ['en0','IPv6','2400:4150:9220:6800:1c8a:f0e2:84b1:c4d3',  'UP BROADCAST RUNNING MULTICAST'],
+  ['utun0','IPv6','fe80::3c2a:8db4:e97f:1024%utun0',        'UP RUNNING P2P MULTICAST'],
+  ['awdl0','MAC', '22:8a:51:c4:7f:9e',                      'UP BROADCAST RUNNING MULTICAST'],
+  ['bridge0','MAC','1e:83:e7:9f:4d:00',                     'UP BROADCAST RUNNING MULTICAST'],
+];
+function mountNetInfo(root) {
+  root.innerHTML = `
+    <div class="app-header">
+      <h1>${escapeHtml(tx('Net Info','ネット情報'))}</h1>
+      <div class="app-sub">${escapeHtml(tx('read-only interface listing','読み取り専用インターフェイス一覧'))}</div>
+    </div>
+    <div class="hr"></div>
+    <div style="margin:6px 0"><span class="label" style="display:inline;margin:0">${escapeHtml(tx('Hostname / ホスト名','ホスト名 / Hostname'))}</span> <span class="accent" style="font-family:var(--font-mono);font-size:12px">mia-mbp.local</span></div>
+    <div class="btn-row">
+      <button class="btn btn--ghost" id="n-refresh">${escapeHtml(tx('Refresh','更新'))}</button>
+      <span class="muted" style="align-self:center;font-size:11px">(${NET_MOCK.length} entries)</span>
+    </div>
+    <div style="border:1px solid var(--hair);border-radius:8px;overflow:hidden">
+      <table class="net-table" id="n-tbl">
+        <thead><tr><th>${escapeHtml(tx('Interface','インターフェイス'))}</th><th>${escapeHtml(tx('Family','種類'))}</th><th>${escapeHtml(tx('Address','アドレス'))}</th><th>${escapeHtml(tx('Flags','フラグ'))}</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <p class="muted" style="font-size:11px;margin-top:10px;line-height:1.6">${tx(
+      'This view is strictly informational. MiaOS will never modify your routing table, DNS settings, or interface state. (In this web build the list is illustrative and does not reflect your machine.)',
+      '本画面は読み取り専用。ルーティングや DNS を変更することはありません。（Web 版ではこの一覧はサンプル表示で、実機の状態とは異なります。）')}</p>
+  `;
+  const tbody = root.querySelector('tbody');
+  function render() {
+    tbody.innerHTML = NET_MOCK.map(([i,f,a,fl]) =>
+      `<tr><td>${escapeHtml(i)}</td><td><span class="net-fam ${f.toLowerCase()}">${escapeHtml(f)}</span></td><td>${escapeHtml(a)}</td><td class="net-flags">${escapeHtml(fl)}</td></tr>`
+    ).join('');
+  }
+  render();
+  root.querySelector('#n-refresh').addEventListener('click', render);
+  return { dispose: () => {} };
+}
+
+// ====================================================================
+// APPS: Port Scanner
+// ====================================================================
+function mountPortScanner(root) {
+  let state2 = { phase:'idle', target:'127.0.0.1', from:1, to:1024, timeout:250, auth:false, prog:0, total:0, results:[], status:'', cancel:false };
+  function isLoopback(t) { return t === '127.0.0.1' || t === 'localhost' || t === '::1'; }
+  function render() {
+    const non = !isLoopback(state2.target);
+    root.innerHTML = `
+      <div class="app-header">
+        <h1>${escapeHtml(tx('Port Scanner','ポート調査'))}</h1>
+        <div class="app-sub">TCP connect, white hacking only</div>
+      </div>
+      <div class="hr"></div>
+      <div class="banner" style="border-color:rgba(20,20,30,0.18);background:rgba(20,20,30,0.05);color:var(--t-1);font-weight:500">
+        ${tx('Scan only systems you own or have explicit written permission to test. Unauthorized scanning may violate computer-misuse laws in your jurisdiction.',
+             '自分が所有・許可を得たホストのみをスキャンしてください。無許可のポートスキャンは不正アクセス禁止法に抵触する可能性があります。')}
+      </div>
+      <div class="ps-grid">
+        <span class="label" style="margin:0">${escapeHtml(tx('target / ターゲット','ターゲット'))}</span><input class="input" id="ps-target" value="${escapeHtml(state2.target)}" ${state2.phase==='scanning'?'disabled':''}>
+        <span class="label" style="margin:0">${escapeHtml(tx('from port','from'))}</span><input class="input" id="ps-from" type="number" value="${state2.from}" ${state2.phase==='scanning'?'disabled':''}>
+        <span class="label" style="margin:0">${escapeHtml(tx('to port','to'))}</span><input class="input" id="ps-to" type="number" value="${state2.to}" ${state2.phase==='scanning'?'disabled':''}>
+        <span class="label" style="margin:0">${escapeHtml(tx('timeout (ms)','timeout (ms)'))}</span><input class="input" id="ps-tmo" type="number" value="${state2.timeout}" ${state2.phase==='scanning'?'disabled':''}>
+      </div>
+      ${non ? `<div class="banner warn">${tx('Non-loopback target detected. Confirm authorization before scanning.','ループバック以外の対象が指定されています。許可があることを確認してください。')}</div>
+      <label style="display:inline-flex;gap:6px;align-items:center;font-size:12px"><input type="checkbox" id="ps-auth" ${state2.auth?'checked':''}> ${tx('I have explicit authorization to scan this host','許可を得ています')}</label>` : ''}
+      <div class="btn-row">
+        <button class="btn btn--accent" id="ps-start" ${state2.phase==='scanning'?'disabled':''}>${escapeHtml(tx('Start scan','開始'))}</button>
+        <button class="btn btn--ghost" id="ps-cancel" ${state2.phase!=='scanning'?'disabled':''}>${escapeHtml(tx('Cancel','中止'))}</button>
+      </div>
+      ${state2.phase==='scanning' ? `<div class="ps-progress"><div class="ps-progress__fill" style="width:${state2.total?(state2.prog/state2.total*100):0}%"></div><span class="ps-progress__label">${state2.prog} / ${state2.total}</span></div>` : ''}
+      <div class="hr"></div>
+      <span class="label">${escapeHtml(tx('Results / 結果','結果'))}</span>
+      <div class="muted" style="font-size:11px;margin-bottom:6px">${escapeHtml(state2.status||' ')}</div>
+      <table class="kv-table"><thead><tr><th style="width:80px">Port</th><th>State</th></tr></thead>
+        <tbody>${state2.results.map(p => `<tr><td class="mono">${p}</td><td><span class="success">open</span></td></tr>`).join('') || `<tr><td colspan="2" class="muted" style="font-size:11px">${escapeHtml(tx('(no results yet)','(結果はまだありません)'))}</td></tr>`}</tbody>
+      </table>
+      ${state2.phase==='confirming' ? buildConfirmModal() : ''}
+    `;
+    bind();
+  }
+  function buildConfirmModal() {
+    return `
+      <div class="ps-modal-back">
+        <div class="ps-modal">
+          <h3>${tx('Scan a non-loopback host?','ループバック以外のホストをスキャンしますか？')}</h3>
+          <div class="ja">${tx('','')}</div>
+          <div class="muted" style="font-family:var(--font-mono);font-size:12px">target : ${escapeHtml(state2.target)}<br>range  : ${state2.from} - ${state2.to}</div>
+          <div class="body">${tx(
+            'Confirming acknowledges that you are authorized to test this host. MiaOS records no logs, but your network traffic will be observable to the target operators.',
+            'これを確認することは、対象ホストへのテストを許可されていることを意味します。MiaOS はログを記録しませんが、ネットワーク通信は対象側で観測可能です。')}</div>
+          <div class="btn-row">
+            <button class="btn btn--accent" id="ps-confirm">${escapeHtml(tx('Confirm and start','実行'))}</button>
+            <button class="btn btn--ghost" id="ps-cancel-modal">${escapeHtml(tx('Cancel','取消'))}</button>
+          </div>
+        </div>
+      </div>`;
+  }
+  function bind() {
+    const get = (id) => root.querySelector(id);
+    if (get('#ps-target')) get('#ps-target').addEventListener('change', e => { state2.target = e.target.value.trim() || '127.0.0.1'; render(); });
+    if (get('#ps-from')) get('#ps-from').addEventListener('change', e => state2.from = parseInt(e.target.value)||1);
+    if (get('#ps-to')) get('#ps-to').addEventListener('change', e => state2.to = parseInt(e.target.value)||1024);
+    if (get('#ps-tmo')) get('#ps-tmo').addEventListener('change', e => state2.timeout = parseInt(e.target.value)||250);
+    if (get('#ps-auth')) get('#ps-auth').addEventListener('change', e => state2.auth = e.target.checked);
+    if (get('#ps-start')) get('#ps-start').addEventListener('click', onStart);
+    if (get('#ps-cancel')) get('#ps-cancel').addEventListener('click', () => { state2.cancel = true; });
+    if (get('#ps-confirm')) get('#ps-confirm').addEventListener('click', () => { state2.phase = 'idle'; runScan(); });
+    if (get('#ps-cancel-modal')) get('#ps-cancel-modal').addEventListener('click', () => { state2.phase = 'idle'; render(); });
+  }
+  function onStart() {
+    // clamp
+    state2.from = Math.max(1, state2.from);
+    state2.to = Math.min(65535, state2.to);
+    if (state2.to < state2.from) [state2.from, state2.to] = [state2.to, state2.from];
+    if (state2.to - state2.from + 1 > 4096) state2.to = state2.from + 4095;
+    state2.timeout = Math.min(5000, Math.max(50, state2.timeout));
+    if (!isLoopback(state2.target) && !state2.auth) { state2.phase = 'confirming'; render(); return; }
+    runScan();
+  }
+  async function runScan() {
+    if (!isLoopback(state2.target)) { state2.status = `could not resolve host: ${state2.target}`; state2.results = []; state2.phase = 'idle'; render(); return; }
+    state2.phase = 'scanning'; state2.cancel = false; state2.results = []; state2.status = '';
+    const ALL_OPEN = [22, 80, 443, 631, 3000, 5173, 8080, 27017];
+    const total = state2.to - state2.from + 1;
+    state2.total = total; state2.prog = 0; render();
+    const startT = performance.now();
+    for (let p = state2.from; p <= state2.to; p++) {
+      if (state2.cancel) { state2.status = 'cancelled'; state2.phase = 'idle'; render(); return; }
+      if (ALL_OPEN.includes(p)) state2.results.push(p);
+      state2.prog = p - state2.from + 1;
+      // throttle
+      const targetTime = startT + 1500 * (state2.prog / total);
+      const now = performance.now();
+      if (now < targetTime) await new Promise(r => setTimeout(r, Math.min(50, targetTime - now)));
+      if (state2.prog % 32 === 0 || state2.prog === total) render();
+    }
+    state2.status = 'scan complete'; state2.phase = 'idle'; render();
+  }
+  render();
+  return { dispose: () => { state2.cancel = true; } };
+}
+
+// ====================================================================
+// APPS: Port Reference
+// ====================================================================
+const PORTS = [
+  [20,'TCP','ftp-data','FTP file transfer (data channel)'],
+  [21,'TCP','ftp','FTP control'],
+  [22,'TCP','ssh','Secure shell - prefer keys, disable passwords'],
+  [23,'TCP','telnet','Cleartext - obsolete, treat as red flag'],
+  [25,'TCP','smtp','Mail submission (server-to-server)'],
+  [53,'UDP','dns','Name resolution'],
+  [53,'TCP','dns','Zone transfers / large responses'],
+  [67,'UDP','dhcp-server',''],
+  [68,'UDP','dhcp-client',''],
+  [69,'UDP','tftp','Often used by network device firmware'],
+  [80,'TCP','http','Cleartext web - check for redirect to https'],
+  [110,'TCP','pop3','Mail retrieval (legacy)'],
+  [111,'TCP','rpcbind','Sun RPC portmapper'],
+  [123,'UDP','ntp','Time sync - frequent amplification target'],
+  [135,'TCP','msrpc','Windows RPC endpoint mapper'],
+  [137,'UDP','netbios-ns','Windows name service'],
+  [139,'TCP','netbios-ssn','SMB (legacy)'],
+  [143,'TCP','imap','Mail retrieval'],
+  [161,'UDP','snmp',"Watch for default community 'public'"],
+  [389,'TCP','ldap','Directory service'],
+  [443,'TCP','https','TLS - check cert / cipher hygiene'],
+  [445,'TCP','smb','File sharing - notorious vulnerability surface'],
+  [465,'TCP','smtps',''],
+  [500,'UDP','isakmp','IPsec IKE'],
+  [514,'UDP','syslog',''],
+  [587,'TCP','submission','Authenticated SMTP submission'],
+  [636,'TCP','ldaps','LDAP over TLS'],
+  [873,'TCP','rsync',''],
+  [993,'TCP','imaps',''],
+  [995,'TCP','pop3s',''],
+  [1433,'TCP','mssql',''],
+  [1521,'TCP','oracle',''],
+  [2049,'TCP','nfs',''],
+  [3306,'TCP','mysql',''],
+  [3389,'TCP','rdp','Remote desktop - prefer VPN-front'],
+  [5432,'TCP','postgres',''],
+  [5900,'TCP','vnc',''],
+  [6379,'TCP','redis','Often unauth in default config - misconfig RCE risk'],
+];
+function mountPortRef(root) {
+  root.innerHTML = `
+    <div class="app-header">
+      <h1>${escapeHtml(tx('Port Reference','ポート一覧'))}</h1>
+      <div class="app-sub">${escapeHtml(tx('Common TCP/UDP service ports. Search by number or name.','よく使われるTCP/UDPポート。番号または名前で検索できます。'))}</div>
+    </div>
+    <div class="pr-search"><input class="input" id="pr-q" placeholder="${escapeHtml(tx('filter (e.g. ssh, 443, mysql)','検索 (例: ssh, 443, mysql)'))}" spellcheck="false"></div>
+    <div class="pr-wrap">
+      <table class="pr-table">
+        <thead><tr><th>${escapeHtml(tx('Port','ポート'))}</th><th>${escapeHtml(tx('Proto','プロトコル'))}</th><th>${escapeHtml(tx('Name','名前'))}</th><th>${escapeHtml(tx('Note','備考'))}</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  `;
+  const tbody = root.querySelector('tbody');
+  function render(q='') {
+    q = q.trim().toLowerCase();
+    const rows = q ? PORTS.filter(([p,pr,n,note]) => String(p).includes(q) || n.toLowerCase().includes(q) || note.toLowerCase().includes(q) || pr.toLowerCase().includes(q)) : PORTS;
+    tbody.innerHTML = rows.map(([p,pr,n,note]) =>
+      `<tr><td class="num">${p}</td><td class="proto">${pr}</td><td class="svc">${escapeHtml(n)}</td><td class="note">${escapeHtml(note)}</td></tr>`
+    ).join('') || `<tr><td colspan="4" class="muted" style="text-align:center;padding:14px">no match</td></tr>`;
+  }
+  render();
+  root.querySelector('#pr-q').addEventListener('input', e => render(e.target.value));
+  return { dispose: () => {} };
+}
+
+// ====================================================================
+// APPS: Log Viewer
+// ====================================================================
+const SAMPLE_LOG = `2026-05-07 09:00:01 INFO   miaos.boot  starting MiaOS shell v0.1
+2026-05-07 09:00:01 INFO   miaos.boot  registered 9 apps
+2026-05-07 09:00:02 INFO   miaos.wm    opened window id=welcome size=780x520
+2026-05-07 09:01:14 DEBUG  miaos.spotlight  toggled, query=""
+2026-05-07 09:01:18 INFO   miaos.spotlight  launch id=hash via shortcut
+2026-05-07 09:02:03 INFO   miaos.hash  computed sha256 (12 bytes)
+2026-05-07 09:02:33 WARN   miaos.hash  md5 used; consider sha-256 for new work
+2026-05-07 09:04:11 INFO   miaos.encoder  mode=base64 op=encode in=42 out=56
+2026-05-07 09:05:00 INFO   miaos.netinfo  refreshed 8 interface entries
+2026-05-07 09:05:47 INFO   miaos.portscan  scan started host=127.0.0.1 range=1-1024
+2026-05-07 09:05:48 INFO   miaos.portscan  open tcp/22 (ssh)
+2026-05-07 09:05:48 INFO   miaos.portscan  open tcp/80 (http)
+2026-05-07 09:05:49 INFO   miaos.portscan  open tcp/443 (https)
+2026-05-07 09:05:51 INFO   miaos.portscan  scan complete in 4.12s
+2026-05-07 09:07:00 ERROR  miaos.logs   could not open: /var/log/auth.log (EACCES)
+2026-05-07 09:07:14 INFO   miaos.logs   loaded 1842 lines, 184231 bytes
+2026-05-07 09:09:22 DEBUG  miaos.wm    focus changed terminal -> hash
+2026-05-07 09:11:00 INFO   miaos.terminal  exec: hash hello
+2026-05-07 09:11:00 INFO   miaos.terminal  out: 5d41402abc4b2a76b9719d911017c592
+2026-05-07 09:14:08 WARN   miaos.portscan  non-loopback target rejected: 192.168.1.5
+2026-05-07 09:14:42 INFO   miaos.ethics  user opened code-of-conduct app
+2026-05-07 09:18:01 DEBUG  miaos.theme  applied glass tokens
+2026-05-07 09:21:30 INFO   miaos.terminal  cleared scrollback
+2026-05-07 09:24:55 INFO   miaos.wm    closed window id=portref
+2026-05-07 09:30:00 INFO   miaos.boot  shutdown requested`;
+function mountLogViewer(root) {
+  let lines = []; let status = '';
+  root.innerHTML = `
+    <div class="app-header">
+      <h1>${escapeHtml(tx('Log Viewer','ログ閲覧'))}</h1>
+      <div class="app-sub">${escapeHtml(tx('read-only file viewer with grep','読み取り専用 / grep 風フィルタ'))}</div>
+    </div>
+    <div class="hr"></div>
+    <div class="log-tools">
+      <button class="btn btn--accent" id="lg-sample">${escapeHtml(tx('Load sample','サンプル読込'))}</button>
+      <input type="file" id="lg-file" accept=".log,.txt,text/*" style="display:none">
+      <button class="btn" id="lg-pick">${escapeHtml(tx('Choose file...','ファイル選択...'))}</button>
+      <button class="btn btn--ghost" id="lg-clear">${escapeHtml(tx('Clear','消去'))}</button>
+    </div>
+    <div class="log-tools" style="margin-top:0">
+      <input class="input" id="lg-q" style="flex:1" placeholder="${escapeHtml(tx('filter / 絞り込み','絞り込み / filter'))}" spellcheck="false">
+      <label><input type="checkbox" id="lg-ic" checked> ${escapeHtml(tx('ignore case','大文字小文字無視'))}</label>
+    </div>
+    <div class="log-status-line" id="lg-status"></div>
+    <div class="log-pane" id="lg-pane"></div>
+  `;
+  const pane = root.querySelector('#lg-pane');
+  const $q = root.querySelector('#lg-q'); const $ic = root.querySelector('#lg-ic');
+  const $st = root.querySelector('#lg-status');
+  function render() {
+    const q = $q.value;
+    const ic = $ic.checked;
+    let visible = lines;
+    if (q) {
+      const qq = ic ? q.toLowerCase() : q;
+      visible = lines.filter(l => (ic ? l.toLowerCase() : l).includes(qq));
+    }
+    pane.innerHTML = visible.map((l, i) =>
+      `<div class="log-line"><span class="log-num">${String(lines.indexOf(l) + 1).padStart(4,' ')}</span><span class="log-content">${escapeHtml(l)}</span></div>`
+    ).join('') || `<div class="muted">(empty)</div>`;
+    if (q) $st.textContent = `matched ${visible.length} / ${lines.length} lines`;
+    else $st.textContent = status || ' ';
+  }
+  function load(text) {
+    lines = text.split(/\r?\n/);
+    if (lines.length > 200000) { lines = lines.slice(0, 200000); status = `loaded 200000 lines (truncated)`; }
+    else status = `loaded ${lines.length} lines, ${new TextEncoder().encode(text).length} bytes`;
+    render();
+  }
+  root.querySelector('#lg-sample').addEventListener('click', () => load(SAMPLE_LOG));
+  root.querySelector('#lg-pick').addEventListener('click', () => root.querySelector('#lg-file').click());
+  root.querySelector('#lg-file').addEventListener('change', async (e) => {
+    const f = e.target.files[0]; if (!f) return;
+    const text = await f.text(); load(text);
+  });
+  root.querySelector('#lg-clear').addEventListener('click', () => { lines = []; status = ''; render(); });
+  $q.addEventListener('input', render); $ic.addEventListener('change', render);
+  render();
+  return { dispose: () => {} };
+}
+
+// ====================================================================
+// APPS: Ethics
+// ====================================================================
+const ETHICS = [
+  ['1. Do not scan or probe without explicit, documented permission.',
+   '1. 文書による明示的な許可がない対象をスキャンしない。'],
+  ['2. Practice on intentionally vulnerable, isolated environments (DVWA, OWASP Juice Shop, HackTheBox, your own VMs).',
+   '2. 練習は意図的に脆弱な隔離環境で行う (DVWA / Juice Shop / HTB / 自宅 VM 等)。'],
+  ['3. Disclose findings responsibly to the vendor first; never publish weaponized exploit details for unpatched systems.',
+   '3. 脆弱性は責任ある開示を行い、未パッチの段階で武器化された詳細を公開しない。'],
+  ['4. Stay inside your authorized scope. Out-of-scope curiosity is a career-ending risk and may be a crime.',
+   '4. 契約・依頼で許された範囲を超えない。範囲外への興味は重大なリスク。'],
+  ['5. Know your local law. In Japan, the Unauthorized Computer Access Law and Penal Code Article 168 may apply.',
+   '5. 自国の法律 (日本では不正アクセス禁止法、刑法 168 条等) を必ず確認する。'],
+  ['6. Keep records: timestamped commands, output, decisions. Defenders must be reproducible.',
+   '6. 操作・時刻・出力を記録する。防御側の仕事は再現性が命。'],
+  ['7. Refuse to misuse this software. Password cracking, intrusion, malware delivery, phishing - all forbidden.',
+   '7. 本ソフトをパスワードクラック、無断侵入、マルウェア配布等に使わない。'],
+];
+function mountEthics(root) {
+  const en = LANG === 'en';
+  root.innerHTML = `
+    <div class="app-header">
+      <h1>${escapeHtml(t('EthicsTitle'))}</h1>
+      <div class="app-sub">${escapeHtml(t('EthicsSub'))}</div>
+    </div>
+    <div class="hr"></div>
+    <ol class="ethics-list">
+      ${ETHICS.map(([e,j]) => `<li>${escapeHtml(en ? e.replace(/^\d+\.\s*/,'') : j.replace(/^\d+\.\s*/,''))}${en ? `<span class="ja">${escapeHtml(j.replace(/^\d+\.\s*/,''))}</span>` : ''}</li>`).join('')}
+    </ol>
+    <div class="ethics-quote">"With great power comes great responsibility."</div>
+  `;
+  return { dispose: () => {} };
+}
+
+// ====================================================================
+// APPS: Finder (preserved from original mia-os-react)
+// ====================================================================
+const FS = {
+  '/':         { type:'dir', children:['bin','etc','home','usr','var','tmp'] },
+  '/bin':      { type:'dir', children:['ls','cat','echo','hash','b64','uname','whoami'] },
+  '/home':     { type:'dir', children:['mia'] },
+  '/home/mia': { type:'dir', children:['notes.txt','tools','reports'] },
+  '/etc':      { type:'dir', children:['hosts','services','passwd'] },
+  '/usr':      { type:'dir', children:['bin','share','local'] },
+  '/var':      { type:'dir', children:['log'] },
+  '/tmp':      { type:'dir', children:[] },
+};
+const SIDEBAR = [
+  ['Recents',      '最近の項目',    'recents'],
+  ['Applications', 'アプリケーション', 'apps'],
+  ['Home',         'ホーム',        '/home/mia'],
+  ['/',            '/',             '/'],
+];
+function mountFinder(root) {
+  let active = '/home/mia';
+  function render() {
+    root.innerHTML = `
+      <div class="finder">
+        <aside class="finder__side">
+          <h4>${escapeHtml(tx('Favorites','よく使う項目'))}</h4>
+          ${SIDEBAR.map(([en,ja,p]) => `<div class="item${p===active?' is-active':''}" data-p="${escapeHtml(p)}">${escapeHtml(LANG==='ja'?ja:en)}</div>`).join('')}
+        </aside>
+        <main class="finder__main">
+          <div class="finder__head">
+            <h3>${escapeHtml(headerLabel(active))}</h3>
+            <div class="finder__crumb">${escapeHtml(active)}</div>
+          </div>
+          <div class="finder__grid">${gridContent(active)}</div>
+        </main>
+      </div>
+    `;
+    root.querySelectorAll('.finder__side .item').forEach(it => it.addEventListener('click', () => { active = it.dataset.p; render(); }));
+    root.querySelectorAll('.finder__cell[data-go]').forEach(c => c.addEventListener('click', () => { active = c.dataset.go; render(); }));
+    root.querySelectorAll('.finder__cell[data-app]').forEach(c => c.addEventListener('click', () => openWindow(c.dataset.app)));
+  }
+  function headerLabel(p) {
+    if (p === 'recents') return tx('Recents','最近の項目');
+    if (p === 'apps')    return tx('Applications','アプリケーション');
+    if (p === '/home/mia') return tx('Home','ホーム');
+    return p;
+  }
+  function gridContent(p) {
+    if (p === 'apps') {
+      return APPS.map(a => `<div class="finder__cell" data-app="${a.id}"><div class="ico app">${escapeHtml(a.icon)}</div><div class="name">${escapeHtml(a.title)}</div></div>`).join('');
+    }
+    if (p === 'recents') {
+      const recent = ['welcome','terminal','hash','ethics'];
+      return recent.map(id => { const a = APP_BY_ID[id]; return `<div class="finder__cell" data-app="${a.id}"><div class="ico app">${escapeHtml(a.icon)}</div><div class="name">${escapeHtml(a.title)}</div></div>`; }).join('');
+    }
+    const node = FS[p];
+    if (!node || node.type !== 'dir') return `<div class="muted" style="font-size:11px">${escapeHtml(tx('(empty)','(空)'))}</div>`;
+    if (!node.children.length) return `<div class="muted" style="font-size:11px">${escapeHtml(tx('(empty)','(空)'))}</div>`;
+    return node.children.map(name => {
+      const childPath = (p === '/' ? '' : p) + '/' + name;
+      const isDir = FS[childPath] && FS[childPath].type === 'dir';
+      return `<div class="finder__cell" ${isDir?`data-go="${escapeHtml(childPath)}"`:''}><div class="ico ${isDir?'folder':'file'}">${escapeHtml(isDir ? '▸' : '·')}</div><div class="name">${escapeHtml(name)}</div></div>`;
+    }).join('');
+  }
+  render();
+  return { dispose: () => {} };
+}
+
+// ====================================================================
+// App mounters
+// ====================================================================
+const APP_MOUNTERS = {
+  welcome:  mountWelcome,
+  terminal: mountTerminal,
+  hash:     mountHash,
+  encoder:  mountEncoder,
+  netinfo:  mountNetInfo,
+  portscan: mountPortScanner,
+  portref:  mountPortRef,
+  logs:     mountLogViewer,
+  ethics:   mountEthics,
+  finder:   mountFinder,
+};
+
+// ====================================================================
+// Init
+// ====================================================================
+try { const saved = localStorage.getItem('miaos.lang'); if (saved === 'en' || saved === 'ja') LANG = saved; } catch(_) {}
+startBoot();
+
+})();
+</script>
+</body>
+</html>
