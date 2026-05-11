@@ -44,6 +44,21 @@ a{color:inherit;text-decoration:none}
 .wallpaper__mark{position:absolute;left:48px;bottom:14px;font-family:var(--font-ui);font-style:italic;font-weight:300;font-size:160px;color:rgba(20,20,30,0.09);line-height:1;letter-spacing:-0.04em;pointer-events:none;user-select:none;z-index:1}
 .wallpaper__vignette{position:absolute;left:0;right:0;bottom:0;height:160px;background:linear-gradient(180deg,rgba(20,20,30,0) 0%,rgba(20,20,30,0.06) 100%);pointer-events:none;z-index:1}
 
+/* ===== Custom cursor (dual-layer dot + easing ring) ===== */
+html.miaos-cursor-on, html.miaos-cursor-on body, html.miaos-cursor-on *{cursor:none !important}
+html.miaos-cursor-on input, html.miaos-cursor-on textarea, html.miaos-cursor-on [contenteditable]{cursor:text !important}
+html.miaos-cursor-on iframe{cursor:auto !important}
+.miaos-cursor-dot{position:fixed;left:0;top:0;width:6px;height:6px;background:rgba(15,15,20,0.96);border-radius:50%;pointer-events:none;z-index:99999;transform:translate3d(-100px,-100px,0) translate(-50%,-50%);box-shadow:0 0 0 1.2px rgba(255,255,255,0.7),0 0 12px rgba(15,15,20,0.18);transition:opacity .15s ease-out,width .12s ease-out,height .12s ease-out,background .12s ease-out;will-change:transform}
+.miaos-cursor-ring{position:fixed;left:0;top:0;width:28px;height:28px;border:1.3px solid rgba(15,15,20,0.45);border-radius:50%;pointer-events:none;z-index:99998;transform:translate3d(-100px,-100px,0) translate(-50%,-50%);transition:width .18s ease-out,height .18s ease-out,border-color .18s ease-out,border-radius .18s ease-out,background .18s ease-out,opacity .15s ease-out;will-change:transform}
+.miaos-cursor-ring.is-hover{width:46px;height:46px;border-color:rgba(91,141,239,0.85);background:rgba(91,141,239,0.08);border-width:1.6px}
+.miaos-cursor-dot.is-hover{width:4px;height:4px;background:rgba(91,141,239,1)}
+.miaos-cursor-ring.is-text{width:8px;height:22px;border-radius:2px;border-color:rgba(15,15,20,0.7);background:rgba(255,255,255,0)}
+.miaos-cursor-dot.is-text{opacity:0}
+.miaos-cursor-ring.is-press{width:18px;height:18px;background:rgba(15,15,20,0.18);border-color:rgba(15,15,20,0.85)}
+.miaos-cursor-dot.is-press{width:8px;height:8px}
+.miaos-cursor-ring.is-hidden,.miaos-cursor-dot.is-hidden{opacity:0}
+@media (hover:none),(pointer:coarse){html.miaos-cursor-on,html.miaos-cursor-on body,html.miaos-cursor-on *{cursor:auto !important}.miaos-cursor-dot,.miaos-cursor-ring{display:none}}
+
 /* ===== Boot ===== */
 .boot{position:fixed;inset:0;z-index:9000;background:radial-gradient(circle at 50% 50%,#1f1f26 0%,#0c0c10 70%);display:grid;place-items:center;color:#e9e9ef;transition:opacity .4s,visibility .4s}
 .boot.is-done{opacity:0;visibility:hidden;pointer-events:none}
@@ -63,7 +78,8 @@ a{color:inherit;text-decoration:none}
 .menubar{position:fixed;top:0;left:0;right:0;height:32px;z-index:200;background:linear-gradient(180deg,rgba(255,255,255,0.7),rgba(255,255,255,0.4));backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);border-bottom:1px solid rgba(255,255,255,0.45);box-shadow:0 1px 0 rgba(255,255,255,0.6) inset,0 1px 0 rgba(20,20,30,0.06);display:flex;align-items:center;padding:0 14px;font-size:12px;font-weight:500}
 .menubar__group{display:flex;align-items:center;gap:0;position:relative}
 .menubar__brand{display:flex;align-items:center;gap:8px;padding:0 10px;height:24px;border-radius:6px;font-weight:600;letter-spacing:.02em}
-.menubar__brand-mark{width:14px;height:14px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#fff 0%,#d4d4dd 35%,#15151a 100%);box-shadow:0 0 0 1px rgba(0,0,0,0.05)}
+.menubar__brand-mark{width:16px;height:16px;display:inline-flex;align-items:center;justify-content:center;flex:0 0 16px}
+.menubar__brand-mark svg{width:16px;height:16px;display:block;filter:drop-shadow(0 1px 0 rgba(255,255,255,0.5))}
 .menubar__item{height:24px;padding:0 10px;border-radius:6px;display:inline-flex;align-items:center;color:var(--t-1);font-weight:500;transition:background .15s,color .15s}
 .menubar__item:hover,.menubar__item.is-open{background:#15151a;color:#fff}
 .menubar__time{font-family:var(--font-mono);font-size:11px;letter-spacing:0;padding:0 10px;color:var(--t-1)}
@@ -77,32 +93,48 @@ a{color:inherit;text-decoration:none}
 .menubar__dropdown .check{width:12px;display:inline-block;text-align:center}
 .menubar__dropdown hr{border:0;border-top:1px solid var(--hair);margin:5px 4px}
 
-/* ===== Dock ===== */
-.dock-wrap{position:fixed;left:0;right:0;bottom:14px;z-index:150;display:flex;justify-content:center;pointer-events:none}
-.dock{display:flex;align-items:flex-end;gap:6px;padding:8px;background:linear-gradient(180deg,rgba(255,255,255,0.55),rgba(255,255,255,0.32));backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);border:1px solid rgba(255,255,255,0.7);border-radius:22px;box-shadow:inset 0 1px 0 rgba(255,255,255,0.85),inset 0 -1px 0 rgba(20,20,30,0.06),0 12px 32px rgba(20,20,30,0.22),0 24px 64px -12px rgba(20,20,30,0.32);pointer-events:auto}
-.dock-app{position:relative;width:54px;height:54px;border-radius:13px;display:grid;place-items:center;color:#fff;font-family:var(--font-mono);font-size:18px;font-weight:600;cursor:pointer;transition:transform .25s cubic-bezier(.2,.8,.3,1);box-shadow:inset 0 0 0 1px rgba(255,255,255,0.18),0 4px 12px rgba(0,0,0,0.12);overflow:hidden}
-.dock-app:before{content:"";position:absolute;inset:0;background:linear-gradient(rgba(255,255,255,0.35),rgba(255,255,255,0) 45%);border-radius:13px;pointer-events:none}
-.dock-app:hover{transform:scale(1.18) translateY(-6px)}
-.dock-app__indicator{position:absolute;left:50%;bottom:-7px;transform:translateX(-50%);width:5px;height:5px;border-radius:50%;background:rgba(21,21,26,0.7);opacity:0;transition:opacity .2s}
+/* ===== Dock — unified glass design ===== */
+.dock-wrap{position:fixed;left:0;right:0;bottom:16px;z-index:150;display:flex;justify-content:center;pointer-events:none}
+.dock{display:flex;align-items:flex-end;gap:7px;padding:9px 11px;background:linear-gradient(180deg,rgba(255,255,255,0.62),rgba(255,255,255,0.36));backdrop-filter:blur(28px) saturate(1.6);-webkit-backdrop-filter:blur(28px) saturate(1.6);border:1px solid rgba(255,255,255,0.65);border-radius:24px;box-shadow:inset 0 1px 0 rgba(255,255,255,0.9),inset 0 -1px 0 rgba(20,20,30,0.06),0 14px 36px rgba(20,20,30,0.22),0 26px 70px -14px rgba(20,20,30,0.32);pointer-events:auto}
+.dock-app{position:relative;width:52px;height:52px;border-radius:13px;display:grid;place-items:center;color:#fff;font-family:var(--font-mono);font-size:16px;font-weight:600;cursor:pointer;transition:transform .25s cubic-bezier(.2,.8,.3,1),box-shadow .25s;overflow:hidden;background:linear-gradient(155deg,#2c2c34 0%,#15151a 70%,#0a0a0e 100%);box-shadow:inset 0 0 0 1px rgba(255,255,255,0.14),inset 0 1px 0 rgba(255,255,255,0.18),0 4px 14px rgba(0,0,0,0.18),0 1px 0 rgba(0,0,0,0.4)}
+.dock-app:before{content:"";position:absolute;inset:0;background:linear-gradient(rgba(255,255,255,0.28),rgba(255,255,255,0) 48%);border-radius:13px;pointer-events:none}
+.dock-app:after{content:"";position:absolute;left:8%;right:8%;top:6%;height:34%;background:linear-gradient(rgba(255,255,255,0.22),rgba(255,255,255,0) 100%);border-radius:11px 11px 50% 50%/11px 11px 14px 14px;pointer-events:none;opacity:.7}
+.dock-app:hover{transform:scale(1.22) translateY(-8px);box-shadow:inset 0 0 0 1px rgba(255,255,255,0.18),inset 0 1px 0 rgba(255,255,255,0.22),0 10px 28px rgba(0,0,0,0.28),0 1px 0 rgba(0,0,0,0.4)}
+.dock-app svg{display:block}
+.dock-app > span:first-child{position:relative;z-index:1;letter-spacing:-0.02em}
+.dock-app__indicator{position:absolute;left:50%;bottom:-8px;transform:translateX(-50%);width:4px;height:4px;border-radius:50%;background:rgba(21,21,26,0.85);opacity:0;transition:opacity .2s,transform .2s;z-index:3}
 .dock-app.is-open .dock-app__indicator{opacity:1}
-.dock-app__tooltip{position:absolute;left:50%;bottom:calc(100% + 10px);transform:translateX(-50%) translateY(4px);padding:6px 10px;background:rgba(20,20,28,0.85);color:#fff;border-radius:6px;font-size:11px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .15s,transform .15s;font-weight:500}
-.dock-app__tooltip .ja{font-family:var(--font-jp);opacity:.7;margin-left:6px;font-size:10px}
+.dock-app__tooltip{position:absolute;left:50%;bottom:calc(100% + 12px);transform:translateX(-50%) translateY(4px);padding:6px 10px;background:rgba(20,20,28,0.92);color:#fff;border-radius:7px;font-size:11px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .15s,transform .15s;font-weight:500;box-shadow:0 4px 14px rgba(0,0,0,0.2);z-index:4}
+.dock-app__tooltip:after{content:"";position:absolute;left:50%;bottom:-4px;transform:translateX(-50%) rotate(45deg);width:7px;height:7px;background:rgba(20,20,28,0.92);border-radius:1px}
+.dock-app__tooltip .ja{font-family:var(--font-jp);opacity:.65;margin-left:6px;font-size:10px}
 .dock-app:hover .dock-app__tooltip{opacity:1;transform:translateX(-50%) translateY(0)}
-/* tile colors — pure grayscale */
-.dock-app[data-id=welcome]{background:linear-gradient(180deg,#3d3d45,#15151a)}
-.dock-app[data-id=terminal]{background:linear-gradient(180deg,#1a1a1f,#000)}
-.dock-app[data-id=hash]{background:linear-gradient(180deg,#5a5a62,#2a2a30)}
-.dock-app[data-id=encoder]{background:linear-gradient(180deg,#4d4d55,#1f1f24)}
-.dock-app[data-id=netinfo]{background:linear-gradient(180deg,#56565e,#26262c)}
-.dock-app[data-id=portscan]{background:linear-gradient(180deg,#6a6a72,#363640)}
-.dock-app[data-id=portref]{background:linear-gradient(180deg,#7a7a82,#42424a)}
-.dock-app[data-id=logs]{background:linear-gradient(180deg,#2f2f36,#0d0d12)}
-.dock-app[data-id=ethics]{background:linear-gradient(180deg,#84848c,#4a4a52)}
-.dock-app[data-id=finder]{background:linear-gradient(180deg,#fafafa,#cfcfd5);color:#15151a;font-size:22px}
-.dock-app[data-id=finder]:before{background:linear-gradient(rgba(255,255,255,0.85),rgba(255,255,255,0) 45%)}
-.dock-app[data-id=trash]{background:rgba(255,255,255,0.45);box-shadow:inset 0 0 0 1px rgba(20,20,30,0.1),inset 0 1px 0 rgba(255,255,255,0.7),0 4px 12px rgba(0,0,0,0.06);color:#3d3d48}
-.dock-app[data-id=trash]:before{background:linear-gradient(rgba(255,255,255,0.65),rgba(255,255,255,0) 40%)}
-.dock__sep{align-self:center;width:1px;height:42px;background:rgba(20,20,30,0.14);margin:0 4px}
+/* category accents — subtle bottom border tints, unified dark base */
+.dock-app[data-id=welcome]:before{background:linear-gradient(rgba(120,170,255,0.18),rgba(255,255,255,0) 50%)}
+.dock-app[data-id=terminal]:before{background:linear-gradient(rgba(255,255,255,0.16),rgba(255,255,255,0) 48%)}
+.dock-app[data-id=hash]:before{background:linear-gradient(rgba(255,180,120,0.15),rgba(255,255,255,0) 50%)}
+.dock-app[data-id=encoder]:before{background:linear-gradient(rgba(170,140,255,0.16),rgba(255,255,255,0) 50%)}
+.dock-app[data-id=netinfo]:before{background:linear-gradient(rgba(120,220,180,0.16),rgba(255,255,255,0) 50%)}
+.dock-app[data-id=portscan]:before{background:linear-gradient(rgba(255,140,140,0.16),rgba(255,255,255,0) 50%)}
+.dock-app[data-id=portref]:before{background:linear-gradient(rgba(220,200,120,0.16),rgba(255,255,255,0) 50%)}
+.dock-app[data-id=logs]:before{background:linear-gradient(rgba(180,180,200,0.18),rgba(255,255,255,0) 50%)}
+.dock-app[data-id=ethics]:before{background:linear-gradient(rgba(240,210,140,0.18),rgba(255,255,255,0) 50%)}
+.dock-app[data-id=jwt]:before{background:linear-gradient(rgba(255,200,120,0.16),rgba(255,255,255,0) 50%)}
+.dock-app[data-id=cidr]:before{background:linear-gradient(rgba(140,200,255,0.16),rgba(255,255,255,0) 50%)}
+.dock-app[data-id=passwd]:before{background:linear-gradient(rgba(255,160,200,0.16),rgba(255,255,255,0) 50%)}
+.dock-app[data-id=hmac]:before{background:linear-gradient(rgba(180,255,200,0.16),rgba(255,255,255,0) 50%)}
+.dock-app[data-id=regex]:before{background:linear-gradient(rgba(200,180,255,0.16),rgba(255,255,255,0) 50%)}
+.dock-app[data-id=browser]:before{background:linear-gradient(rgba(120,200,255,0.20),rgba(255,255,255,0) 50%)}
+/* finder — light variant */
+.dock-app[data-id=finder]{background:linear-gradient(155deg,#fafafa 0%,#dcdce2 70%,#bdbdc6 100%);color:#15151a;box-shadow:inset 0 0 0 1px rgba(255,255,255,0.6),inset 0 1px 0 rgba(255,255,255,0.9),0 4px 14px rgba(0,0,0,0.12),0 1px 0 rgba(0,0,0,0.08)}
+.dock-app[data-id=finder]:hover{box-shadow:inset 0 0 0 1px rgba(255,255,255,0.7),inset 0 1px 0 rgba(255,255,255,0.95),0 10px 28px rgba(0,0,0,0.18),0 1px 0 rgba(0,0,0,0.08)}
+.dock-app[data-id=finder]:before{background:linear-gradient(rgba(255,255,255,0.85),rgba(255,255,255,0) 50%)}
+.dock-app[data-id=finder]:after{background:linear-gradient(rgba(255,255,255,0.5),rgba(255,255,255,0) 100%)}
+/* trash — translucent outline */
+.dock-app[data-id=trash]{background:linear-gradient(155deg,rgba(255,255,255,0.55) 0%,rgba(255,255,255,0.32) 100%);color:#3d3d48;box-shadow:inset 0 0 0 1px rgba(20,20,30,0.12),inset 0 1px 0 rgba(255,255,255,0.8),0 4px 14px rgba(0,0,0,0.08)}
+.dock-app[data-id=trash]:before{background:linear-gradient(rgba(255,255,255,0.65),rgba(255,255,255,0) 45%)}
+.dock-app[data-id=trash]:after{background:linear-gradient(rgba(255,255,255,0.5),rgba(255,255,255,0) 100%)}
+.dock-app[data-id=trash]:hover{background:linear-gradient(155deg,rgba(200,200,200,0.55) 0%,rgba(160,160,160,0.4) 100%);color:#2f2f2f;box-shadow:inset 0 0 0 1px rgba(60,60,60,0.2),inset 0 1px 0 rgba(255,255,255,0.7),0 10px 28px rgba(40,40,40,0.18)}
+.dock__sep{align-self:center;width:1px;height:38px;background:linear-gradient(rgba(20,20,30,0),rgba(20,20,30,0.18) 50%,rgba(20,20,30,0));margin:0 4px}
 
 /* Finder app */
 .finder{display:flex;height:100%;margin:-20px -22px;font-size:13px}
@@ -282,6 +314,66 @@ a{color:inherit;text-decoration:none}
 .log-content{flex:1;color:var(--t-1);white-space:pre-wrap;word-break:break-word}
 .log-status-line{margin-top:6px;font-family:var(--font-mono);font-size:11px;color:var(--accent)}
 
+/* Browser (Chrome-like) */
+.br-root{display:flex;flex-direction:column;height:100%;margin:-16px;background:#1f1f24;border-radius:0 0 14px 14px;overflow:hidden}
+.br-tabs{display:flex;align-items:flex-end;gap:2px;padding:6px 10px 0;background:#2a2a30;border-bottom:1px solid rgba(0,0,0,0.4)}
+.br-tab{display:flex;align-items:center;gap:8px;padding:8px 14px 8px 12px;background:#1f1f24;color:#dadae0;font-size:12px;border-radius:10px 10px 0 0;max-width:220px;border:1px solid rgba(0,0,0,0.4);border-bottom:none;cursor:default}
+.br-tab__fav{width:14px;height:14px;flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;color:#9aa0a6}
+.br-tab__title{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.br-toolbar{display:flex;align-items:center;gap:8px;padding:8px 12px;background:#1f1f24;border-bottom:1px solid rgba(0,0,0,0.4)}
+.br-btn{width:30px;height:30px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#dadae0;cursor:pointer;background:transparent;border:none;transition:background .15s,color .15s;flex-shrink:0}
+.br-btn:hover:not(:disabled){background:rgba(255,255,255,0.08)}
+.br-btn:disabled{color:#5f6368;cursor:default}
+.br-btn svg{width:16px;height:16px}
+.br-omni{flex:1;display:flex;align-items:center;gap:8px;background:#3a3a40;border-radius:18px;padding:0 12px;height:32px;border:1px solid transparent;transition:background .15s,border-color .15s}
+.br-omni:focus-within{background:#42424a;border-color:rgba(140,180,255,0.5)}
+.br-omni__icon{color:#9aa0a6;flex-shrink:0;display:inline-flex}
+.br-omni__icon svg{width:14px;height:14px}
+.br-omni input{flex:1;background:transparent;border:none;outline:none;color:#e8eaed;font-size:13px;font-family:inherit}
+.br-omni input::placeholder{color:#9aa0a6}
+.br-omni__lock{color:#9aa0a6;font-size:10px;font-family:var(--font-mono);flex-shrink:0}
+.br-frame-wrap{flex:1;position:relative;background:#fff;overflow:hidden}
+.br-frame{width:100%;height:100%;border:0;display:block;background:#fff}
+.br-newtab{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:80px 40px 40px;background:linear-gradient(180deg,#fafafa,#f0f0f4);overflow:auto}
+.br-newtab__logo{font-size:64px;font-weight:300;letter-spacing:-0.04em;color:#15151a;display:flex;align-items:center;gap:6px;margin-bottom:32px;font-style:italic;font-family:var(--font-display,inherit)}
+.br-newtab__logo .dot{width:10px;height:10px;border-radius:50%;background:#5b8def;display:inline-block;margin-bottom:6px}
+.br-newtab__search{width:100%;max-width:560px;height:46px;border-radius:24px;background:#fff;border:1px solid rgba(20,20,30,0.12);box-shadow:0 1px 6px rgba(20,20,30,0.08);display:flex;align-items:center;padding:0 18px;gap:12px;transition:box-shadow .15s,border-color .15s}
+.br-newtab__search:focus-within{box-shadow:0 1px 8px rgba(20,20,30,0.18);border-color:rgba(91,141,239,0.5)}
+.br-newtab__search input{flex:1;border:none;outline:none;background:transparent;font-size:15px;color:#15151a}
+.br-newtab__search svg{color:#9aa0a6;flex-shrink:0}
+.br-newtab__hint{margin-top:10px;font-size:11px;color:var(--t-3);max-width:560px;text-align:center;line-height:1.6}
+.br-newtab__shortcuts{display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:14px;margin-top:36px;width:100%;max-width:560px}
+.br-shortcut{display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;padding:10px 6px;border-radius:10px;transition:background .15s}
+.br-shortcut:hover{background:rgba(20,20,30,0.05)}
+.br-shortcut__ico{width:48px;height:48px;border-radius:50%;background:linear-gradient(180deg,#fff,#e6e6ec);display:grid;place-items:center;font-family:var(--font-mono);font-size:16px;font-weight:600;color:#15151a;box-shadow:0 1px 4px rgba(20,20,30,0.12);border:1px solid rgba(20,20,30,0.06)}
+.br-shortcut__name{font-size:12px;color:var(--t-1);text-align:center}
+.br-blocked{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px;background:#fafafa;text-align:center;gap:16px}
+.br-blocked h3{font-size:18px;color:var(--t-1);font-weight:500;margin:0}
+.br-blocked p{font-size:13px;color:var(--t-2);max-width:440px;line-height:1.6;margin:0}
+.br-blocked .btn-row{margin-top:8px}
+/* In-app search results page */
+.br-search{position:absolute;inset:0;background:#fff;overflow:auto;padding:24px 36px 36px}
+.br-search__head{display:flex;flex-direction:column;gap:10px;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--hair)}
+.br-search__title{font-size:13px;color:var(--t-3);font-family:var(--font-mono)}
+.br-search__title strong{color:var(--t-1);font-weight:600}
+.br-search__exts{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.br-search__exts span{font-size:11px;color:var(--t-3);margin-right:4px}
+.br-search__ext{padding:5px 12px;background:rgba(20,20,30,0.05);border:1px solid var(--hair);border-radius:14px;font-size:12px;color:var(--t-1);cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:background .15s,border-color .15s}
+.br-search__ext:hover{background:rgba(91,141,239,0.08);border-color:rgba(91,141,239,0.4)}
+.br-search__ext svg{width:11px;height:11px;color:var(--t-3)}
+.br-search__results{display:flex;flex-direction:column;gap:18px}
+.br-search__loading{font-size:12px;color:var(--t-3);font-family:var(--font-mono)}
+.br-result{display:flex;flex-direction:column;gap:4px}
+.br-result__src{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--t-3);font-family:var(--font-mono)}
+.br-result__title{font-size:16px;color:#1a4ed8;font-weight:500;cursor:pointer;text-decoration:none;line-height:1.3;display:inline-block}
+.br-result__title:hover{text-decoration:underline}
+.br-result__title:visited{color:#7c3aed}
+.br-result__url{font-size:11px;color:#0a7c2c;font-family:var(--font-mono);word-break:break-all}
+.br-result__desc{font-size:13px;color:var(--t-2);line-height:1.55;margin-top:2px}
+.br-result__actions{display:flex;gap:6px;margin-top:4px}
+.br-result__act{padding:3px 8px;background:transparent;border:1px solid var(--hair);border-radius:10px;font-size:11px;color:var(--t-2);cursor:pointer}
+.br-result__act:hover{background:rgba(20,20,30,0.04)}
+
 /* Welcome */
 .welcome-keys{width:100%;border-collapse:collapse;font-size:12px;margin-top:6px}
 .welcome-keys td{padding:7px 10px;border-bottom:1px solid var(--hair)}
@@ -346,6 +438,12 @@ const APPS = [
   { id:'portref',  title:'Port Reference',  titleJa:'ポート一覧',   icon:'?',  w:760, h:560 },
   { id:'logs',     title:'Log Viewer',      titleJa:'ログ閲覧',     icon:'/',  w:820, h:580 },
   { id:'ethics',   title:'Code of Conduct', titleJa:'行動規範',     icon:'!',  w:760, h:560 },
+  { id:'jwt',      title:'JWT Inspector',   titleJa:'JWT 解析',     icon:'JT', w:820, h:600 },
+  { id:'cidr',     title:'CIDR Calc',       titleJa:'サブネット計算', icon:'IP', w:780, h:560 },
+  { id:'passwd',   title:'Password Meter',  titleJa:'パスワード強度', icon:'**', w:780, h:580 },
+  { id:'hmac',     title:'HMAC Tool',       titleJa:'HMAC',         icon:'~',  w:780, h:560 },
+  { id:'regex',    title:'Regex Tester',    titleJa:'正規表現',     icon:'.*', w:800, h:580 },
+  { id:'browser',  title:'Browser',         titleJa:'ブラウザ',     icon:'@@', w:980, h:680 },
 ];
 // Extras kept from the original mia-os-react: Finder + Trash. Not part of Cmd+1-9.
 const EXTRAS = [
@@ -508,8 +606,11 @@ function openWindow(id) {
 }
 
 function onDockClick(id) {
-  // Trash is a no-op tile (matches original mia-os-react behavior)
-  if (id === 'trash') return;
+  if (id === 'trash') {
+    // Close every open window — animate by routing through closeWindow
+    [...state.windows].forEach(w => closeWindow(w.id));
+    return;
+  }
   openWindow(id);
 }
 
@@ -657,8 +758,66 @@ function startBoot() {
 
 function onBootComplete() {
   buildShell();
+  initCustomCursor();
   setTimeout(() => openWindow('welcome'), 200);
   setTimeout(showWelcomeNotif, 600);
+}
+
+// ====================================================================
+// Custom cursor — dual-layer dot + easing ring
+// ====================================================================
+let _cursorInited = false;
+function initCustomCursor() {
+  // Skip on touch / coarse pointer devices
+  if (window.matchMedia && window.matchMedia('(pointer:coarse)').matches) return;
+  if (_cursorInited) return;
+  _cursorInited = true;
+  // Remove any stale cursor elements (e.g. from a hot-reloaded prior init)
+  document.querySelectorAll('.miaos-cursor-dot, .miaos-cursor-ring').forEach(n => n.remove());
+  const html = document.documentElement;
+  html.classList.add('miaos-cursor-on');
+  const dot = el('div', { class:'miaos-cursor-dot is-hidden' });
+  const ring = el('div', { class:'miaos-cursor-ring is-hidden' });
+  document.body.appendChild(dot);
+  document.body.appendChild(ring);
+
+  let mx = -100, my = -100;     // raw mouse
+  let dx = -100, dy = -100;     // dot (lerps fast)
+  let rx = -100, ry = -100;     // ring (lerps slow for trailing feel)
+  let inside = false;
+
+  const HOVER_SEL = 'a, button, [role="button"], .dock-app, .menubar__item, .menubar__brand, .spot__row, .finder__cell, .br-shortcut, .br-result__title, .br-result__act, .br-search__ext, .window__btn, .tl, .ps-modal-back, label, select, [data-menu], [data-app], [data-go], [data-act]';
+  const TEXT_SEL = 'input:not([type="checkbox"]):not([type="radio"]):not([type="button"]):not([type="submit"]), textarea, [contenteditable]';
+
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    if (!inside) { inside = true; dot.classList.remove('is-hidden'); ring.classList.remove('is-hidden'); }
+    const target = e.target;
+    const isText = target && target.closest && target.closest(TEXT_SEL);
+    const isHover = !isText && target && target.closest && target.closest(HOVER_SEL);
+    ring.classList.toggle('is-hover', !!isHover);
+    dot.classList.toggle('is-hover', !!isHover);
+    ring.classList.toggle('is-text', !!isText);
+    dot.classList.toggle('is-text', !!isText);
+  }, { passive: true });
+
+  document.addEventListener('mouseleave', () => { inside = false; dot.classList.add('is-hidden'); ring.classList.add('is-hidden'); });
+  document.addEventListener('mouseenter', () => { inside = true; dot.classList.remove('is-hidden'); ring.classList.remove('is-hidden'); });
+  document.addEventListener('mousedown', () => { ring.classList.add('is-press'); dot.classList.add('is-press'); }, { passive: true });
+  document.addEventListener('mouseup',   () => { ring.classList.remove('is-press'); dot.classList.remove('is-press'); }, { passive: true });
+  window.addEventListener('blur', () => { dot.classList.add('is-hidden'); ring.classList.add('is-hidden'); });
+  window.addEventListener('focus', () => { if (inside) { dot.classList.remove('is-hidden'); ring.classList.remove('is-hidden'); }});
+
+  function tick() {
+    // Dot snaps to the mouse with no visible lag; ring eases for a graceful trailing feel
+    dx = mx; dy = my;
+    rx += (mx - rx) * 0.22;
+    ry += (my - ry) * 0.22;
+    dot.style.transform = `translate3d(${dx}px,${dy}px,0) translate(-50%,-50%)`;
+    ring.style.transform = `translate3d(${rx}px,${ry}px,0) translate(-50%,-50%)`;
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
 }
 
 // ====================================================================
@@ -672,7 +831,7 @@ function buildShell() {
   const mb = el('div', { class:'menubar' });
   mb.innerHTML = `
     <div class="menubar__group">
-      <div class="menubar__brand"><span class="menubar__brand-mark"></span>STUDIO MIA</div>
+      <div class="menubar__brand"><span class="menubar__brand-mark" aria-hidden="true"><svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="mia-mark-bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2a2a32"/><stop offset="1" stop-color="#0c0c10"/></linearGradient></defs><rect x="0.5" y="0.5" width="15" height="15" rx="3.6" fill="url(#mia-mark-bg)" stroke="rgba(255,255,255,0.12)"/><rect x="3" y="4" width="10" height="6.6" rx="1" fill="none" stroke="#ffffff" stroke-width="1.1"/><line x1="6.4" y1="13" x2="9.6" y2="13" stroke="#ffffff" stroke-width="1.1" stroke-linecap="round"/><line x1="8" y1="10.6" x2="8" y2="13" stroke="#ffffff" stroke-width="1.1"/></svg></span>STUDIO MIA</div>
       <div class="menubar__item" data-menu="file">${t('FileMenu')}</div>
       <div class="menubar__item" data-menu="help">${t('HelpMenu')}</div>
       <div class="menubar__item" data-menu="lang">${t('Language')}</div>
@@ -726,7 +885,12 @@ function buildShell() {
     tile.innerHTML = `${content || `<span>${escapeHtml(a.icon)}</span>`}<span class="dock-app__indicator"></span><span class="dock-app__tooltip">${escapeHtml(a.title)}<span class="ja">${escapeHtml(a.titleJa)}</span></span>`;
     dock.appendChild(tile);
   };
-  for (const a of APPS) addTile(a);
+  // Welcome (leftmost) uses a computer/monitor SVG instead of the '@' character
+  const computerSvg = `<svg viewBox="0 0 32 32" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5.5" width="25" height="16" rx="2"/><line x1="11" y1="27" x2="21" y2="27"/><line x1="16" y1="21.5" x2="16" y2="27"/><line x1="9" y1="27" x2="23" y2="27"/></svg>`;
+  // Browser uses a globe/compass SVG (Chrome-inspired but original — no Chrome trade dress)
+  const browserSvg = `<svg viewBox="0 0 32 32" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="16" cy="16" r="11"/><line x1="5" y1="16" x2="27" y2="16"/><path d="M16 5a17 17 0 0 1 5 11 17 17 0 0 1-5 11"/><path d="M16 5a17 17 0 0 0-5 11 17 17 0 0 0 5 11"/></svg>`;
+  const customIcon = (id) => id === 'welcome' ? computerSvg : (id === 'browser' ? browserSvg : null);
+  for (const a of APPS) addTile(a, customIcon(a.id));
   dock.appendChild(el('span', { class:'dock__sep' }));
   addTile(EXTRAS[0]);  // Finder
   // Trash uses an SVG icon
@@ -890,6 +1054,14 @@ function mountWelcome(root) {
   const body = en
     ? `Welcome to MiaOS.\nA minimal desktop environment originally written in C and C++ on SDL2 + Dear ImGui, here re-implemented as vanilla JavaScript inside an iframe.\nIt bundles a set of white hacking tools — hashing, encoding, network info, a localhost-only port scanner — for learning and defensive work.\nIt is not a real kernel; it is a desktop shell.`
     : `ようこそ MiaOS へ。\n本来は C / C++ + SDL2 + Dear ImGui で構築されたデスクトップ環境を、ここではバニラ JavaScript として iframe 内に再実装しています。\nホワイトハッキング用の小さな調査ツール群（ハッシュ、エンコーダ、ネットワーク情報、ループバック専用ポートスキャナ）を搭載。\n本物のカーネルではなく「デスクトップ・シェル」として動作します。`;
+  const toolsHead = tx('Analysis tools', '搭載ツール');
+  const toolsBody = en
+    ? `Hash (MD5/SHA-1/SHA-256), Encoder (Base64/Hex/URL/ROT13), Net Info (mock), Port Scanner (loopback mock), Port Reference, Log Viewer.\nAdded: JWT Inspector with HS256/384/512 verification, CIDR / subnet calculator, Password Strength Meter (entropy), HMAC tool with constant-time compare, Regex Tester, and a Chrome-style Browser with DuckDuckGo search.\nAll analysis tools run locally; only the Browser issues normal user-driven HTTP(S) requests.`
+    : `ハッシュ計算 (MD5 / SHA-1 / SHA-256)・エンコーダ (Base64 / Hex / URL / ROT13)・ネット情報（模擬）・ポートスキャナ（ループバック模擬）・ポート早見表・ログビューア。\n追加: JWT インスペクタ（HS256/384/512 署名検証）・CIDR / サブネット計算機・パスワード強度計（エントロピー算出）・HMAC ツール（定数時間比較）・正規表現テスター・Chrome 風ブラウザ（DuckDuckGo 検索付き）。\n解析系ツールはタブ内で完結。ブラウザのみ、通常のユーザー操作による HTTP(S) リクエストを発生させます。`;
+  const safetyHead = tx('Safety & legality', '安全と法令順守');
+  const safetyBody = en
+    ? `Analysis tools execute no OS commands, send no traffic, and store nothing beyond your language preference.\nThe Browser app loads pages only when you type a URL or run a search — exactly like any normal browser. Many sites refuse iframe embedding (X-Frame-Options / CSP); MiaOS respects those refusals.\nNo attack-sending, credential-cracking, or auto-propagating features are included.`
+    : `解析系ツールは OS コマンド実行・通信を行わず、保存するのは言語設定のみです。\nブラウザアプリは、ユーザーが URL 入力または検索した時にのみページを読み込みます。これは通常のブラウザと同じ動作です。多くのサイトは iframe 表示を拒否 (X-Frame-Options / CSP) しますが、MiaOS はその意思を尊重します。\n攻撃送信・認証突破・自動拡散機能は一切搭載していません。不正アクセス禁止法・刑法 168 条の 2 等に抵触する機能は実装されていません。`;
   const rulesHead = tx('First, read the rules', 'まず行動規範を確認してください');
   const rulesBody = en
     ? `Open the "Code of Conduct" app from the dock or with Cmd/Ctrl+9.\nMiaOS is for defenders, learners, and authorized researchers.\nIt must not be used to attack systems you do not own.`
@@ -909,8 +1081,12 @@ function mountWelcome(root) {
     </div>
     <div class="hr"></div>
     <p style="white-space:pre-line;line-height:1.7;color:var(--t-2);font-size:13px">${escapeHtml(body)}</p>
+    <p style="margin-top:14px;color:var(--t-1);font-weight:500">${escapeHtml(toolsHead)}</p>
+    <p style="white-space:pre-line;line-height:1.7;color:var(--t-2);font-size:12.5px;margin-top:4px">${escapeHtml(toolsBody)}</p>
     <p style="margin-top:14px;color:var(--accent);font-weight:500">${escapeHtml(rulesHead)}</p>
     <p style="white-space:pre-line;line-height:1.7;color:var(--t-2);font-size:12.5px;margin-top:4px">${escapeHtml(rulesBody)}</p>
+    <p style="margin-top:14px;color:var(--t-1);font-weight:500">${escapeHtml(safetyHead)}</p>
+    <p style="white-space:pre-line;line-height:1.7;color:var(--t-2);font-size:12.5px;margin-top:4px">${escapeHtml(safetyBody)}</p>
     <p style="margin-top:14px;color:var(--t-1);font-weight:500">${escapeHtml(keysHead)}</p>
     <table class="welcome-keys">
       ${keys.map(([k,a,j]) => `<tr><td>${escapeHtml(k)}</td><td>${en ? escapeHtml(a) + `<span class="ja">${escapeHtml(j)}</span>` : escapeHtml(j)}</td></tr>`).join('')}
@@ -1502,6 +1678,577 @@ function mountEthics(root) {
 }
 
 // ====================================================================
+// APPS: JWT Inspector (decode-only, defensive)
+// ====================================================================
+function mountJwt(root) {
+  const SAMPLE = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6Ik1pYSIsImlhdCI6MTcxNTAwMDAwMCwiZXhwIjoyMDAwMDAwMDAwfQ.JpQNRZeS8Fhw0i8oZqPzC2dMxgkTZ0bL5OoChFcJg9Q';
+  root.innerHTML = `
+    <div class="app-header">
+      <h1>${escapeHtml(tx('JWT Inspector','JWT 解析'))}</h1>
+      <div class="app-sub">${escapeHtml(tx('decode-only — never paste production tokens you do not own','復号のみ — 自分の所有しないトークンを貼らないこと'))}</div>
+    </div>
+    <div class="hr"></div>
+    <div class="banner" style="border-color:rgba(20,20,30,0.18);background:rgba(20,20,30,0.05);color:var(--t-1);font-weight:500">
+      ${tx('Inspecting tokens you do not own can leak credentials. Use sample tokens or your own dev tokens only.',
+           '所有していないトークンの解析は資格情報の漏洩につながります。検証用または自分のトークンのみ使用してください。')}
+    </div>
+    <span class="label">${escapeHtml(tx('Token (header.payload.signature)','トークン (header.payload.signature)'))}</span>
+    <textarea class="textarea" id="jw-in" rows="4" spellcheck="false" placeholder="eyJhbGciOi...">${SAMPLE}</textarea>
+    <div class="btn-row">
+      <button class="btn btn--accent" id="jw-decode">${escapeHtml(tx('Decode','解析'))}</button>
+      <button class="btn btn--ghost" id="jw-clear">${escapeHtml(tx('Clear','消去'))}</button>
+    </div>
+    <div class="hr"></div>
+    <div class="ps-grid" style="grid-template-columns:90px 1fr">
+      <span class="label" style="margin:0">Header</span><textarea class="textarea" id="jw-h" rows="4" readonly spellcheck="false" style="font-family:var(--font-mono);font-size:11px"></textarea>
+      <span class="label" style="margin:0">Payload</span><textarea class="textarea" id="jw-p" rows="6" readonly spellcheck="false" style="font-family:var(--font-mono);font-size:11px"></textarea>
+      <span class="label" style="margin:0">Signature</span><input class="input" id="jw-s" readonly spellcheck="false" style="font-family:var(--font-mono);font-size:11px">
+    </div>
+    <div id="jw-meta" class="muted" style="font-size:11px;margin-top:8px;line-height:1.6"></div>
+    <div class="hr"></div>
+    <span class="label">${escapeHtml(tx('Verify HMAC signature (HS256/HS384/HS512)','HMAC 署名検証 (HS256/HS384/HS512)'))}</span>
+    <div class="ps-grid" style="grid-template-columns:90px 1fr">
+      <span class="label" style="margin:0">${escapeHtml(tx('secret','秘密鍵'))}</span><input class="input" id="jw-key" spellcheck="false" placeholder="${escapeHtml(tx('your-256-bit-secret','秘密鍵 (UTF-8)'))}">
+    </div>
+    <div class="btn-row"><button class="btn" id="jw-verify">${escapeHtml(tx('Verify','検証'))}</button></div>
+    <div id="jw-vstatus" style="margin-top:8px"></div>
+  `;
+  const $in = root.querySelector('#jw-in');
+  const $h = root.querySelector('#jw-h'), $p = root.querySelector('#jw-p'), $s = root.querySelector('#jw-s'), $m = root.querySelector('#jw-meta');
+  const $key = root.querySelector('#jw-key'), $vs = root.querySelector('#jw-vstatus');
+  function b64urlDecode(seg) {
+    const pad = seg.length % 4 === 0 ? '' : '='.repeat(4 - (seg.length % 4));
+    return b64decode(seg.replace(/-/g,'+').replace(/_/g,'/') + pad);
+  }
+  function pretty(s) { try { return JSON.stringify(JSON.parse(s), null, 2); } catch { return s; } }
+  function decode() {
+    const tok = $in.value.trim();
+    const parts = tok.split('.');
+    if (parts.length !== 3) { $h.value = ''; $p.value = ''; $s.value = ''; $m.textContent = tx('not a JWT (expected 3 dot-separated parts)','JWT 形式ではありません (3 セクション必要)'); return null; }
+    try {
+      const h = b64urlDecode(parts[0]); const p = b64urlDecode(parts[1]);
+      $h.value = pretty(h); $p.value = pretty(p); $s.value = parts[2];
+      let warns = [];
+      try {
+        const hj = JSON.parse(h);
+        if (hj.alg === 'none') warns.push(tx('alg=none — this token is unsigned and trivially forgeable','alg=none — 署名なしトークンです'));
+        if (hj.alg && /^HS/.test(hj.alg)) warns.push(tx('HS* uses a shared secret; rotate if leaked','HS* は共有秘密鍵を使用'));
+      } catch {}
+      try {
+        const pj = JSON.parse(p);
+        if (pj.exp) {
+          const exp = new Date(pj.exp * 1000);
+          warns.push('exp: ' + exp.toISOString() + (Date.now() > pj.exp*1000 ? ' ' + tx('(expired)','(期限切れ)') : ''));
+        }
+        if (pj.iat) warns.push('iat: ' + new Date(pj.iat * 1000).toISOString());
+      } catch {}
+      $m.innerHTML = warns.map(escapeHtml).join('<br>') || ' ';
+      return parts;
+    } catch (e) {
+      $m.textContent = tx('decode failed: ','解析失敗: ') + e.message; return null;
+    }
+  }
+  async function verify() {
+    const parts = decode(); if (!parts) return;
+    let alg;
+    try { alg = JSON.parse(b64urlDecode(parts[0])).alg; } catch { $vs.innerHTML = `<span class="cmp-status" style="background:#15151a;color:#fff">cannot read alg</span>`; return; }
+    const map = { HS256:'SHA-256', HS384:'SHA-384', HS512:'SHA-512' };
+    if (!map[alg]) { $vs.innerHTML = `<span class="cmp-status" style="background:rgba(20,20,30,0.06);color:var(--t-2);font-style:italic">${escapeHtml(tx('unsupported alg: ','非対応 alg: ') + alg)}</span>`; return; }
+    const key = await crypto.subtle.importKey('raw', new TextEncoder().encode($key.value), { name:'HMAC', hash: map[alg] }, false, ['sign']);
+    const sig = await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(parts[0] + '.' + parts[1]));
+    const computed = btoa(String.fromCharCode(...new Uint8Array(sig))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+    if (computed === parts[2]) $vs.innerHTML = `<span class="cmp-status" style="background:rgba(20,20,30,0.08);color:#15151a;font-weight:600">${escapeHtml(tx('SIGNATURE VALID  /  署名一致','署名一致'))}</span>`;
+    else $vs.innerHTML = `<span class="cmp-status" style="background:#15151a;color:#fff;font-weight:600">${escapeHtml(tx('SIGNATURE INVALID  /  署名不一致','署名不一致'))}</span>`;
+  }
+  root.querySelector('#jw-decode').addEventListener('click', decode);
+  root.querySelector('#jw-clear').addEventListener('click', () => { $in.value=''; $h.value=''; $p.value=''; $s.value=''; $m.textContent=''; $vs.innerHTML=''; });
+  root.querySelector('#jw-verify').addEventListener('click', verify);
+  decode();
+  return { dispose: () => {} };
+}
+
+// ====================================================================
+// APPS: CIDR / Subnet Calculator (IPv4)
+// ====================================================================
+function mountCidr(root) {
+  root.innerHTML = `
+    <div class="app-header">
+      <h1>${escapeHtml(tx('CIDR Calculator','サブネット計算'))}</h1>
+      <div class="app-sub">${escapeHtml(tx('IPv4 network / broadcast / host range','IPv4 ネットワーク・ブロードキャスト・ホスト範囲'))}</div>
+    </div>
+    <div class="hr"></div>
+    <div class="ps-grid" style="grid-template-columns:140px 1fr">
+      <span class="label" style="margin:0">CIDR</span><input class="input" id="cd-in" spellcheck="false" placeholder="192.168.1.0/24" value="192.168.1.0/24" style="font-family:var(--font-mono);font-size:12px">
+    </div>
+    <div class="btn-row"><button class="btn btn--accent" id="cd-calc">${escapeHtml(tx('Calculate','計算'))}</button></div>
+    <div class="hr"></div>
+    <table class="kv-table" id="cd-out"><tbody></tbody></table>
+    <p class="muted" style="font-size:11px;margin-top:10px;line-height:1.6">${tx(
+      'Use this for documenting your own networks or pre-flighting a planned change. Do not probe arbitrary ranges you computed here without authorization.',
+      '自社ネットワークの設計・記録用です。算出した範囲を許可なくスキャンすると不正アクセス禁止法に抵触する可能性があります。')}</p>
+  `;
+  const $in = root.querySelector('#cd-in'), $out = root.querySelector('#cd-out tbody');
+  function ipToInt(s) {
+    const p = s.split('.').map(Number);
+    if (p.length !== 4 || p.some(n => !Number.isInteger(n) || n < 0 || n > 255)) throw new Error('invalid IP');
+    return ((p[0]<<24) | (p[1]<<16) | (p[2]<<8) | p[3]) >>> 0;
+  }
+  function intToIp(n) { return [(n>>>24)&255,(n>>>16)&255,(n>>>8)&255,n&255].join('.'); }
+  function calc() {
+    $out.innerHTML = '';
+    const v = $in.value.trim(); const m = v.match(/^([\d.]+)(?:\/(\d+))?$/);
+    if (!m) { $out.innerHTML = `<tr><td class="muted">${escapeHtml(tx('invalid format','形式不正'))}</td></tr>`; return; }
+    let ip, prefix;
+    try { ip = ipToInt(m[1]); } catch { $out.innerHTML = `<tr><td class="muted">${escapeHtml(tx('invalid IP','IP 不正'))}</td></tr>`; return; }
+    prefix = m[2] !== undefined ? parseInt(m[2], 10) : 32;
+    if (prefix < 0 || prefix > 32) { $out.innerHTML = `<tr><td class="muted">${escapeHtml(tx('prefix must be 0-32','プレフィックスは 0-32'))}</td></tr>`; return; }
+    const mask = prefix === 0 ? 0 : (0xFFFFFFFF << (32 - prefix)) >>> 0;
+    const wildcard = (~mask) >>> 0;
+    const network = (ip & mask) >>> 0;
+    const broadcast = (network | wildcard) >>> 0;
+    const total = prefix === 32 ? 1 : (prefix === 31 ? 2 : Math.pow(2, 32 - prefix));
+    const usable = prefix >= 31 ? total : Math.max(0, total - 2);
+    const firstHost = prefix >= 31 ? network : (network + 1) >>> 0;
+    const lastHost = prefix >= 31 ? broadcast : (broadcast - 1) >>> 0;
+    let cls = 'A'; const oct = (ip >>> 24) & 255;
+    if (oct >= 128 && oct < 192) cls = 'B'; else if (oct >= 192 && oct < 224) cls = 'C'; else if (oct >= 224 && oct < 240) cls = 'D (multicast)'; else if (oct >= 240) cls = 'E (reserved)';
+    const isPrivate = (oct === 10) || (oct === 172 && ((ip>>>16)&255) >= 16 && ((ip>>>16)&255) <= 31) || (oct === 192 && ((ip>>>16)&255) === 168) || (oct === 127);
+    const rows = [
+      ['Network',         intToIp(network) + '/' + prefix],
+      ['Netmask',         intToIp(mask)],
+      ['Wildcard',        intToIp(wildcard)],
+      ['Broadcast',       intToIp(broadcast)],
+      ['First host',      intToIp(firstHost)],
+      ['Last host',       intToIp(lastHost)],
+      ['Total addresses', String(total)],
+      ['Usable hosts',    String(usable)],
+      ['Class',           cls],
+      [tx('Private (RFC1918/loopback)','プライベート (RFC1918/ループバック)'), isPrivate ? 'yes' : 'no'],
+    ];
+    $out.innerHTML = rows.map(([k,v]) => `<tr><td style="width:200px">${escapeHtml(k)}</td><td class="mono">${escapeHtml(v)}</td></tr>`).join('');
+  }
+  root.querySelector('#cd-calc').addEventListener('click', calc);
+  $in.addEventListener('keydown', e => { if (e.key === 'Enter') calc(); });
+  calc();
+  return { dispose: () => {} };
+}
+
+// ====================================================================
+// APPS: Password Strength Meter (defensive — no cracking)
+// ====================================================================
+function mountPasswd(root) {
+  root.innerHTML = `
+    <div class="app-header">
+      <h1>${escapeHtml(tx('Password Strength Meter','パスワード強度計'))}</h1>
+      <div class="app-sub">${escapeHtml(tx('estimates entropy locally — nothing leaves this tab','このタブ内のみで計算 — 外部送信なし'))}</div>
+    </div>
+    <div class="hr"></div>
+    <span class="label">${escapeHtml(tx('Password / パスワード','パスワード / Password'))}</span>
+    <input class="input" id="pw-in" type="password" spellcheck="false" autocomplete="new-password" style="font-family:var(--font-mono);font-size:13px">
+    <label style="display:inline-flex;gap:6px;align-items:center;font-size:12px;margin-top:6px"><input type="checkbox" id="pw-show"> ${escapeHtml(tx('Show password','表示する'))}</label>
+    <div class="hr"></div>
+    <div class="ps-progress"><div class="ps-progress__fill" id="pw-bar" style="width:0%"></div><span class="ps-progress__label" id="pw-label">—</span></div>
+    <table class="kv-table" id="pw-out" style="margin-top:10px"><tbody></tbody></table>
+    <div class="hr"></div>
+    <span class="label">${escapeHtml(tx('Suggestions','推奨'))}</span>
+    <ul id="pw-tips" style="margin:6px 0 0 18px;padding:0;font-size:12px;line-height:1.7"></ul>
+    <p class="muted" style="font-size:11px;margin-top:14px;line-height:1.6">${tx(
+      'Entropy here is a rough upper bound assuming a uniformly random password drawn from the observed character classes. Real passwords (dictionary words, dates, leetspeak) are weaker than entropy alone suggests. Always pair with MFA.',
+      'ここでのエントロピー値は「観測された文字種から一様ランダムに選ばれた」と仮定した上限値です。辞書語・日付・leet などはこれより弱くなります。MFA との併用を推奨。')}</p>
+  `;
+  const $in = root.querySelector('#pw-in'), $show = root.querySelector('#pw-show');
+  const $bar = root.querySelector('#pw-bar'), $lab = root.querySelector('#pw-label');
+  const $out = root.querySelector('#pw-out tbody'), $tips = root.querySelector('#pw-tips');
+  const COMMON = new Set(['password','123456','12345678','qwerty','abc123','letmein','admin','welcome','monkey','iloveyou','111111','dragon','master','passw0rd','p@ssw0rd','password1','login','sunshine']);
+  function classes(p) {
+    let n = 0;
+    if (/[a-z]/.test(p)) n += 26;
+    if (/[A-Z]/.test(p)) n += 26;
+    if (/[0-9]/.test(p)) n += 10;
+    if (/[^A-Za-z0-9]/.test(p)) n += 33;
+    return n;
+  }
+  function update() {
+    const p = $in.value;
+    if (!p) { $bar.style.width = '0%'; $lab.textContent = '—'; $out.innerHTML = ''; $tips.innerHTML = ''; return; }
+    const cs = classes(p);
+    const entropy = cs > 0 ? Math.log2(cs) * p.length : 0;
+    let label, color;
+    if (entropy < 28) { label = tx('Very weak','非常に弱い'); color = '#15151a'; }
+    else if (entropy < 36) { label = tx('Weak','弱い'); color = '#15151a'; }
+    else if (entropy < 60) { label = tx('Reasonable','まあまあ'); color = '#15151a'; }
+    else if (entropy < 80) { label = tx('Strong','強い'); color = '#15151a'; }
+    else { label = tx('Very strong','非常に強い'); color = '#15151a'; }
+    const pct = Math.min(100, Math.round(entropy / 100 * 100));
+    $bar.style.width = pct + '%'; $bar.style.background = color;
+    $lab.textContent = `${label} — ${entropy.toFixed(1)} bits`;
+    const repeats = (p.match(/(.)\1{2,}/g) || []).length;
+    const seq = /(?:0123|1234|2345|3456|4567|5678|6789|abcd|bcde|cdef|qwer|asdf|zxcv)/i.test(p);
+    const isCommon = COMMON.has(p.toLowerCase());
+    const yearLike = /(?:19|20)\d{2}/.test(p);
+    const rows = [
+      [tx('Length','長さ'), p.length + ' ' + tx('chars','字')],
+      [tx('Charset size','文字種サイズ'), cs + ''],
+      [tx('Entropy','エントロピー'), entropy.toFixed(1) + ' bits'],
+      [tx('Lowercase','小文字'), /[a-z]/.test(p) ? '✓' : '—'],
+      [tx('Uppercase','大文字'), /[A-Z]/.test(p) ? '✓' : '—'],
+      [tx('Digits','数字'), /[0-9]/.test(p) ? '✓' : '—'],
+      [tx('Symbols','記号'), /[^A-Za-z0-9]/.test(p) ? '✓' : '—'],
+    ];
+    $out.innerHTML = rows.map(([k,v]) => `<tr><td style="width:200px">${escapeHtml(k)}</td><td class="mono">${escapeHtml(v)}</td></tr>`).join('');
+    const tips = [];
+    if (p.length < 12) tips.push(tx('Use at least 12 characters (16+ for high-value accounts).','12 文字以上 (重要アカウントは 16 文字以上) を推奨。'));
+    if (cs < 60) tips.push(tx('Mix lowercase, uppercase, digits, and symbols.','大小文字・数字・記号を混在させる。'));
+    if (repeats) tips.push(tx('Avoid repeated characters (aaaa, 1111).','同じ文字の連続を避ける。'));
+    if (seq) tips.push(tx('Avoid keyboard sequences (qwerty, 1234).','キーボード列・連番を避ける。'));
+    if (yearLike) tips.push(tx('Avoid year-like numbers (1990, 2024).','西暦のような数字を避ける。'));
+    if (isCommon) tips.push(tx('This is on common-password lists. Choose another.','一般的な漏洩済みパスワードです。別のものを使用。'));
+    if (!tips.length) tips.push(tx('Looks reasonable. Pair with MFA and a password manager.','問題ありません。MFA とパスワードマネージャ併用を推奨。'));
+    $tips.innerHTML = tips.map(t => `<li>${escapeHtml(t)}</li>`).join('');
+  }
+  $in.addEventListener('input', update);
+  $show.addEventListener('change', () => { $in.type = $show.checked ? 'text' : 'password'; });
+  update();
+  return { dispose: () => {} };
+}
+
+// ====================================================================
+// APPS: HMAC Tool (webhook signature verification)
+// ====================================================================
+function mountHmac(root) {
+  root.innerHTML = `
+    <div class="app-header">
+      <h1>HMAC</h1>
+      <div class="app-sub">${escapeHtml(tx('verify webhook signatures / API integrity','Webhook 署名検証・API 完全性確認'))}</div>
+    </div>
+    <div class="hr"></div>
+    <div class="enc-modes">
+      <label><input type="radio" name="hm-a" value="SHA-1">HMAC-SHA-1</label>
+      <label><input type="radio" name="hm-a" value="SHA-256" checked>HMAC-SHA-256</label>
+      <label><input type="radio" name="hm-a" value="SHA-384">HMAC-SHA-384</label>
+      <label><input type="radio" name="hm-a" value="SHA-512">HMAC-SHA-512</label>
+    </div>
+    <span class="label">${escapeHtml(tx('Key (UTF-8) / 鍵','鍵 (UTF-8) / Key'))}</span>
+    <input class="input" id="hm-key" spellcheck="false" style="font-family:var(--font-mono);font-size:12px">
+    <span class="label">${escapeHtml(tx('Message / メッセージ','メッセージ / Message'))}</span>
+    <textarea class="textarea" id="hm-msg" rows="5" spellcheck="false"></textarea>
+    <div class="btn-row">
+      <button class="btn btn--accent" id="hm-go">${escapeHtml(tx('Compute','計算'))}</button>
+      <button class="btn btn--ghost" id="hm-clear">${escapeHtml(tx('Clear','消去'))}</button>
+    </div>
+    <span class="label">${escapeHtml(tx('Digest (hex) / 出力 (16進)','出力 (16進) / Digest'))}</span>
+    <input class="input" id="hm-out" readonly spellcheck="false" style="font-family:var(--font-mono);font-size:11px">
+    <div class="hr"></div>
+    <span class="label">${escapeHtml(tx('Compare with expected (constant-time)','期待値と比較 (定数時間)'))}</span>
+    <input class="input" id="hm-exp" spellcheck="false" style="font-family:var(--font-mono);font-size:11px" placeholder="${escapeHtml(tx('hex digest','期待 hex'))}">
+    <div id="hm-status" style="margin-top:8px"></div>
+    <p class="muted" style="font-size:11px;margin-top:14px;line-height:1.6">${tx(
+      'Use HMAC to verify webhooks (Stripe, GitHub, Slack) or sign API requests. Always compare digests with a constant-time function on the server side to avoid timing attacks.',
+      'Webhook (Stripe / GitHub / Slack) や API 署名の検証に使用。サーバー側ではタイミング攻撃を避けるため必ず定数時間比較を使用してください。')}</p>
+  `;
+  const algoRadio = () => root.querySelector('input[name="hm-a"]:checked').value;
+  const $key = root.querySelector('#hm-key'), $msg = root.querySelector('#hm-msg');
+  const $out = root.querySelector('#hm-out'), $exp = root.querySelector('#hm-exp'), $st = root.querySelector('#hm-status');
+  async function compute() {
+    if (!$key.value) { $out.value = ''; $st.innerHTML = `<span class="cmp-status" style="background:rgba(20,20,30,0.06);color:var(--t-2);font-style:italic">${escapeHtml(tx('key required','鍵が必要'))}</span>`; return; }
+    const algo = algoRadio();
+    const k = await crypto.subtle.importKey('raw', new TextEncoder().encode($key.value), { name:'HMAC', hash: algo }, false, ['sign']);
+    const sig = await crypto.subtle.sign('HMAC', k, new TextEncoder().encode($msg.value));
+    $out.value = Array.from(new Uint8Array(sig)).map(b => b.toString(16).padStart(2,'0')).join('');
+    compare();
+  }
+  function ctEq(a, b) {
+    if (a.length !== b.length) return false;
+    let r = 0; for (let i = 0; i < a.length; i++) r |= a.charCodeAt(i) ^ b.charCodeAt(i);
+    return r === 0;
+  }
+  function compare() {
+    const a = $out.value.trim().toLowerCase(); const e = $exp.value.trim().toLowerCase().replace(/\s+/g,'');
+    if (!a || !e) { $st.innerHTML = ''; return; }
+    if (ctEq(a, e)) $st.innerHTML = `<span class="cmp-status" style="background:rgba(20,20,30,0.08);color:#15151a;font-weight:600">${escapeHtml(tx('MATCH  /  一致','一致'))}</span>`;
+    else $st.innerHTML = `<span class="cmp-status" style="background:#15151a;color:#fff;font-weight:600">${escapeHtml(tx('DIFFER /  不一致','不一致'))}</span>`;
+  }
+  root.querySelector('#hm-go').addEventListener('click', compute);
+  root.querySelector('#hm-clear').addEventListener('click', () => { $key.value=''; $msg.value=''; $out.value=''; $exp.value=''; $st.innerHTML=''; });
+  $exp.addEventListener('input', compare);
+  return { dispose: () => {} };
+}
+
+// ====================================================================
+// APPS: Regex Tester
+// ====================================================================
+function mountRegex(root) {
+  root.innerHTML = `
+    <div class="app-header">
+      <h1>${escapeHtml(tx('Regex Tester','正規表現テスター'))}</h1>
+      <div class="app-sub">${escapeHtml(tx('JavaScript regex — match, capture, replace','JavaScript 正規表現 — 一致・キャプチャ・置換'))}</div>
+    </div>
+    <div class="hr"></div>
+    <div class="ps-grid" style="grid-template-columns:60px 1fr">
+      <span class="label" style="margin:0">/regex/</span><input class="input" id="rx-p" spellcheck="false" style="font-family:var(--font-mono);font-size:12px" value="\\b[A-Z][a-z]+\\b">
+      <span class="label" style="margin:0">flags</span><input class="input" id="rx-f" spellcheck="false" style="font-family:var(--font-mono);font-size:12px;width:120px" value="g">
+    </div>
+    <span class="label">${escapeHtml(tx('Test string / テスト対象','テスト文字列 / Test string'))}</span>
+    <textarea class="textarea" id="rx-t" rows="6" spellcheck="false">Mia builds Studio MIA. The MiaOS desktop is for white-hat security work.</textarea>
+    <div class="hr"></div>
+    <div id="rx-status" class="muted" style="font-size:11px;margin-bottom:6px"></div>
+    <div class="log-pane" id="rx-pane" style="max-height:160px"></div>
+    <div class="hr"></div>
+    <span class="label">${escapeHtml(tx('Replace with','置換文字列'))}</span>
+    <input class="input" id="rx-r" spellcheck="false" style="font-family:var(--font-mono);font-size:12px" value="[$&]">
+    <span class="label">${escapeHtml(tx('Replacement output','置換結果'))}</span>
+    <textarea class="textarea" id="rx-ro" rows="4" readonly spellcheck="false"></textarea>
+  `;
+  const $p = root.querySelector('#rx-p'), $f = root.querySelector('#rx-f'), $t = root.querySelector('#rx-t');
+  const $r = root.querySelector('#rx-r'), $ro = root.querySelector('#rx-ro');
+  const $st = root.querySelector('#rx-status'), $pane = root.querySelector('#rx-pane');
+  function run() {
+    const pat = $p.value, fl = $f.value;
+    let re;
+    try { re = new RegExp(pat, fl); }
+    catch (e) { $st.innerHTML = `<span class="danger">${escapeHtml('regex error: ' + e.message)}</span>`; $pane.innerHTML = ''; $ro.value = ''; return; }
+    const text = $t.value;
+    const matches = [];
+    if (fl.includes('g')) { let m; const re2 = new RegExp(pat, fl); while ((m = re2.exec(text)) !== null) { matches.push(m); if (m.index === re2.lastIndex) re2.lastIndex++; } }
+    else { const m = text.match(re); if (m) matches.push(m); }
+    $st.textContent = matches.length + ' ' + tx('match(es)','件一致');
+    $pane.innerHTML = matches.length
+      ? matches.map((m,i) => `<div class="log-line"><span class="log-num">${String(i+1).padStart(3,' ')}</span><span class="log-content">${escapeHtml(m[0])}${m.length > 1 ? '  ' + tx('groups','グループ') + ': [' + m.slice(1).map(g => g === undefined ? '∅' : JSON.stringify(g)).join(', ') + ']' : ''}</span></div>`).join('')
+      : `<div class="muted">${escapeHtml(tx('(no matches)','(一致なし)'))}</div>`;
+    try { $ro.value = text.replace(re, $r.value); } catch { $ro.value = ''; }
+  }
+  [$p, $f, $t, $r].forEach(e => e.addEventListener('input', run));
+  run();
+  return { dispose: () => {} };
+}
+
+// ====================================================================
+// APPS: Browser (Chrome-like, user-driven navigation only)
+// ====================================================================
+const BR_NEWTAB = 'miaos://newtab';
+const BR_SHORTCUTS = [
+  { name:'Wikipedia',    ico:'W',  url:'https://en.wikipedia.org/wiki/Main_Page' },
+  { name:'MDN',          ico:'M',  url:'https://developer.mozilla.org/' },
+  { name:'GitHub',       ico:'GH', url:'https://github.com/' },
+  { name:'Hacker News',  ico:'Y',  url:'https://news.ycombinator.com/' },
+  { name:'arXiv',        ico:'aX', url:'https://arxiv.org/' },
+  { name:'OWASP',        ico:'OW', url:'https://owasp.org/' },
+];
+function mountBrowser(root) {
+  let history = [BR_NEWTAB];
+  let pos = 0;
+  let blocked = false;
+  let lastLoadAt = 0;
+
+  function isUrlLike(s) {
+    s = s.trim();
+    if (!s) return false;
+    if (/^https?:\/\//i.test(s)) return true;
+    if (/^miaos:\/\//i.test(s)) return true;
+    return /^[a-z0-9-]+(\.[a-z0-9-]+)+(\/.*)?$/i.test(s);
+  }
+  function normalize(s) {
+    s = s.trim();
+    if (!s) return BR_NEWTAB;
+    if (s === 'about:blank' || s === 'about:newtab' || s === 'home') return BR_NEWTAB;
+    if (/^https?:\/\//i.test(s) || /^miaos:\/\//i.test(s)) return s;
+    if (isUrlLike(s)) return 'https://' + s;
+    return 'miaos://search?q=' + encodeURIComponent(s);
+  }
+  function searchQueryOf(url) {
+    if (!url.startsWith('miaos://search?q=')) return null;
+    try { return decodeURIComponent(url.slice('miaos://search?q='.length)); } catch { return null; }
+  }
+  function displayUrl(url) {
+    const q = searchQueryOf(url);
+    return q !== null ? q : url;
+  }
+  function current() { return history[pos]; }
+  function pushNav(url) {
+    url = normalize(url);
+    if (history[pos] === url) { render(); return; }
+    history = history.slice(0, pos + 1);
+    history.push(url);
+    pos = history.length - 1;
+    blocked = false;
+    render();
+  }
+  function back() { if (pos > 0) { pos--; blocked = false; render(); }}
+  function forward() { if (pos < history.length - 1) { pos++; blocked = false; render(); }}
+  function reload() { blocked = false; render(true); }
+  function home() { pushNav(BR_NEWTAB); }
+
+  function render(forceReload) {
+    const url = current();
+    const isNewtab = url === BR_NEWTAB;
+    const searchQ = searchQueryOf(url);
+    const isSearch = searchQ !== null;
+    const safeOrigin = (() => { try { return new URL(url).host; } catch { return ''; }})();
+    const isHttps = url.startsWith('https://');
+    const titleForTab = isNewtab
+      ? tx('New Tab','新しいタブ')
+      : isSearch
+        ? tx('Search: ','検索: ') + searchQ
+        : (safeOrigin || url);
+
+    root.innerHTML = `
+      <div class="br-root">
+        <div class="br-tabs">
+          <div class="br-tab"><span class="br-tab__fav">${isNewtab ? '◎' : (isHttps ? '🔒' : '🌐')}</span><span class="br-tab__title">${escapeHtml(titleForTab)}</span></div>
+        </div>
+        <div class="br-toolbar">
+          <button class="br-btn" id="br-back" ${pos<=0?'disabled':''} title="${escapeHtml(tx('Back','戻る'))}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
+          <button class="br-btn" id="br-fwd" ${pos>=history.length-1?'disabled':''} title="${escapeHtml(tx('Forward','進む'))}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
+          <button class="br-btn" id="br-rl" title="${escapeHtml(tx('Reload','再読込'))}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg></button>
+          <button class="br-btn" id="br-home" title="${escapeHtml(tx('Home','ホーム'))}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></button>
+          <div class="br-omni">
+            <span class="br-omni__icon">${isNewtab || isSearch
+              ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>'
+              : (isHttps
+                ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>'
+                : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>')}</span>
+            <input id="br-url" type="text" spellcheck="false" placeholder="${escapeHtml(tx('Search or type a URL','検索または URL を入力'))}" value="${isNewtab ? '' : escapeHtml(displayUrl(url))}">
+            <span class="br-omni__lock">${isNewtab ? '' : (isSearch ? tx('SEARCH','検索') : (isHttps ? 'HTTPS' : 'HTTP'))}</span>
+          </div>
+          <button class="br-btn" id="br-ext" title="${escapeHtml(tx('Open in real browser tab','実ブラウザで開く'))}" ${isNewtab?'disabled':''}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></button>
+        </div>
+        <div class="br-frame-wrap" id="br-frame-wrap"></div>
+      </div>
+    `;
+    const wrap = root.querySelector('#br-frame-wrap');
+    if (isNewtab) {
+      wrap.innerHTML = `
+        <div class="br-newtab">
+          <div class="br-newtab__logo">mia<span class="dot"></span>browse</div>
+          <form class="br-newtab__search" id="br-newtab-form">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input id="br-q" type="text" autocomplete="off" spellcheck="false" placeholder="${escapeHtml(tx('Search the web or paste a URL','Web を検索または URL を貼付'))}">
+          </form>
+          <div class="br-newtab__hint">${escapeHtml(tx('Press Enter to search Wikipedia + open quick links to DuckDuckGo / Google / Bing in a real tab. Many sites block iframe embedding (X-Frame-Options / CSP); use the popout button to open them externally.','Enter で Wikipedia を検索 + DuckDuckGo / Google / Bing への外部検索リンクを表示します。多くのサイトは iframe 内表示を拒否 (X-Frame-Options / CSP) するため、その際は右上の外部リンクボタンで実ブラウザを使用してください。'))}</div>
+          <div class="br-newtab__shortcuts">
+            ${BR_SHORTCUTS.map(s => `<button type="button" class="br-shortcut" data-url="${escapeHtml(s.url)}"><span class="br-shortcut__ico">${escapeHtml(s.ico)}</span><span class="br-shortcut__name">${escapeHtml(s.name)}</span></button>`).join('')}
+          </div>
+        </div>
+      `;
+      const ntForm = wrap.querySelector('#br-newtab-form');
+      const ntQ = wrap.querySelector('#br-q');
+      ntForm.addEventListener('submit', e => { e.preventDefault(); pushNav(ntQ.value); });
+      wrap.querySelectorAll('.br-shortcut').forEach(b => b.addEventListener('click', () => pushNav(b.dataset.url)));
+      setTimeout(() => ntQ && ntQ.focus(), 30);
+    } else if (isSearch) {
+      renderSearch(wrap, searchQ);
+    } else {
+      lastLoadAt = Date.now();
+      wrap.innerHTML = `<iframe class="br-frame" id="br-iframe" src="${escapeHtml(url)}" referrerpolicy="no-referrer" sandbox="allow-scripts allow-forms allow-same-origin allow-popups allow-popups-to-escape-sandbox" loading="lazy"></iframe>`;
+      const iframe = wrap.querySelector('#br-iframe');
+      let loaded = false;
+      iframe.addEventListener('load', () => { loaded = true; });
+      // Many cross-origin sites set X-Frame-Options or CSP frame-ancestors that
+      // prevent the iframe from rendering. We can't directly inspect the cross-
+      // origin document, so we offer a manual fallback after a grace period.
+      setTimeout(() => {
+        if (!loaded && wrap.querySelector('#br-iframe')) {
+          showBlocked(wrap, url);
+        }
+      }, 4500);
+    }
+
+    // toolbar bindings
+    const omni = root.querySelector('#br-url');
+    omni.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); pushNav(omni.value); }});
+    omni.addEventListener('focus', () => omni.select());
+    root.querySelector('#br-back').addEventListener('click', back);
+    root.querySelector('#br-fwd').addEventListener('click', forward);
+    root.querySelector('#br-rl').addEventListener('click', reload);
+    root.querySelector('#br-home').addEventListener('click', home);
+    const ext = root.querySelector('#br-ext');
+    if (ext && !isNewtab) ext.addEventListener('click', () => { try { window.open(url, '_blank', 'noopener,noreferrer'); } catch {} });
+  }
+
+  async function renderSearch(wrap, q) {
+    const enc = encodeURIComponent(q);
+    const externals = [
+      { id:'ddg',    name:'DuckDuckGo', url:'https://duckduckgo.com/?q=' + enc },
+      { id:'google', name:'Google',     url:'https://www.google.com/search?q=' + enc },
+      { id:'bing',   name:'Bing',       url:'https://www.bing.com/search?q=' + enc },
+      { id:'wp',     name:'Wikipedia',  url:`https://${LANG === 'ja' ? 'ja' : 'en'}.wikipedia.org/w/index.php?search=` + enc },
+    ];
+    const popoutSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>';
+    wrap.innerHTML = `
+      <div class="br-search">
+        <div class="br-search__head">
+          <div class="br-search__title">${escapeHtml(tx('Results for','検索クエリ'))} <strong>${escapeHtml(q)}</strong></div>
+          <div class="br-search__exts">
+            <span>${escapeHtml(tx('Open in real browser:','実ブラウザで検索:'))}</span>
+            ${externals.map(e => `<button class="br-search__ext" data-url="${escapeHtml(e.url)}">${escapeHtml(e.name)}${popoutSvg}</button>`).join('')}
+          </div>
+        </div>
+        <div class="br-search__results" id="br-search-results">
+          <div class="br-search__loading">${escapeHtml(tx('Searching Wikipedia...','Wikipedia 検索中...'))}</div>
+        </div>
+      </div>
+    `;
+    wrap.querySelectorAll('.br-search__ext').forEach(b => b.addEventListener('click', () => {
+      try { window.open(b.dataset.url, '_blank', 'noopener,noreferrer'); } catch {}
+    }));
+    const list = wrap.querySelector('#br-search-results');
+    const lang = LANG === 'ja' ? 'ja' : 'en';
+    try {
+      const res = await fetch(`https://${lang}.wikipedia.org/w/api.php?action=opensearch&search=${enc}&limit=10&namespace=0&format=json&origin=*`);
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const data = await res.json();
+      const titles = data[1] || [], descs = data[2] || [], urls = data[3] || [];
+      if (!titles.length) {
+        list.innerHTML = `<div class="br-search__loading">${escapeHtml(tx('No Wikipedia results. Try the external buttons above.','Wikipedia 結果なし。上の外部検索をご利用ください。'))}</div>`;
+        return;
+      }
+      list.innerHTML = titles.map((t, i) => {
+        const u = urls[i] || '';
+        const d = descs[i] || '';
+        return `
+          <div class="br-result">
+            <div class="br-result__src">Wikipedia</div>
+            <a class="br-result__title" data-url="${escapeHtml(u)}" href="#">${escapeHtml(t)}</a>
+            <div class="br-result__url">${escapeHtml(u)}</div>
+            ${d ? `<div class="br-result__desc">${escapeHtml(d)}</div>` : ''}
+            <div class="br-result__actions">
+              <button class="br-result__act" data-act="open" data-url="${escapeHtml(u)}">${escapeHtml(tx('Open here','ここで開く'))}</button>
+              <button class="br-result__act" data-act="ext" data-url="${escapeHtml(u)}">${escapeHtml(tx('Open in real tab','実ブラウザで開く'))}</button>
+            </div>
+          </div>`;
+      }).join('');
+      list.querySelectorAll('.br-result__title').forEach(a => a.addEventListener('click', e => { e.preventDefault(); pushNav(a.dataset.url); }));
+      list.querySelectorAll('.br-result__act').forEach(b => b.addEventListener('click', () => {
+        if (b.dataset.act === 'open') pushNav(b.dataset.url);
+        else { try { window.open(b.dataset.url, '_blank', 'noopener,noreferrer'); } catch {} }
+      }));
+    } catch (e) {
+      list.innerHTML = `<div class="br-search__loading" style="color:#7a1f1f">${escapeHtml(tx('Wikipedia search failed: ','Wikipedia 検索失敗: ') + e.message)}<br>${escapeHtml(tx('Use the external buttons above to search elsewhere.','上の外部検索ボタンをご利用ください。'))}</div>`;
+    }
+  }
+
+  function showBlocked(wrap, url) {
+    const safeUrl = escapeHtml(url);
+    const banner = el('div', { class:'br-blocked' });
+    banner.innerHTML = `
+      <h3>${escapeHtml(tx('This site refused to embed','このサイトは iframe 表示を拒否しています'))}</h3>
+      <p>${escapeHtml(tx('The page sent X-Frame-Options or a Content-Security-Policy that prevents in-frame display. This is a security choice by the site owner; MiaOS respects it.','サイト側が X-Frame-Options または CSP で埋め込み表示を禁止しています。MiaOS はその意思を尊重します。'))}</p>
+      <p style="font-family:var(--font-mono);font-size:11px;color:var(--t-3);word-break:break-all">${safeUrl}</p>
+      <div class="btn-row">
+        <button class="btn btn--accent" id="br-blocked-open">${escapeHtml(tx('Open in real browser tab','実ブラウザで開く'))}</button>
+        <button class="btn btn--ghost" id="br-blocked-back">${escapeHtml(tx('Back','戻る'))}</button>
+      </div>
+    `;
+    wrap.appendChild(banner);
+    banner.querySelector('#br-blocked-open').addEventListener('click', () => { try { window.open(url, '_blank', 'noopener,noreferrer'); } catch {} });
+    banner.querySelector('#br-blocked-back').addEventListener('click', back);
+  }
+
+  render();
+  return { dispose: () => {} };
+}
+
+// ====================================================================
 // APPS: Finder (preserved from original mia-os-react)
 // ====================================================================
 const FS = {
@@ -1582,6 +2329,12 @@ const APP_MOUNTERS = {
   portref:  mountPortRef,
   logs:     mountLogViewer,
   ethics:   mountEthics,
+  jwt:      mountJwt,
+  cidr:     mountCidr,
+  passwd:   mountPasswd,
+  hmac:     mountHmac,
+  regex:    mountRegex,
+  browser:  mountBrowser,
   finder:   mountFinder,
 };
 

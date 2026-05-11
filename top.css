@@ -1253,6 +1253,9 @@ body:not(.video-text-active) .intro__title-amp {
     background: #fff;
     border: var(--mac-stroke) solid var(--mac-ink);
     overflow: hidden;
+    /* Hide the parent page's native cursor while hovering MiaOS — its
+       desktop draws its own custom cursor inside the iframe. */
+    cursor: none;
 }
 
 .mac-frame__iframe {
@@ -1265,6 +1268,7 @@ body:not(.video-text-active) .intro__title-amp {
     background: #fff;
     transform-origin: top left;
     transform: scale(calc(100cqi / 1200px));
+    cursor: none;
 }
 
 .mac-frame__base {
