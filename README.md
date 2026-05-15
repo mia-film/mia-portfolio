@@ -32,7 +32,7 @@ mia-0203/
 ├── mia-os-react.css    # Mia OSポートフォリオ用のスタイルシート
 ├── js/
 │   ├── top.js          # メインのJavaScript（開発用・解説コメント入り）
-│   └── top.min.js      # 圧縮済みのJavaScript（本番読み込み用）
+│   └── mia-os-react.js # mia osのJavaScript
 ├── img/                # 画像ファイルディレクトリ（WebP, ICO等）
 ├── video/              # 動画ファイルディレクトリ（ヒーローセクション用）
 ├── models/             # 機械学習モデルのディレクトリ
