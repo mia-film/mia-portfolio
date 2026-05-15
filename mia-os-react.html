@@ -387,6 +387,244 @@ html.miaos-cursor-on iframe{cursor:auto !important}
 .ethics-list li:before{counter-increment:r;content:counter(r) ".";position:absolute;left:0;top:0;font-family:var(--font-mono);color:var(--accent);font-weight:600}
 .ethics-list .ja{display:block;color:var(--t-3);font-family:var(--font-jp);font-size:11.5px;margin-top:3px;line-height:1.7}
 .ethics-quote{margin-top:18px;padding-top:14px;border-top:1px solid var(--hair);color:var(--t-4);font-style:italic;font-size:12px}
+
+/* ===== Wallpaper variants ===== */
+.wallpaper.var-grid{background:
+  linear-gradient(rgba(20,20,30,0.06) 1px, transparent 1px) 0 0 / 32px 32px,
+  linear-gradient(90deg, rgba(20,20,30,0.06) 1px, transparent 1px) 0 0 / 32px 32px,
+  linear-gradient(rgba(20,20,30,0.03) 1px, transparent 1px) 0 0 / 128px 128px,
+  linear-gradient(90deg, rgba(20,20,30,0.03) 1px, transparent 1px) 0 0 / 128px 128px,
+  #f6f6f8}
+.wallpaper.var-topo{background:
+  radial-gradient(circle at 20% 30%, transparent 0, transparent 60px, rgba(20,20,30,0.05) 61px, transparent 62px, transparent 120px, rgba(20,20,30,0.04) 121px, transparent 122px, transparent 180px, rgba(20,20,30,0.03) 181px, transparent 182px),
+  radial-gradient(circle at 80% 70%, transparent 0, transparent 80px, rgba(20,20,30,0.05) 81px, transparent 82px, transparent 160px, rgba(20,20,30,0.04) 161px, transparent 162px),
+  #f4f4f7}
+.wallpaper.var-slate{background:
+  radial-gradient(40% 32% at 24% 28%, rgba(255,255,255,0.06), transparent 65%),
+  radial-gradient(36% 30% at 78% 22%, rgba(255,255,255,0.04), transparent 65%),
+  #0d0d12}
+.wallpaper.var-slate:after{opacity:.18;mix-blend-mode:screen}
+.wallpaper.var-slate .wallpaper__mark{color:rgba(255,255,255,0.06)}
+
+/* ===== Status icons in menubar ===== */
+.menubar__status{display:flex;align-items:center;gap:8px;padding-right:6px}
+.menubar__icon{width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;border-radius:5px;color:var(--t-2);cursor:pointer;transition:background .15s,color .15s}
+.menubar__icon:hover{background:rgba(20,20,30,0.06);color:var(--t-1)}
+.menubar__icon svg{width:14px;height:14px}
+.menubar__icon.is-on{color:var(--t-1)}
+.menubar__wpager{display:flex;align-items:center;gap:5px;padding:0 8px;height:24px;border-radius:6px;cursor:pointer}
+.menubar__wpager:hover{background:rgba(20,20,30,0.05)}
+.menubar__wpager .dot{width:6px;height:6px;border-radius:50%;background:rgba(20,20,30,0.18);transition:background .18s,transform .18s}
+.menubar__wpager .dot.is-active{background:var(--t-1);transform:scale(1.35)}
+
+/* ===== Context menu (right-click) ===== */
+.ctx{position:fixed;min-width:200px;background:linear-gradient(180deg,rgba(255,255,255,0.94),rgba(255,255,255,0.82));backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);border:1px solid rgba(255,255,255,0.7);border-radius:10px;box-shadow:inset 0 1px 0 rgba(255,255,255,0.85),0 16px 40px rgba(20,20,30,0.22),0 34px 90px -16px rgba(20,20,30,0.3);padding:6px;font-size:13px;z-index:380;animation:ctxIn .12s ease-out}
+@keyframes ctxIn{from{opacity:0;transform:scale(.96) translateY(-3px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.ctx .row{padding:6px 12px;border-radius:5px;display:flex;justify-content:space-between;align-items:center;color:var(--t-1);cursor:pointer;gap:14px}
+.ctx .row:hover{background:linear-gradient(#15151a,#000);color:#fff}
+.ctx .row.dim{color:var(--t-4);pointer-events:none}
+.ctx .row .kbd{font-family:var(--font-mono);font-size:11px;color:var(--t-3)}
+.ctx .row:hover .kbd{color:rgba(255,255,255,0.85)}
+.ctx hr{border:0;border-top:1px solid var(--hair);margin:5px 4px}
+
+/* ===== Lock screen ===== */
+.lock{position:fixed;inset:0;z-index:9500;background:rgba(12,12,18,0.55);backdrop-filter:blur(28px) saturate(140%);-webkit-backdrop-filter:blur(28px) saturate(140%);display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;animation:lockIn .25s ease-out;font-family:var(--font-ui)}
+.lock.is-out{animation:lockOut .25s ease-in forwards}
+@keyframes lockIn{from{opacity:0}to{opacity:1}}
+@keyframes lockOut{to{opacity:0;visibility:hidden}}
+.lock__time{font-size:120px;font-weight:200;letter-spacing:-0.04em;line-height:1;font-feature-settings:"tnum"}
+.lock__date{font-size:14px;font-weight:400;color:rgba(255,255,255,0.7);margin-top:6px;letter-spacing:.06em}
+.lock__brand{position:absolute;top:36px;font-size:32px;font-style:italic;font-weight:300;letter-spacing:-0.02em;color:rgba(255,255,255,0.85)}
+.lock__hint{margin-top:60px;font-size:11px;color:rgba(255,255,255,0.55);letter-spacing:.16em;text-transform:uppercase;font-family:var(--font-mono)}
+.lock__input{margin-top:18px;width:280px;height:38px;padding:0 16px;border-radius:99px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.18);color:#fff;outline:none;font-size:13px;text-align:center;letter-spacing:.18em;transition:background .15s,border-color .15s}
+.lock__input:focus{background:rgba(255,255,255,0.14);border-color:rgba(255,255,255,0.3)}
+.lock__input::placeholder{color:rgba(255,255,255,0.35);letter-spacing:.12em}
+.lock__err{height:16px;margin-top:8px;font-size:11px;font-family:var(--font-mono);color:#ff9a9a;letter-spacing:.05em}
+
+/* ===== App Launcher (Launchpad) ===== */
+.launcher{position:fixed;inset:0;z-index:320;background:rgba(20,20,28,0.36);backdrop-filter:blur(28px) saturate(160%);-webkit-backdrop-filter:blur(28px) saturate(160%);opacity:0;visibility:hidden;transition:opacity .22s,visibility .22s;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:8vh 6vw 4vh}
+.launcher.is-open{opacity:1;visibility:visible}
+.launcher__search{width:480px;max-width:90vw;height:42px;border-radius:99px;background:rgba(255,255,255,0.18);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.22);padding:0 18px;color:#fff;outline:none;font-size:14px;text-align:center;font-style:italic;letter-spacing:.04em;transition:transform .22s,opacity .22s;transform:translateY(-12px);opacity:0}
+.launcher.is-open .launcher__search{transform:translateY(0);opacity:1}
+.launcher__search::placeholder{color:rgba(255,255,255,0.55)}
+.launcher__grid{margin-top:48px;display:grid;grid-template-columns:repeat(7,1fr);gap:36px 28px;width:100%;max-width:1000px;transform:scale(.96);opacity:0;transition:transform .26s cubic-bezier(.2,.8,.3,1),opacity .22s}
+.launcher.is-open .launcher__grid{transform:scale(1);opacity:1}
+.launcher__cell{display:flex;flex-direction:column;align-items:center;gap:10px;color:#fff;cursor:pointer;padding:6px 4px;border-radius:12px;transition:background .15s,transform .15s}
+.launcher__cell:hover{background:rgba(255,255,255,0.1);transform:translateY(-2px)}
+.launcher__cell .ico{width:64px;height:64px;border-radius:16px;background:linear-gradient(155deg,#2c2c34 0%,#15151a 70%,#0a0a0e 100%);box-shadow:inset 0 0 0 1px rgba(255,255,255,0.14),inset 0 1px 0 rgba(255,255,255,0.2),0 6px 18px rgba(0,0,0,0.28);display:grid;place-items:center;font-family:var(--font-mono);font-size:18px;font-weight:600;color:#fff;position:relative;overflow:hidden}
+.launcher__cell .ico:before{content:"";position:absolute;inset:0;background:linear-gradient(rgba(255,255,255,0.22),rgba(255,255,255,0) 50%);border-radius:16px}
+.launcher__cell .name{font-size:12px;letter-spacing:.02em;font-weight:500;text-align:center;text-shadow:0 1px 2px rgba(0,0,0,0.4)}
+.launcher__cell .ja{font-size:9.5px;color:rgba(255,255,255,0.55);font-family:var(--font-jp);margin-top:-4px}
+.launcher__hint{margin-top:auto;font-size:10px;color:rgba(255,255,255,0.5);font-family:var(--font-mono);letter-spacing:.16em;text-transform:uppercase}
+
+/* ===== Notification Center ===== */
+.notif-center{position:fixed;top:38px;right:8px;z-index:240;width:340px;max-height:80vh;background:linear-gradient(180deg,rgba(255,255,255,0.92),rgba(255,255,255,0.78));backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);border:1px solid rgba(255,255,255,0.7);border-radius:14px;box-shadow:inset 0 1px 0 rgba(255,255,255,0.85),0 24px 60px rgba(20,20,30,0.22),0 60px 120px -22px rgba(20,20,30,0.32);transform:translateY(-10px) scale(.96);opacity:0;visibility:hidden;transition:transform .2s cubic-bezier(.2,.8,.3,1),opacity .2s,visibility .2s;display:flex;flex-direction:column;overflow:hidden}
+.notif-center.is-open{transform:translateY(0) scale(1);opacity:1;visibility:visible}
+.notif-center__head{padding:14px 16px 10px;border-bottom:1px solid var(--hair);display:flex;justify-content:space-between;align-items:center}
+.notif-center__head h3{font-size:13px;font-weight:600;letter-spacing:.04em}
+.notif-center__head .ja{color:var(--t-3);font-family:var(--font-jp);font-size:11px;margin-left:6px;font-weight:500}
+.notif-center__clear{font-size:11px;color:var(--t-3);font-family:var(--font-mono);cursor:pointer;padding:3px 6px;border-radius:4px;transition:background .15s}
+.notif-center__clear:hover{background:rgba(20,20,30,0.05);color:var(--t-1)}
+.notif-center__list{flex:1;overflow:auto;padding:8px}
+.notif-center__item{padding:10px 12px;border-radius:9px;background:rgba(245,245,248,0.7);margin-bottom:6px;border:1px solid rgba(20,20,30,0.05)}
+.notif-center__item .t{font-size:12px;font-weight:600;color:var(--t-1);display:flex;justify-content:space-between;margin-bottom:3px}
+.notif-center__item .t .ts{font-family:var(--font-mono);font-size:9.5px;color:var(--t-3);font-weight:400}
+.notif-center__item .b{font-size:11.5px;color:var(--t-2);line-height:1.5}
+.notif-center__empty{padding:32px 16px;text-align:center;color:var(--t-3);font-size:11.5px;font-style:italic}
+.notif-center__toggle{padding:10px 16px;border-top:1px solid var(--hair);display:flex;justify-content:space-between;align-items:center;font-size:11.5px;color:var(--t-2)}
+.notif-center__toggle .sw{width:30px;height:18px;background:rgba(20,20,30,0.18);border-radius:99px;cursor:pointer;position:relative;transition:background .18s}
+.notif-center__toggle .sw:after{content:"";position:absolute;left:2px;top:2px;width:14px;height:14px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,0.15);transition:left .18s}
+.notif-center__toggle .sw.on{background:var(--t-1)}
+.notif-center__toggle .sw.on:after{left:14px}
+
+/* ===== Window resize/maximize/snap ===== */
+.window__resize{position:absolute;right:0;bottom:0;width:14px;height:14px;cursor:nwse-resize;z-index:5}
+.window__resize:after{content:"";position:absolute;right:2px;bottom:2px;width:8px;height:8px;border-right:1.5px solid rgba(20,20,30,0.3);border-bottom:1.5px solid rgba(20,20,30,0.3)}
+.window.is-maximized{border-radius:0;animation:none}
+.window.is-min{transform:scale(.04);opacity:0;pointer-events:none;transition:transform .25s cubic-bezier(.4,0,.6,1),opacity .25s}
+.window.is-snapping{transition:left .18s ease-out,top .18s ease-out,width .18s ease-out,height .18s ease-out}
+.snap-preview{position:fixed;background:rgba(20,20,30,0.12);border:1.5px dashed rgba(20,20,30,0.5);border-radius:10px;pointer-events:none;z-index:140;backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);opacity:0;transition:opacity .15s,left .12s,top .12s,width .12s,height .12s}
+.snap-preview.is-show{opacity:1}
+.window.is-focused .window__chrome{background:linear-gradient(rgba(255,255,255,0.7),rgba(255,255,255,0.18))}
+.window:not(.is-focused){box-shadow:inset 0 1px 0 rgba(255,255,255,0.7),inset 0 -1px 0 rgba(20,20,30,0.04),0 8px 24px rgba(20,20,30,0.16),0 36px 80px -28px rgba(20,20,30,0.22)}
+
+/* ===== Settings app ===== */
+.settings{display:flex;height:100%;margin:-20px -22px;font-size:13px}
+.settings__side{width:200px;border-right:1px solid var(--hair);background:rgba(252,252,254,0.7);padding:14px 8px;flex-shrink:0}
+.settings__side h4{font-family:var(--font-mono);font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--t-3);margin:6px 8px 4px;font-weight:500}
+.settings__tab{padding:8px 12px;border-radius:7px;color:var(--t-2);font-weight:500;cursor:pointer;display:flex;align-items:center;gap:9px;font-size:13px;margin:1px 0}
+.settings__tab:hover{background:rgba(20,20,30,0.04);color:var(--t-1)}
+.settings__tab.is-active{background:#15151a;color:#fff}
+.settings__tab .ja{font-family:var(--font-jp);font-size:10px;opacity:.6;margin-left:auto}
+.settings__main{flex:1;padding:18px 22px;overflow:auto}
+.settings__pane h2{font-size:18px;font-weight:500;letter-spacing:-0.01em;margin-bottom:4px}
+.settings__pane .sub{color:var(--t-3);font-size:11px;font-family:var(--font-mono);margin-bottom:14px}
+.settings__row{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid var(--hair);gap:18px}
+.settings__row:last-child{border-bottom:0}
+.settings__row .label-grp{flex:1}
+.settings__row .label-grp .ttl{font-size:13px;color:var(--t-1);font-weight:500}
+.settings__row .label-grp .desc{font-size:11px;color:var(--t-3);line-height:1.5;margin-top:2px}
+.settings__row .label-grp .ja{font-family:var(--font-jp);color:var(--t-3);display:block;margin-top:1px}
+.settings__seg{display:flex;border:1px solid rgba(20,20,30,0.1);border-radius:7px;overflow:hidden;background:rgba(245,245,248,0.7)}
+.settings__seg button{padding:6px 12px;font-size:12px;color:var(--t-2);border-right:1px solid rgba(20,20,30,0.06);transition:background .15s,color .15s;font-family:var(--font-ui)}
+.settings__seg button:last-child{border-right:0}
+.settings__seg button:hover{background:rgba(20,20,30,0.04);color:var(--t-1)}
+.settings__seg button.is-active{background:#15151a;color:#fff}
+.settings__sw{width:38px;height:22px;background:rgba(20,20,30,0.18);border-radius:99px;cursor:pointer;position:relative;transition:background .2s;flex-shrink:0}
+.settings__sw:after{content:"";position:absolute;left:2px;top:2px;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,0.18);transition:left .2s}
+.settings__sw.on{background:#15151a}
+.settings__sw.on:after{left:18px}
+.wallpaper-swatch{width:84px;height:54px;border-radius:8px;border:2px solid rgba(20,20,30,0.06);cursor:pointer;position:relative;overflow:hidden}
+.wallpaper-swatch.is-active{border-color:#15151a}
+.wallpaper-swatch .lbl{position:absolute;left:0;right:0;bottom:0;font-size:9px;font-family:var(--font-mono);text-align:center;color:rgba(20,20,30,0.7);padding:2px;background:rgba(255,255,255,0.55)}
+
+/* ===== Calculator ===== */
+.calc{margin:-8px -10px}
+.calc__display{background:#15151a;color:#fff;padding:18px 18px 14px;border-radius:10px;text-align:right;font-family:var(--font-mono);margin-bottom:10px;min-height:88px;display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden}
+.calc__hist{font-size:12px;color:rgba(255,255,255,0.45);min-height:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.calc__main{font-size:32px;font-weight:300;letter-spacing:-0.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.calc__grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.calc__btn{padding:14px 0;border-radius:8px;background:rgba(245,245,248,0.85);color:var(--t-1);font-family:var(--font-mono);font-size:15px;border:1px solid rgba(20,20,30,0.06);cursor:pointer;transition:background .12s,transform .08s}
+.calc__btn:hover{background:rgba(235,235,240,0.95)}
+.calc__btn:active{transform:scale(.96)}
+.calc__btn.op{background:#15151a;color:#fff;font-weight:500}
+.calc__btn.op:hover{background:#3d3d48}
+.calc__btn.fn{background:rgba(20,20,30,0.06);color:var(--t-2);font-size:13px}
+.calc__btn.eq{background:#15151a;color:#fff;font-weight:600}
+.calc__btn.wide{grid-column:span 2}
+
+/* ===== Notes ===== */
+.notes{display:flex;height:100%;margin:-20px -22px;font-size:13px}
+.notes__side{width:200px;border-right:1px solid var(--hair);background:rgba(252,252,254,0.7);display:flex;flex-direction:column;flex-shrink:0}
+.notes__toolbar{padding:10px;display:flex;gap:6px;border-bottom:1px solid var(--hair)}
+.notes__list{flex:1;overflow:auto;padding:6px}
+.notes__item{padding:9px 11px;border-radius:7px;cursor:pointer;margin-bottom:2px}
+.notes__item:hover{background:rgba(20,20,30,0.04)}
+.notes__item.is-active{background:#15151a;color:#fff}
+.notes__item .ttl{font-size:12.5px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px}
+.notes__item .meta{font-size:10px;font-family:var(--font-mono);color:var(--t-3)}
+.notes__item.is-active .meta{color:rgba(255,255,255,0.6)}
+.notes__main{flex:1;display:flex;flex-direction:column;min-width:0}
+.notes__edit-row{display:flex;flex:1;min-height:0}
+.notes__edit,.notes__preview{flex:1;padding:14px 18px;overflow:auto;min-width:0}
+.notes__edit{border-right:1px solid var(--hair)}
+.notes__edit textarea{width:100%;height:100%;border:0;outline:none;background:transparent;resize:none;font-family:var(--font-mono);font-size:12.5px;line-height:1.65;color:var(--t-1)}
+.notes__title-in{width:100%;border:0;outline:none;background:transparent;font-size:18px;font-weight:500;color:var(--t-1);padding:14px 18px 6px;border-bottom:1px solid var(--hair)}
+.notes__preview{background:rgba(252,252,254,0.5);font-size:13px;line-height:1.7;color:var(--t-1)}
+.notes__preview h1,.notes__preview h2,.notes__preview h3{font-weight:600;letter-spacing:-0.01em;margin:14px 0 6px}
+.notes__preview h1{font-size:20px}
+.notes__preview h2{font-size:16px}
+.notes__preview h3{font-size:14px}
+.notes__preview p{margin:8px 0}
+.notes__preview code{font-family:var(--font-mono);font-size:11.5px;background:rgba(20,20,30,0.06);padding:1px 5px;border-radius:3px}
+.notes__preview pre{background:rgba(20,20,30,0.04);border-radius:7px;padding:10px 12px;font-family:var(--font-mono);font-size:11.5px;line-height:1.55;overflow:auto;margin:8px 0}
+.notes__preview ul,.notes__preview ol{padding-left:24px;margin:6px 0}
+.notes__preview li{margin:2px 0}
+.notes__preview blockquote{border-left:3px solid var(--t-3);padding-left:12px;color:var(--t-2);margin:8px 0;font-style:italic}
+.notes__preview a{color:var(--t-1);text-decoration:underline}
+.notes__preview hr{border:0;border-top:1px solid var(--hair);margin:14px 0}
+.notes__empty{flex:1;display:grid;place-items:center;color:var(--t-3);font-size:13px;font-style:italic}
+
+/* ===== Diff Viewer ===== */
+.diff{display:flex;flex-direction:column;height:100%;margin:0;gap:10px}
+.diff__inputs{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.diff__inputs textarea{font-family:var(--font-mono);font-size:11.5px;height:140px;resize:vertical}
+.diff__out{flex:1;border:1px solid var(--hair);border-radius:8px;overflow:auto;background:rgba(252,252,254,0.6);font-family:var(--font-mono);font-size:11.5px;line-height:1.55;padding:6px 0;min-height:160px}
+.diff__line{display:flex;padding:0 10px}
+.diff__line .num{width:36px;color:var(--t-4);text-align:right;flex-shrink:0;user-select:none;padding-right:8px}
+.diff__line .sign{width:16px;flex-shrink:0;text-align:center}
+.diff__line .txt{flex:1;white-space:pre-wrap;word-break:break-word}
+.diff__line.add{background:rgba(20,20,30,0.04)}
+.diff__line.add .sign{color:#15151a;font-weight:700}
+.diff__line.del{background:rgba(20,20,30,0.10);text-decoration:line-through;text-decoration-color:rgba(20,20,30,0.5)}
+.diff__line.del .sign{color:var(--t-1);font-weight:700}
+
+/* ===== UUID / Random ===== */
+.rnd-out{font-family:var(--font-mono);font-size:12px;background:rgba(20,20,30,0.04);padding:10px 12px;border-radius:8px;white-space:pre-wrap;word-break:break-all;min-height:60px;line-height:1.7}
+.rnd-tabs{display:flex;gap:4px;margin-bottom:10px;border-bottom:1px solid var(--hair)}
+.rnd-tabs button{padding:8px 14px;font-size:12px;color:var(--t-3);border:0;background:transparent;border-bottom:2px solid transparent;cursor:pointer;transition:color .15s,border-color .15s}
+.rnd-tabs button:hover{color:var(--t-1)}
+.rnd-tabs button.is-active{color:var(--t-1);border-bottom-color:var(--t-1);font-weight:500}
+
+/* ===== Headers / Cookies / DNS / RDAP shared ===== */
+.audit-row{display:flex;padding:9px 10px;border-bottom:1px solid var(--hair);gap:14px;align-items:flex-start}
+.audit-row:last-child{border-bottom:0}
+.audit-row .h{flex:0 0 200px;font-family:var(--font-mono);font-size:11px;color:var(--t-1);font-weight:600;word-break:break-all}
+.audit-row .v{flex:1;font-family:var(--font-mono);font-size:11px;color:var(--t-2);word-break:break-all;line-height:1.55}
+.audit-row .b{flex:0 0 60px;text-align:right}
+.badge{display:inline-block;padding:2px 7px;border-radius:99px;font-family:var(--font-mono);font-size:9.5px;letter-spacing:.05em;font-weight:600;text-transform:uppercase}
+.badge.ok{background:rgba(20,20,30,0.08);color:#15151a}
+.badge.warn{background:#15151a;color:#fff}
+.badge.miss{background:rgba(20,20,30,0.18);color:#fff}
+.badge.info{background:rgba(20,20,30,0.05);color:var(--t-2);font-weight:500}
+.audit-grade{display:flex;align-items:center;gap:14px;margin:10px 0;padding:14px 16px;border:1px solid var(--hair);border-radius:10px;background:rgba(245,245,248,0.6)}
+.audit-grade .letter{font-size:42px;font-weight:300;font-family:var(--font-mono);line-height:1;color:var(--t-1)}
+.audit-grade .desc{flex:1;font-size:12px;color:var(--t-2);line-height:1.55}
+.audit-grade .desc strong{color:var(--t-1);font-weight:600;display:block;font-size:13px;margin-bottom:2px}
+
+/* ===== Codepoint Inspector ===== */
+.cp-table{width:100%;border-collapse:collapse;font-size:11.5px}
+.cp-table th,.cp-table td{padding:7px 10px;border-bottom:1px solid var(--hair);text-align:left;vertical-align:top}
+.cp-table th{font-family:var(--font-mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--t-3);background:rgba(248,248,250,0.95);position:sticky;top:0;font-weight:500}
+.cp-table td.gly{font-family:var(--font-mono);font-size:15px;width:46px;color:var(--t-1)}
+.cp-table td.hex{font-family:var(--font-mono);width:78px;color:var(--t-1);font-weight:500}
+.cp-table td.dec{font-family:var(--font-mono);width:78px;color:var(--t-2)}
+.cp-table td.utf{font-family:var(--font-mono);width:120px;color:var(--t-3);font-size:10.5px}
+.cp-table td.name{color:var(--t-2);font-size:11.5px}
+
+/* ===== Task Manager ===== */
+.taskmgr{font-size:12px}
+.taskmgr table{width:100%;border-collapse:collapse}
+.taskmgr th,.taskmgr td{padding:8px 10px;border-bottom:1px solid var(--hair);text-align:left}
+.taskmgr th{font-family:var(--font-mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--t-3);font-weight:500;background:rgba(248,248,250,0.6)}
+.taskmgr td .pill{font-family:var(--font-mono);font-size:10px;padding:2px 6px;border-radius:99px;background:rgba(20,20,30,0.06);color:var(--t-2)}
+.taskmgr .end-btn{padding:4px 10px;border-radius:6px;background:#15151a;color:#fff;font-size:11px;border:0;cursor:pointer}
+.taskmgr .end-btn:hover{background:#3d3d48}
+.bar{height:4px;border-radius:99px;background:rgba(20,20,30,0.08);overflow:hidden;margin-top:4px}
+.bar > span{display:block;height:100%;background:var(--t-1)}
+
+/* ===== Reduce motion ===== */
+html.miaos-reduce-motion *,html.miaos-reduce-motion *:before,html.miaos-reduce-motion *:after{animation-duration:0.01ms !important;animation-iteration-count:1 !important;transition-duration:0.01ms !important;scroll-behavior:auto !important}
 </style>
 </head>
 <body>
@@ -429,26 +667,37 @@ const tx = (en, ja) => (LANG === 'ja' ? ja : en);
 // App registry
 // ====================================================================
 const APPS = [
-  { id:'welcome',  title:'Welcome',         titleJa:'ようこそ',     icon:'@',  w:780, h:520 },
-  { id:'terminal', title:'Terminal',        titleJa:'端末',         icon:'>_', w:820, h:520 },
-  { id:'hash',     title:'Hash Tool',       titleJa:'ハッシュ',     icon:'#',  w:760, h:540 },
-  { id:'encoder',  title:'Encoder',         titleJa:'エンコーダ',   icon:'{}', w:780, h:540 },
-  { id:'netinfo',  title:'Net Info',        titleJa:'ネット情報',   icon:'()', w:780, h:540 },
-  { id:'portscan', title:'Port Scanner',    titleJa:'ポート調査',   icon:'::', w:800, h:580 },
-  { id:'portref',  title:'Port Reference',  titleJa:'ポート一覧',   icon:'?',  w:760, h:560 },
-  { id:'logs',     title:'Log Viewer',      titleJa:'ログ閲覧',     icon:'/',  w:820, h:580 },
-  { id:'ethics',   title:'Code of Conduct', titleJa:'行動規範',     icon:'!',  w:760, h:560 },
-  { id:'jwt',      title:'JWT Inspector',   titleJa:'JWT 解析',     icon:'JT', w:820, h:600 },
-  { id:'cidr',     title:'CIDR Calc',       titleJa:'サブネット計算', icon:'IP', w:780, h:560 },
-  { id:'passwd',   title:'Password Meter',  titleJa:'パスワード強度', icon:'**', w:780, h:580 },
-  { id:'hmac',     title:'HMAC Tool',       titleJa:'HMAC',         icon:'~',  w:780, h:560 },
-  { id:'regex',    title:'Regex Tester',    titleJa:'正規表現',     icon:'.*', w:800, h:580 },
-  { id:'browser',  title:'Browser',         titleJa:'ブラウザ',     icon:'@@', w:980, h:680 },
+  { id:'welcome',  title:'Welcome',         titleJa:'ようこそ',     icon:'@',  w:780, h:520, pin:true,  cat:'system' },
+  { id:'terminal', title:'Terminal',        titleJa:'端末',         icon:'>_', w:820, h:520, pin:true,  cat:'system' },
+  { id:'browser',  title:'Browser',         titleJa:'ブラウザ',     icon:'@@', w:980, h:680, pin:true,  cat:'system' },
+  { id:'notes',    title:'Notes',           titleJa:'ノート',       icon:'N',  w:880, h:600, pin:true,  cat:'productivity' },
+  { id:'calc',     title:'Calculator',      titleJa:'電卓',         icon:'=',  w:380, h:500, pin:true,  cat:'productivity' },
+  { id:'hash',     title:'Hash Tool',       titleJa:'ハッシュ',     icon:'#',  w:760, h:540, pin:true,  cat:'security' },
+  { id:'encoder',  title:'Encoder',         titleJa:'エンコーダ',   icon:'{}', w:780, h:540, pin:true,  cat:'security' },
+  { id:'netinfo',  title:'Net Info',        titleJa:'ネット情報',   icon:'()', w:780, h:540, pin:true,  cat:'network' },
+  { id:'portscan', title:'Port Scanner',    titleJa:'ポート調査',   icon:'::', w:800, h:580, pin:true,  cat:'network' },
+  { id:'settings', title:'Settings',        titleJa:'設定',         icon:'⚙',  w:780, h:560, pin:true,  cat:'system' },
+  { id:'portref',  title:'Port Reference',  titleJa:'ポート一覧',   icon:'?',  w:760, h:560, pin:false, cat:'network' },
+  { id:'logs',     title:'Log Viewer',      titleJa:'ログ閲覧',     icon:'/',  w:820, h:580, pin:false, cat:'security' },
+  { id:'ethics',   title:'Code of Conduct', titleJa:'行動規範',     icon:'!',  w:760, h:560, pin:false, cat:'system' },
+  { id:'jwt',      title:'JWT Inspector',   titleJa:'JWT 解析',     icon:'JT', w:820, h:600, pin:false, cat:'security' },
+  { id:'cidr',     title:'CIDR Calc',       titleJa:'サブネット計算', icon:'IP', w:780, h:560, pin:false, cat:'network' },
+  { id:'passwd',   title:'Password Meter',  titleJa:'パスワード強度', icon:'**', w:780, h:580, pin:false, cat:'security' },
+  { id:'hmac',     title:'HMAC Tool',       titleJa:'HMAC',         icon:'~',  w:780, h:560, pin:false, cat:'security' },
+  { id:'regex',    title:'Regex Tester',    titleJa:'正規表現',     icon:'.*', w:800, h:580, pin:false, cat:'productivity' },
+  { id:'diff',     title:'Diff Viewer',     titleJa:'差分',         icon:'+-', w:840, h:600, pin:false, cat:'productivity' },
+  { id:'uuid',     title:'UUID / Random',   titleJa:'UUID・乱数',   icon:'U4', w:760, h:580, pin:false, cat:'security' },
+  { id:'headers',  title:'Header Inspector',titleJa:'ヘッダ監査',   icon:'HD', w:820, h:620, pin:false, cat:'security' },
+  { id:'cookies',  title:'Cookie Inspector',titleJa:'Cookie 監査',  icon:'CK', w:820, h:600, pin:false, cat:'security' },
+  { id:'dns',      title:'DNS Lookup',      titleJa:'DNS 解決',     icon:'DN', w:820, h:600, pin:false, cat:'network' },
+  { id:'rdap',     title:'RDAP / Whois',    titleJa:'RDAP / Whois', icon:'WH', w:820, h:600, pin:false, cat:'network' },
+  { id:'codepoint',title:'Codepoint',       titleJa:'文字コード',   icon:'CP', w:820, h:600, pin:false, cat:'productivity' },
+  { id:'taskmgr',  title:'Task Manager',    titleJa:'タスク',       icon:'TM', w:780, h:520, pin:false, cat:'system' },
 ];
 // Extras kept from the original mia-os-react: Finder + Trash. Not part of Cmd+1-9.
 const EXTRAS = [
-  { id:'finder',   title:'Finder',          titleJa:'ファインダ',   icon:'☺',  w:760, h:520 },
-  { id:'trash',    title:'Trash',           titleJa:'ゴミ箱',       icon:'',   w:0,   h:0  },
+  { id:'finder',   title:'Finder',          titleJa:'ファインダ',   icon:'F',  w:780, h:560, pin:true, cat:'system' },
+  { id:'trash',    title:'Trash',           titleJa:'ゴミ箱',       icon:'',   w:0,   h:0,  pin:true, cat:'system' },
 ];
 const APP_BY_ID = Object.fromEntries([...APPS, ...EXTRAS].map(a => [a.id, a]));
 
@@ -562,7 +811,7 @@ function rot13(s) {
 // ====================================================================
 const state = {
   bootDone: false,
-  windows: [],          // { id, x, y, w, h, z, el, instance }
+  windows: [],          // { id, x, y, w, h, z, el, instance, workspace, maximized, prev:{x,y,w,h} }
   focusedId: null,
   topZ: 100,
   staggerX: 100,
@@ -572,7 +821,44 @@ const state = {
   spotlightActive: 0,
   notifShown: false,
   langMenuOpen: false,
+  workspace: 0,
+  workspaceCount: 3,
+  locked: false,
+  launcherOpen: false,
+  launcherQuery: '',
+  notifCenterOpen: false,
+  notifs: [],           // { title, body, ts, id }
+  dnd: false,
+  settings: {
+    motion: true,
+    sound: false,
+    cursor: true,
+    wallpaper: 'mist',  // mist | grid | topo | slate
+  },
 };
+// Load persisted settings
+try {
+  const raw = localStorage.getItem('miaos.settings');
+  if (raw) Object.assign(state.settings, JSON.parse(raw));
+} catch(_) {}
+function saveSettings() {
+  try { localStorage.setItem('miaos.settings', JSON.stringify(state.settings)); } catch(_) {}
+}
+function applySettings() {
+  document.documentElement.classList.toggle('miaos-reduce-motion', !state.settings.motion);
+  const wp = document.querySelector('.wallpaper');
+  if (wp) {
+    wp.classList.remove('var-mist','var-grid','var-topo','var-slate');
+    wp.classList.add('var-' + state.settings.wallpaper);
+  }
+  if (state.settings.cursor) {
+    initCustomCursor();
+  } else {
+    document.documentElement.classList.remove('miaos-cursor-on');
+    document.querySelectorAll('.miaos-cursor-dot, .miaos-cursor-ring').forEach(n => n.remove());
+    _cursorInited = false;
+  }
+}
 
 function nextStagger() {
   const x = state.staggerX, y = state.staggerY;
@@ -595,14 +881,67 @@ function focusWindow(id) {
 function openWindow(id) {
   const meta = APP_BY_ID[id];
   if (!meta) return;
-  const existing = state.windows.find(w => w.id === id);
-  if (existing) { focusWindow(id); return; }
+  const existing = state.windows.find(w => w.id === id && w.workspace === state.workspace);
+  if (existing) {
+    if (existing.minimized) restoreFromMin(existing);
+    focusWindow(id);
+    return;
+  }
+  // open in current workspace
   const { x, y } = nextStagger();
   const win = createWindowEl(meta, x, y);
+  win.workspace = state.workspace;
   document.querySelector('.windows').appendChild(win.el);
   state.windows.push(win);
   focusWindow(id);
   updateDockIndicators();
+  applyWorkspaceVisibility();
+}
+function restoreFromMin(w) {
+  w.minimized = false;
+  w.el.classList.remove('is-min');
+  w.el.style.pointerEvents = '';
+}
+function minimizeWindow(id) {
+  const w = state.windows.find(x => x.id === id);
+  if (!w || w.minimized) return;
+  w.minimized = true;
+  w.el.classList.add('is-min');
+  if (state.focusedId === id) {
+    const next = [...state.windows].reverse().find(x => !x.minimized && x.workspace === state.workspace && x.id !== id);
+    state.focusedId = next ? next.id : null;
+  }
+}
+function maximizeWindow(id) {
+  const w = state.windows.find(x => x.id === id);
+  if (!w) return;
+  if (w.maximized) {
+    w.maximized = false;
+    w.el.classList.remove('is-maximized');
+    if (w.prev) {
+      Object.assign(w.el.style, { left: w.prev.x+'px', top: w.prev.y+'px', width: w.prev.w+'px', height: w.prev.h+'px' });
+    }
+  } else {
+    w.prev = { x: parseInt(w.el.style.left)||0, y: parseInt(w.el.style.top)||0, w: w.el.offsetWidth, h: w.el.offsetHeight };
+    w.maximized = true;
+    w.el.classList.add('is-maximized');
+    const wrap = document.querySelector('.windows').getBoundingClientRect();
+    Object.assign(w.el.style, { left:'0px', top:'0px', width: wrap.width+'px', height: wrap.height+'px' });
+  }
+}
+function applyWorkspaceVisibility() {
+  for (const w of state.windows) {
+    w.el.style.display = (w.workspace === state.workspace) ? '' : 'none';
+  }
+  // update pager
+  document.querySelectorAll('.menubar__wpager .dot').forEach((d, i) => d.classList.toggle('is-active', i === state.workspace));
+  updateDockIndicators();
+}
+function switchWorkspace(idx) {
+  idx = Math.max(0, Math.min(state.workspaceCount - 1, idx));
+  if (idx === state.workspace) return;
+  state.workspace = idx;
+  applyWorkspaceVisibility();
 }
 
 function onDockClick(id) {
@@ -624,7 +963,8 @@ function closeWindow(id) {
     w.el.remove();
     state.windows.splice(state.windows.indexOf(w), 1);
     if (state.focusedId === id) {
-      state.focusedId = state.windows.length ? state.windows[state.windows.length-1].id : null;
+      const here = state.windows.filter(x => x.workspace === state.workspace && !x.minimized);
+      state.focusedId = here.length ? here[here.length-1].id : null;
     }
     updateDockIndicators();
   }, 220);
@@ -640,6 +980,14 @@ function updateDockIndicators() {
     a.classList.toggle('is-open', state.windows.some(w => w.id === id));
   });
 }
+function cycleFocus(dir) {
+  const here = state.windows.filter(w => w.workspace === state.workspace && !w.minimized);
+  if (here.length < 1) return;
+  here.sort((a,b) => a.z - b.z);
+  let idx = here.findIndex(w => w.id === state.focusedId);
+  idx = (idx + dir + here.length) % here.length;
+  focusWindow(here[idx].id);
+}
 
 function createWindowEl(meta, x, y) {
   const winEl = el('div', { class:'window', style:{ left:x+'px', top:y+'px', width:meta.w+'px', height:meta.h+'px' }});
@@ -649,30 +997,41 @@ function createWindowEl(meta, x, y) {
   winEl.innerHTML = `
     <div class="window__chrome">
       <div class="tlights">
-        <span class="tl" data-act="close">${closeIco}</span>
-        <span class="tl" data-act="min">${minIco}</span>
-        <span class="tl" data-act="max">${maxIco}</span>
+        <span class="tl" data-act="close" title="Close">${closeIco}</span>
+        <span class="tl" data-act="min"   title="Minimize">${minIco}</span>
+        <span class="tl" data-act="max"   title="Maximize">${maxIco}</span>
       </div>
       <div class="window__title">${escapeHtml(meta.title)}<span class="ja">${escapeHtml(meta.titleJa)}</span></div>
       <div class="window__chrome-spacer"></div>
     </div>
     <div class="window__body"></div>
+    <div class="window__resize" title="resize"></div>
   `;
   const body = winEl.querySelector('.window__body');
   const chrome = winEl.querySelector('.window__chrome');
-  // close button
+  const resizer = winEl.querySelector('.window__resize');
+  // traffic-light buttons
   winEl.querySelector('.tl[data-act=close]').addEventListener('click', (e) => { e.stopPropagation(); closeWindow(meta.id); });
-  winEl.querySelector('.tl[data-act=min]').addEventListener('click', (e) => { e.stopPropagation(); closeWindow(meta.id); });
-  winEl.querySelector('.tl[data-act=max]').addEventListener('click', (e) => { e.stopPropagation(); /* no-op */ });
+  winEl.querySelector('.tl[data-act=min]').addEventListener('click',   (e) => { e.stopPropagation(); minimizeWindow(meta.id); });
+  winEl.querySelector('.tl[data-act=max]').addEventListener('click',   (e) => { e.stopPropagation(); maximizeWindow(meta.id); });
   // focus on click
   winEl.addEventListener('mousedown', () => focusWindow(meta.id));
-  // drag
+  // right-click context menu on chrome
+  chrome.addEventListener('contextmenu', (e) => { e.preventDefault(); openContextMenu(e.clientX, e.clientY, buildWindowContextMenu(meta.id)); });
+  // double-click chrome → toggle maximize
+  chrome.addEventListener('dblclick', (e) => { if (e.target.closest('.tl')) return; maximizeWindow(meta.id); });
+  // drag with snap preview
   let drag = null;
   chrome.addEventListener('mousedown', (e) => {
     if (e.target.closest('.tl')) return;
+    const w = state.windows.find(w => w.id === meta.id);
+    if (w && w.maximized) {
+      // un-maximize on drag so the user can re-position freely
+      maximizeWindow(meta.id);
+    }
     chrome.classList.add('is-dragging');
     const rect = winEl.getBoundingClientRect();
-    drag = { dx: e.clientX - rect.left, dy: e.clientY - rect.top };
+    drag = { dx: e.clientX - rect.left, dy: e.clientY - rect.top, snap: null };
     e.preventDefault();
   });
   window.addEventListener('mousemove', (e) => {
@@ -680,18 +1039,81 @@ function createWindowEl(meta, x, y) {
     const wrap = document.querySelector('.windows').getBoundingClientRect();
     let nx = e.clientX - wrap.left - drag.dx;
     let ny = e.clientY - wrap.top - drag.dy;
-    nx = Math.max(0, Math.min(wrap.width - 80, nx));
+    nx = Math.max(-40, Math.min(wrap.width - 80, nx));
     ny = Math.max(0, Math.min(wrap.height - 30, ny));
     winEl.style.left = nx + 'px';
     winEl.style.top = ny + 'px';
+    // snap preview
+    const ex = e.clientX, ey = e.clientY;
+    const wrapEl = wrap;
+    let snap = null;
+    if (ey - wrapEl.top < 6) snap = 'max';
+    else if (ex - wrapEl.left < 6) snap = 'left';
+    else if (wrapEl.right - ex < 6) snap = 'right';
+    drag.snap = snap;
+    showSnapPreview(snap, wrapEl);
   });
-  window.addEventListener('mouseup', () => { if (drag) { drag = null; chrome.classList.remove('is-dragging'); }});
+  window.addEventListener('mouseup', (e) => {
+    if (!drag) return;
+    chrome.classList.remove('is-dragging');
+    if (drag.snap) {
+      const w = state.windows.find(w => w.id === meta.id);
+      if (w) snapWindow(w, drag.snap);
+    }
+    drag = null;
+    showSnapPreview(null);
+  });
+  // resize
+  let res = null;
+  resizer.addEventListener('mousedown', (e) => {
+    e.stopPropagation();
+    const rect = winEl.getBoundingClientRect();
+    res = { sx: e.clientX, sy: e.clientY, sw: rect.width, sh: rect.height };
+    e.preventDefault();
+  });
+  window.addEventListener('mousemove', (e) => {
+    if (!res) return;
+    const nw = Math.max(360, res.sw + (e.clientX - res.sx));
+    const nh = Math.max(240, res.sh + (e.clientY - res.sy));
+    winEl.style.width = nw + 'px';
+    winEl.style.height = nh + 'px';
+  });
+  window.addEventListener('mouseup', () => { res = null; });
 
-  const winRec = { id: meta.id, el: winEl, z: 0, instance: null };
+  const winRec = { id: meta.id, el: winEl, z: 0, instance: null, workspace: state.workspace, maximized: false, minimized: false, prev: null };
   // Mount the app
   const mounter = APP_MOUNTERS[meta.id];
   winRec.instance = mounter ? mounter(body) : null;
   return winRec;
+}
+
+// Snap preview overlay
+function showSnapPreview(side, wrapRect) {
+  let p = document.querySelector('.snap-preview');
+  if (!side) { if (p) p.classList.remove('is-show'); return; }
+  if (!p) {
+    p = el('div', { class:'snap-preview' });
+    document.body.appendChild(p);
+  }
+  const w = wrapRect || document.querySelector('.windows').getBoundingClientRect();
+  let s = { left: w.left, top: w.top, width: w.width, height: w.height };
+  if (side === 'left')  s = { left: w.left,             top: w.top, width: w.width/2, height: w.height };
+  if (side === 'right') s = { left: w.left + w.width/2, top: w.top, width: w.width/2, height: w.height };
+  if (side === 'max')   s = { left: w.left,             top: w.top, width: w.width,   height: w.height };
+  Object.assign(p.style, { left: s.left+'px', top: s.top+'px', width: s.width+'px', height: s.height+'px' });
+  p.classList.add('is-show');
+}
+function snapWindow(w, side) {
+  const wrap = document.querySelector('.windows').getBoundingClientRect();
+  w.el.classList.add('is-snapping');
+  let s = null;
+  if (side === 'left')  s = { left: 0,           top: 0, width: wrap.width/2, height: wrap.height };
+  if (side === 'right') s = { left: wrap.width/2,top: 0, width: wrap.width/2, height: wrap.height };
+  if (side === 'max') { maximizeWindow(w.id); setTimeout(() => w.el.classList.remove('is-snapping'), 220); return; }
+  if (s) {
+    Object.assign(w.el.style, { left: s.left+'px', top: s.top+'px', width: s.width+'px', height: s.height+'px' });
+    setTimeout(() => w.el.classList.remove('is-snapping'), 220);
+  }
 }
 
 // ====================================================================
@@ -758,9 +1180,9 @@ function startBoot() {
 
 function onBootComplete() {
   buildShell();
-  initCustomCursor();
+  applySettings();
   setTimeout(() => openWindow('welcome'), 200);
-  setTimeout(showWelcomeNotif, 600);
+  setTimeout(showWelcomeNotif, 900);
 }
 
 // ====================================================================
@@ -829,17 +1251,47 @@ function buildShell() {
 
   // Menubar
   const mb = el('div', { class:'menubar' });
+  const pagerDots = Array.from({length:state.workspaceCount}, (_,i) => `<span class="dot${i===state.workspace?' is-active':''}" data-w="${i}"></span>`).join('');
+  const wifiSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.55a11 11 0 0 1 14 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><circle cx="12" cy="20" r=".8"/></svg>';
+  const battSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="18" height="10" rx="2"/><line x1="22" y1="11" x2="22" y2="13"/><rect x="4" y="9.5" width="11" height="5" fill="currentColor" stroke="none"/></svg>';
+  const dndSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>';
   mb.innerHTML = `
     <div class="menubar__group">
       <div class="menubar__brand"><span class="menubar__brand-mark" aria-hidden="true"><svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="mia-mark-bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2a2a32"/><stop offset="1" stop-color="#0c0c10"/></linearGradient></defs><rect x="0.5" y="0.5" width="15" height="15" rx="3.6" fill="url(#mia-mark-bg)" stroke="rgba(255,255,255,0.12)"/><rect x="3" y="4" width="10" height="6.6" rx="1" fill="none" stroke="#ffffff" stroke-width="1.1"/><line x1="6.4" y1="13" x2="9.6" y2="13" stroke="#ffffff" stroke-width="1.1" stroke-linecap="round"/><line x1="8" y1="10.6" x2="8" y2="13" stroke="#ffffff" stroke-width="1.1"/></svg></span>STUDIO MIA</div>
+      <div class="menubar__wpager" title="${escapeHtml(tx('Workspaces (Cmd+Ctrl+←/→)','ワークスペース'))}">${pagerDots}</div>
       <div class="menubar__item" data-menu="file">${t('FileMenu')}</div>
+      <div class="menubar__item" data-menu="window">${tx('Window','ウィンドウ')}</div>
       <div class="menubar__item" data-menu="help">${t('HelpMenu')}</div>
       <div class="menubar__item" data-menu="lang">${t('Language')}</div>
     </div>
     <div class="menubar__spacer"></div>
-    <div class="menubar__time"></div>
+    <div class="menubar__status">
+      <button class="menubar__icon" data-mb="dnd"   title="${escapeHtml(tx('Do Not Disturb','通知を停止'))}">${dndSvg}</button>
+      <button class="menubar__icon" data-mb="wifi"  title="Wi-Fi">${wifiSvg}</button>
+      <button class="menubar__icon" data-mb="batt"  title="Battery">${battSvg}</button>
+    </div>
+    <div class="menubar__time" title="${escapeHtml(tx('Notification Center','通知センター'))}"></div>
   `;
   root.appendChild(mb);
+
+  // workspace pager
+  mb.querySelectorAll('.menubar__wpager .dot').forEach(d => {
+    d.addEventListener('click', e => { e.stopPropagation(); switchWorkspace(parseInt(d.dataset.w, 10)); });
+  });
+  // dnd toggle
+  const dndBtn = mb.querySelector('[data-mb=dnd]');
+  const setDndUi = () => dndBtn.classList.toggle('is-on', state.dnd);
+  setDndUi();
+  dndBtn.addEventListener('click', e => { e.stopPropagation(); state.dnd = !state.dnd; setDndUi(); });
+  // wifi / battery — visual only, info popover
+  mb.querySelector('[data-mb=wifi]').addEventListener('click', e => {
+    e.stopPropagation();
+    pushNotification(tx('Network','ネットワーク'), tx('Wi-Fi connected (read-only indicator).','Wi-Fi 接続中（表示専用）。'));
+  });
+  mb.querySelector('[data-mb=batt]').addEventListener('click', e => {
+    e.stopPropagation();
+    pushNotification(tx('Battery','バッテリー'), tx('AC power — sandbox build does not read real battery.','AC 電源 — サンドボックスは実バッテリーを参照しません。'));
+  });
 
   // dropdowns wired on click
   let openMenu = null;
@@ -859,7 +1311,7 @@ function buildShell() {
   });
   document.addEventListener('click', () => closeMenu());
 
-  // clock
+  // clock → notification center
   const clockEl = mb.querySelector('.menubar__time');
   const updateClock = () => {
     const d = new Date();
@@ -872,6 +1324,7 @@ function buildShell() {
   };
   updateClock();
   setInterval(updateClock, 30000);
+  clockEl.addEventListener('click', (e) => { e.stopPropagation(); toggleNotifCenter(); });
 
   // Windows root
   const winsRoot = el('div', { class:'windows' });
@@ -890,7 +1343,13 @@ function buildShell() {
   // Browser uses a globe/compass SVG (Chrome-inspired but original — no Chrome trade dress)
   const browserSvg = `<svg viewBox="0 0 32 32" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="16" cy="16" r="11"/><line x1="5" y1="16" x2="27" y2="16"/><path d="M16 5a17 17 0 0 1 5 11 17 17 0 0 1-5 11"/><path d="M16 5a17 17 0 0 0-5 11 17 17 0 0 0 5 11"/></svg>`;
   const customIcon = (id) => id === 'welcome' ? computerSvg : (id === 'browser' ? browserSvg : null);
-  for (const a of APPS) addTile(a, customIcon(a.id));
+  for (const a of APPS.filter(a => a.pin)) addTile(a, customIcon(a.id));
+  dock.appendChild(el('span', { class:'dock__sep' }));
+  // Launchpad tile — opens full app grid
+  const lpadSvg = `<svg viewBox="0 0 32 32" width="24" height="24" fill="currentColor"><rect x="6" y="6" width="6" height="6" rx="1.6"/><rect x="13" y="6" width="6" height="6" rx="1.6"/><rect x="20" y="6" width="6" height="6" rx="1.6"/><rect x="6" y="13" width="6" height="6" rx="1.6"/><rect x="13" y="13" width="6" height="6" rx="1.6"/><rect x="20" y="13" width="6" height="6" rx="1.6"/><rect x="6" y="20" width="6" height="6" rx="1.6"/><rect x="13" y="20" width="6" height="6" rx="1.6"/><rect x="20" y="20" width="6" height="6" rx="1.6"/></svg>`;
+  const lpadTile = el('button', { class:'dock-app', 'data-id':'launchpad', 'aria-label':'Launchpad', onclick: openLauncher });
+  lpadTile.innerHTML = `${lpadSvg}<span class="dock-app__indicator"></span><span class="dock-app__tooltip">Launchpad<span class="ja">アプリ一覧</span></span>`;
+  dock.appendChild(lpadTile);
   dock.appendChild(el('span', { class:'dock__sep' }));
   addTile(EXTRAS[0]);  // Finder
   // Trash uses an SVG icon
@@ -929,10 +1388,282 @@ function buildShell() {
     }
   });
 
-  // Notification slot
+  // Notification slot (toast)
   const notif = el('div', { class:'notif' });
   notif.innerHTML = `<div class="notif__title"><span class="notif__title-text"></span><span class="notif__time">now</span></div><div class="notif__body"></div>`;
   root.appendChild(notif);
+
+  // Notification Center
+  buildNotifCenter(root);
+  // App Launcher
+  buildLauncher(root);
+
+  wireGlobalListeners();
+  applyWorkspaceVisibility();
+}
+
+// Document-level listeners registered exactly once (buildShell may run repeatedly)
+let _globalWired = false;
+function wireGlobalListeners() {
+  if (_globalWired) return;
+  _globalWired = true;
+  // Desktop right-click context menu (.windows is pointer-events:none, so listen on document)
+  document.addEventListener('contextmenu', (e) => {
+    if (e.target.closest('.window') || e.target.closest('.menubar') || e.target.closest('.dock')
+        || e.target.closest('.ctx') || e.target.closest('.spot') || e.target.closest('.launcher')
+        || e.target.closest('.notif-center') || e.target.closest('input') || e.target.closest('textarea')) return;
+    e.preventDefault();
+    openContextMenu(e.clientX, e.clientY, buildDesktopContextMenu());
+  });
+  // dismiss context menu / notif center on any click outside them
+  document.addEventListener('mousedown', (e) => {
+    if (!e.target.closest('.ctx')) closeContextMenu();
+    if (!e.target.closest('.notif-center') && !e.target.closest('.menubar__time')) closeNotifCenter();
+  });
+}
+
+// ====================================================================
+// Notification Center
+// ====================================================================
+function buildNotifCenter(root) {
+  const nc = el('div', { class:'notif-center' });
+  nc.innerHTML = `
+    <div class="notif-center__head">
+      <h3>${escapeHtml(tx('Notifications','通知'))}<span class="ja">${escapeHtml(tx('','センター'))}</span></h3>
+      <span class="notif-center__clear">${escapeHtml(tx('Clear all','すべて消去'))}</span>
+    </div>
+    <div class="notif-center__list"></div>
+    <div class="notif-center__toggle">
+      <span>${escapeHtml(tx('Do Not Disturb','通知を停止'))}</span>
+      <span class="sw${state.dnd?' on':''}"></span>
+    </div>
+  `;
+  root.appendChild(nc);
+  nc.querySelector('.notif-center__clear').addEventListener('click', () => { state.notifs = []; renderNotifCenter(); });
+  nc.querySelector('.sw').addEventListener('click', () => {
+    state.dnd = !state.dnd;
+    nc.querySelector('.sw').classList.toggle('on', state.dnd);
+    document.querySelector('[data-mb=dnd]')?.classList.toggle('is-on', state.dnd);
+  });
+  renderNotifCenter();
+}
+function renderNotifCenter() {
+  const list = document.querySelector('.notif-center__list');
+  if (!list) return;
+  if (!state.notifs.length) {
+    list.innerHTML = `<div class="notif-center__empty">${escapeHtml(tx('No notifications','通知はありません'))}</div>`;
+    return;
+  }
+  list.innerHTML = state.notifs.map(n => `
+    <div class="notif-center__item">
+      <div class="t">${escapeHtml(n.title)}<span class="ts">${escapeHtml(n.ts)}</span></div>
+      <div class="b">${escapeHtml(n.body)}</div>
+    </div>`).join('');
+}
+function toggleNotifCenter() {
+  state.notifCenterOpen ? closeNotifCenter() : openNotifCenter();
+}
+function openNotifCenter() {
+  const nc = document.querySelector('.notif-center');
+  if (!nc) return;
+  nc.classList.add('is-open');
+  state.notifCenterOpen = true;
+}
+function closeNotifCenter() {
+  const nc = document.querySelector('.notif-center');
+  if (!nc) return;
+  nc.classList.remove('is-open');
+  state.notifCenterOpen = false;
+}
+function pushNotification(title, body) {
+  const d = new Date();
+  const ts = `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+  state.notifs.unshift({ title, body, ts, id: Date.now() });
+  if (state.notifs.length > 50) state.notifs.pop();
+  renderNotifCenter();
+  if (state.dnd) return;
+  // toast
+  const n = document.querySelector('.notif');
+  if (!n) return;
+  n.querySelector('.notif__title-text').textContent = title;
+  n.querySelector('.notif__time').textContent = ts;
+  n.querySelector('.notif__body').textContent = body;
+  n.classList.add('is-open');
+  clearTimeout(n._t);
+  n._t = setTimeout(() => n.classList.remove('is-open'), 4200);
+}
+
+// ====================================================================
+// App Launcher (Launchpad)
+// ====================================================================
+function buildLauncher(root) {
+  const lc = el('div', { class:'launcher' });
+  lc.innerHTML = `
+    <input class="launcher__search" type="text" placeholder="${escapeHtml(tx('Search applications…','アプリケーションを検索…'))}" spellcheck="false" autocomplete="off">
+    <div class="launcher__grid"></div>
+    <div class="launcher__hint">${escapeHtml(tx('Esc to close · Enter to launch','Esc で閉じる · Enter で起動'))}</div>
+  `;
+  root.appendChild(lc);
+  const search = lc.querySelector('.launcher__search');
+  lc.addEventListener('mousedown', (e) => { if (e.target === lc) closeLauncher(); });
+  search.addEventListener('input', () => { state.launcherQuery = search.value; renderLauncher(); });
+  search.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') { e.preventDefault(); closeLauncher(); }
+    else if (e.key === 'Enter') {
+      const m = filterApps(state.launcherQuery);
+      if (m.length) { openWindow(m[0].id); closeLauncher(); }
+    }
+  });
+  renderLauncher();
+}
+function renderLauncher() {
+  const grid = document.querySelector('.launcher__grid');
+  if (!grid) return;
+  const apps = filterApps(state.launcherQuery);
+  grid.innerHTML = apps.map(a => `
+    <div class="launcher__cell" data-id="${a.id}">
+      <div class="ico">${escapeHtml(a.icon)}</div>
+      <div class="name">${escapeHtml(a.title)}</div>
+      <div class="ja">${escapeHtml(a.titleJa)}</div>
+    </div>`).join('') || `<div style="grid-column:1/-1;text-align:center;color:rgba(255,255,255,0.6);padding:40px">${escapeHtml(t('SpotlightNoMatch'))}</div>`;
+  grid.querySelectorAll('.launcher__cell').forEach(c => {
+    c.addEventListener('click', () => { openWindow(c.dataset.id); closeLauncher(); });
+  });
+}
+function openLauncher() {
+  const lc = document.querySelector('.launcher');
+  if (!lc) return;
+  state.launcherQuery = '';
+  const s = lc.querySelector('.launcher__search');
+  s.value = '';
+  renderLauncher();
+  lc.classList.add('is-open');
+  state.launcherOpen = true;
+  setTimeout(() => s.focus(), 80);
+}
+function closeLauncher() {
+  const lc = document.querySelector('.launcher');
+  if (!lc) return;
+  lc.classList.remove('is-open');
+  state.launcherOpen = false;
+}
+
+// ====================================================================
+// Context menu
+// ====================================================================
+function closeContextMenu() {
+  document.querySelectorAll('.ctx').forEach(n => n.remove());
+}
+function openContextMenu(x, y, rows) {
+  closeContextMenu();
+  const menu = el('div', { class:'ctx' });
+  menu.innerHTML = rows.map(r => {
+    if (r === 'hr') return '<hr>';
+    return `<div class="row${r.dim?' dim':''}" data-act="${escapeHtml(r.act||'')}">${escapeHtml(r.label)}${r.kbd?`<span class="kbd">${escapeHtml(r.kbd)}</span>`:''}</div>`;
+  }).join('');
+  document.body.appendChild(menu);
+  // keep on screen
+  const mw = menu.offsetWidth, mh = menu.offsetHeight;
+  menu.style.left = Math.min(x, window.innerWidth - mw - 8) + 'px';
+  menu.style.top = Math.min(y, window.innerHeight - mh - 8) + 'px';
+  menu.addEventListener('click', (e) => {
+    const row = e.target.closest('.row[data-act]'); if (!row || !row.dataset.act) return;
+    const r = rows.find(rr => rr !== 'hr' && rr.act === row.dataset.act);
+    closeContextMenu();
+    if (r && r.fn) r.fn();
+  });
+}
+function buildDesktopContextMenu() {
+  return [
+    { act:'launcher', label:tx('Open Launchpad','アプリ一覧を開く'), kbd:'⌘⇧A', fn:openLauncher },
+    { act:'spot',     label:tx('Spotlight Search','検索'),           kbd:'⌘K',  fn:openSpotlight },
+    'hr',
+    { act:'wp',       label:tx('Change Wallpaper…','壁紙を変更…'),    fn:() => openWindow('settings') },
+    { act:'tidy',     label:tx('Tidy Windows','ウィンドウを整列'),    fn:tidyWindows },
+    'hr',
+    { act:'closeall', label:tx('Close All Windows','すべて閉じる'),   kbd:'⌘W', fn:closeAllWindows },
+    { act:'lock',     label:tx('Lock Screen','画面をロック'),         kbd:'⌃⌘L', fn:lockScreen },
+  ];
+}
+function buildWindowContextMenu(id) {
+  const w = state.windows.find(x => x.id === id);
+  return [
+    { act:'min',  label:tx('Minimize','最小化'),            fn:() => minimizeWindow(id) },
+    { act:'max',  label:(w&&w.maximized)?tx('Restore','元に戻す'):tx('Maximize','最大化'), fn:() => maximizeWindow(id) },
+    'hr',
+    { act:'sl',   label:tx('Snap Left','左に整列'),         fn:() => w&&snapWindow(w,'left') },
+    { act:'sr',   label:tx('Snap Right','右に整列'),        fn:() => w&&snapWindow(w,'right') },
+    'hr',
+    { act:'mv1',  label:tx('Move to Workspace 1','WS1 へ移動'), fn:() => moveWindowToWorkspace(id,0) },
+    { act:'mv2',  label:tx('Move to Workspace 2','WS2 へ移動'), fn:() => moveWindowToWorkspace(id,1) },
+    { act:'mv3',  label:tx('Move to Workspace 3','WS3 へ移動'), fn:() => moveWindowToWorkspace(id,2) },
+    'hr',
+    { act:'close',label:tx('Close','閉じる'),               kbd:'⌘W', fn:() => closeWindow(id) },
+  ];
+}
+function moveWindowToWorkspace(id, ws) {
+  const w = state.windows.find(x => x.id === id);
+  if (!w) return;
+  w.workspace = ws;
+  applyWorkspaceVisibility();
+}
+function tidyWindows() {
+  const here = state.windows.filter(w => w.workspace === state.workspace && !w.minimized);
+  let sx = 80, sy = 70;
+  here.forEach((w, i) => {
+    if (w.maximized) maximizeWindow(w.id);
+    w.el.classList.add('is-snapping');
+    w.el.style.left = (sx + i*34) + 'px';
+    w.el.style.top  = (sy + i*30) + 'px';
+    focusWindow(w.id);
+    setTimeout(() => w.el.classList.remove('is-snapping'), 220);
+  });
+}
+
+// ====================================================================
+// Lock screen
+// ====================================================================
+function lockScreen() {
+  if (state.locked) return;
+  state.locked = true;
+  const lock = el('div', { class:'lock' });
+  const fmt = () => {
+    const d = new Date();
+    return {
+      time: `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`,
+      date: ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][d.getDay()] + ', '
+          + ['January','February','March','April','May','June','July','August','September','October','November','December'][d.getMonth()]
+          + ' ' + d.getDate(),
+    };
+  };
+  const f = fmt();
+  lock.innerHTML = `
+    <div class="lock__brand">mia</div>
+    <div class="lock__time">${f.time}</div>
+    <div class="lock__date">${escapeHtml(f.date)}</div>
+    <div class="lock__hint">${escapeHtml(tx('enter passcode to unlock','パスコードを入力して解除'))}</div>
+    <input class="lock__input" type="password" placeholder="••••" spellcheck="false" autocomplete="off">
+    <div class="lock__err"></div>
+  `;
+  document.body.appendChild(lock);
+  const input = lock.querySelector('.lock__input');
+  const err = lock.querySelector('.lock__err');
+  const timeEl = lock.querySelector('.lock__time');
+  const clk = setInterval(() => { timeEl.textContent = fmt().time; }, 10000);
+  const unlock = () => {
+    clearInterval(clk);
+    lock.classList.add('is-out');
+    setTimeout(() => lock.remove(), 280);
+    state.locked = false;
+  };
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      // demo passcode: "mia" or "0000" — also empty passes for convenience
+      if (input.value === 'mia' || input.value === '0000' || input.value === '') unlock();
+      else { err.textContent = tx('incorrect passcode','パスコードが違います'); input.value = ''; }
+    }
+  });
+  setTimeout(() => input.focus(), 100);
 }
 
 function buildDropdown(id, anchorRect) {
@@ -940,8 +1671,10 @@ function buildDropdown(id, anchorRect) {
   if (id === 'file') {
     dd.innerHTML = `
       <div class="row" data-act="new">${t('NewWindow')}<span class="kbd">⌘1</span></div>
+      <div class="row" data-act="launcher">${tx('Open Launchpad','アプリ一覧')}<span class="kbd">⌘⇧A</span></div>
       <div class="row" data-act="spot">${t('OpenSpotlight')}<span class="kbd">⌘K</span></div>
       <hr>
+      <div class="row" data-act="lock">${tx('Lock Screen','画面をロック')}<span class="kbd">⌃⌘L</span></div>
       <div class="row dim" data-act="print">${t('Print')}</div>
       <hr>
       <div class="row" data-act="closeall">${t('CloseAllWindows')}<span class="kbd">⌘W</span></div>
@@ -950,8 +1683,34 @@ function buildDropdown(id, anchorRect) {
       const row = e.target.closest('.row[data-act]'); if (!row) return;
       const a = row.dataset.act;
       if (a === 'new') openWindow('welcome');
+      else if (a === 'launcher') openLauncher();
       else if (a === 'spot') openSpotlight();
+      else if (a === 'lock') lockScreen();
       else if (a === 'closeall') closeAllWindows();
+    });
+  } else if (id === 'window') {
+    const here = state.windows.filter(w => w.workspace === state.workspace);
+    const list = here.length
+      ? here.map(w => `<div class="row" data-act="focus:${w.id}">${escapeHtml(APP_BY_ID[w.id].title)}${w.minimized?` <span class="kbd">${escapeHtml(tx('min','最小'))}</span>`:''}</div>`).join('')
+      : `<div class="row dim">${escapeHtml(tx('No open windows','開いているウィンドウなし'))}</div>`;
+    dd.innerHTML = `
+      <div class="row" data-act="tidy">${tx('Tidy Windows','ウィンドウを整列')}</div>
+      <div class="row" data-act="tasks">${tx('Task Manager','タスクマネージャ')}</div>
+      <hr>
+      <div class="row dim" style="font-size:11px">${escapeHtml(tx('Workspace ','ワークスペース ') + (state.workspace+1))}</div>
+      ${list}
+    `;
+    dd.addEventListener('click', (e) => {
+      const row = e.target.closest('.row[data-act]'); if (!row) return;
+      const a = row.dataset.act;
+      if (a === 'tidy') tidyWindows();
+      else if (a === 'tasks') openWindow('taskmgr');
+      else if (a.startsWith('focus:')) {
+        const wid = a.slice(6);
+        const w = state.windows.find(x => x.id === wid);
+        if (w && w.minimized) restoreFromMin(w);
+        focusWindow(wid);
+      }
     });
   } else if (id === 'help') {
     dd.innerHTML = `
@@ -1022,28 +1781,47 @@ function renderSpotlightResults() {
 function showWelcomeNotif() {
   if (state.notifShown) return;
   state.notifShown = true;
-  const n = $('.notif');
-  n.querySelector('.notif__title-text').textContent = t('NotifTitle');
-  const body = n.querySelector('.notif__body');
-  body.innerHTML = '';
-  const en = el('span', {}, I18N.NotifBody.en);
-  const ja = el('span', { class:'ja' }, I18N.NotifBody.ja);
-  if (LANG === 'en') { body.appendChild(en); body.appendChild(ja); }
-  else { body.appendChild(ja); }
-  n.classList.add('is-open');
-  setTimeout(() => n.classList.remove('is-open'), 5000);
+  pushNotification(t('NotifTitle'), I18N.NotifBody[LANG]);
 }
 
 // ====================================================================
 // Keyboard shortcuts
 // ====================================================================
 window.addEventListener('keydown', (e) => {
-  const meta = e.metaKey || e.ctrlKey;
   if (!state.bootDone) return;
-  if (e.key === 'Escape' && state.spotlightOpen) { e.preventDefault(); closeSpotlight(); return; }
-  if (meta && e.key.toLowerCase() === 'k') { e.preventDefault(); state.spotlightOpen ? closeSpotlight() : openSpotlight(); return; }
-  if (meta && e.key.toLowerCase() === 'w') { e.preventDefault(); if (state.focusedId) closeWindow(state.focusedId); return; }
-  if (meta && /^[1-9]$/.test(e.key)) { e.preventDefault(); const idx = parseInt(e.key, 10) - 1; if (APPS[idx]) openWindow(APPS[idx].id); }
+  if (state.locked) return;
+  const meta = e.metaKey || e.ctrlKey;
+  const ctrl = e.ctrlKey, metaOnly = e.metaKey;
+  // Escape closes overlays
+  if (e.key === 'Escape') {
+    if (state.launcherOpen) { e.preventDefault(); closeLauncher(); return; }
+    if (state.spotlightOpen) { e.preventDefault(); closeSpotlight(); return; }
+    if (state.notifCenterOpen) { e.preventDefault(); closeNotifCenter(); return; }
+    closeContextMenu();
+  }
+  // Lock screen — Ctrl+Cmd+L (or Ctrl+Alt+L on win)
+  if (ctrl && (metaOnly || e.altKey) && e.key.toLowerCase() === 'l') { e.preventDefault(); lockScreen(); return; }
+  // Launchpad — Cmd/Ctrl+Shift+A
+  if (meta && e.shiftKey && e.key.toLowerCase() === 'a') { e.preventDefault(); state.launcherOpen ? closeLauncher() : openLauncher(); return; }
+  // Workspace switch — Cmd/Ctrl + Ctrl + Arrow, or Cmd/Ctrl+Shift+1-3
+  if (meta && ctrl && e.key === 'ArrowRight') { e.preventDefault(); switchWorkspace(state.workspace + 1); return; }
+  if (meta && ctrl && e.key === 'ArrowLeft')  { e.preventDefault(); switchWorkspace(state.workspace - 1); return; }
+  // Spotlight
+  if (meta && !e.shiftKey && e.key.toLowerCase() === 'k') { e.preventDefault(); state.spotlightOpen ? closeSpotlight() : openSpotlight(); return; }
+  // Close focused window
+  if (meta && !e.shiftKey && e.key.toLowerCase() === 'w') { e.preventDefault(); if (state.focusedId) closeWindow(state.focusedId); return; }
+  // Minimize / Maximize focused window
+  if (meta && e.key.toLowerCase() === 'm') { e.preventDefault(); if (state.focusedId) minimizeWindow(state.focusedId); return; }
+  if (ctrl && e.key === 'ArrowUp' && state.focusedId) { e.preventDefault(); maximizeWindow(state.focusedId); return; }
+  // Cycle windows — Cmd/Ctrl+`
+  if (meta && e.key === '`') { e.preventDefault(); cycleFocus(e.shiftKey ? -1 : 1); return; }
+  // Launch pinned dock app by index — Cmd/Ctrl+1-9 (pinned set)
+  if (meta && !e.shiftKey && /^[1-9]$/.test(e.key)) {
+    e.preventDefault();
+    const pinned = APPS.filter(a => a.pin);
+    const idx = parseInt(e.key, 10) - 1;
+    if (pinned[idx]) openWindow(pinned[idx].id);
+  }
 });
 
 // ====================================================================
@@ -2317,6 +3095,903 @@ function mountFinder(root) {
 }
 
 // ====================================================================
+// APPS: Settings
+// ====================================================================
+function mountSettings(root) {
+  let tab = 'general';
+  const TABS = [
+    ['general', tx('General','一般'),  '⚙'],
+    ['display', tx('Display','表示'),  '◳'],
+    ['sound',   tx('Sound','サウンド'), '♪'],
+    ['about',   tx('About','情報'),    'ⓘ'],
+  ];
+  function render() {
+    root.innerHTML = `
+      <div class="settings">
+        <aside class="settings__side">
+          <h4>${escapeHtml(tx('Preferences','環境設定'))}</h4>
+          ${TABS.map(([id,label,ic]) => `<div class="settings__tab${id===tab?' is-active':''}" data-tab="${id}"><span style="font-family:var(--font-mono);width:16px;text-align:center">${ic}</span>${escapeHtml(label)}</div>`).join('')}
+        </aside>
+        <main class="settings__main">${paneHtml()}</main>
+      </div>`;
+    root.querySelectorAll('.settings__tab').forEach(el2 => el2.addEventListener('click', () => { tab = el2.dataset.tab; render(); }));
+    bindPane();
+  }
+  function paneHtml() {
+    if (tab === 'general') {
+      return `<div class="settings__pane">
+        <h2>${escapeHtml(tx('General','一般'))}</h2>
+        <div class="sub">language · region</div>
+        <div class="settings__row">
+          <div class="label-grp"><div class="ttl">${escapeHtml(tx('Language','言語'))}</div><div class="desc">${escapeHtml(tx('Interface language for MiaOS.','MiaOS の表示言語。'))}</div></div>
+          <div class="settings__seg" data-seg="lang">
+            <button data-v="en" class="${LANG==='en'?'is-active':''}">English</button>
+            <button data-v="ja" class="${LANG==='ja'?'is-active':''}">日本語</button>
+          </div>
+        </div>
+        <div class="settings__row">
+          <div class="label-grp"><div class="ttl">${escapeHtml(tx('Workspaces','ワークスペース'))}</div><div class="desc">${escapeHtml(tx('Virtual desktops available from the menu-bar pager.','メニューバーのページャから切り替え可能な仮想デスクトップ数。'))}</div></div>
+          <div class="mono muted">${state.workspaceCount}</div>
+        </div>
+      </div>`;
+    }
+    if (tab === 'display') {
+      const wps = [['mist',tx('Mist','ミスト')],['grid',tx('Grid','グリッド')],['topo',tx('Topo','等高線')],['slate',tx('Slate','スレート')]];
+      return `<div class="settings__pane">
+        <h2>${escapeHtml(tx('Display','表示'))}</h2>
+        <div class="sub">wallpaper · motion · cursor</div>
+        <div class="settings__row">
+          <div class="label-grp"><div class="ttl">${escapeHtml(tx('Wallpaper','壁紙'))}</div><div class="desc">${escapeHtml(tx('All wallpapers stay in the monochrome palette.','壁紙はすべてモノクロ基調です。'))}</div></div>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin:4px 0 6px">
+          ${wps.map(([v,l]) => `<div class="wallpaper-swatch${state.settings.wallpaper===v?' is-active':''}" data-wp="${v}"><div class="wallpaper wallpaper--swatch var-${v}" style="position:absolute;inset:0"></div><span class="lbl">${escapeHtml(l)}</span></div>`).join('')}
+        </div>
+        <div class="settings__row">
+          <div class="label-grp"><div class="ttl">${escapeHtml(tx('Animations','アニメーション'))}</div><div class="desc">${escapeHtml(tx('Window, dock and transition effects.','ウィンドウ・ドック・遷移エフェクト。'))}</div></div>
+          <div class="settings__sw${state.settings.motion?' on':''}" data-sw="motion"></div>
+        </div>
+        <div class="settings__row">
+          <div class="label-grp"><div class="ttl">${escapeHtml(tx('Custom cursor','カスタムカーソル'))}</div><div class="desc">${escapeHtml(tx('Dual-layer dot + easing ring pointer.','二層ドット+リングのポインタ。'))}</div></div>
+          <div class="settings__sw${state.settings.cursor?' on':''}" data-sw="cursor"></div>
+        </div>
+      </div>`;
+    }
+    if (tab === 'sound') {
+      return `<div class="settings__pane">
+        <h2>${escapeHtml(tx('Sound','サウンド'))}</h2>
+        <div class="sub">interface feedback</div>
+        <div class="settings__row">
+          <div class="label-grp"><div class="ttl">${escapeHtml(tx('UI sounds','UI 効果音'))}</div><div class="desc">${escapeHtml(tx('Subtle clicks via the Web Audio API — no files loaded.','Web Audio API による控えめなクリック音。ファイル読み込みなし。'))}</div></div>
+          <div class="settings__sw${state.settings.sound?' on':''}" data-sw="sound"></div>
+        </div>
+        <div class="btn-row"><button class="btn btn--ghost" id="snd-test">${escapeHtml(tx('Play test tone','テスト音を再生'))}</button></div>
+      </div>`;
+    }
+    return `<div class="settings__pane">
+      <h2>${escapeHtml(tx('About MiaOS','MiaOS について'))}</h2>
+      <div class="sub">studio mia — white hacking desktop</div>
+      <table class="kv-table"><tbody>
+        <tr><td style="width:180px">${escapeHtml(tx('Edition','エディション'))}</td><td class="mono">MiaOS '26 — Web Build</td></tr>
+        <tr><td>${escapeHtml(tx('Shell','シェル'))}</td><td class="mono">vanilla JS · single-file</td></tr>
+        <tr><td>${escapeHtml(tx('Applications','アプリ数'))}</td><td class="mono">${APPS.length}</td></tr>
+        <tr><td>${escapeHtml(tx('Inspiration','参考'))}</td><td class="mono">OS.js · Puter</td></tr>
+        <tr><td>${escapeHtml(tx('Palette','配色'))}</td><td class="mono">monochrome</td></tr>
+      </tbody></table>
+      <p class="muted" style="font-size:11px;margin-top:14px;line-height:1.6">${escapeHtml(tx(
+        'A desktop-style learning environment for defensive security work. Analysis tools run locally; network tools (DNS, RDAP) issue normal user-driven requests only.',
+        '防御的セキュリティ学習のためのデスクトップ風環境。解析ツールはローカル動作、ネットワークツール (DNS / RDAP) はユーザー操作による通常リクエストのみ行います。'))}</p>
+    </div>`;
+  }
+  function relaunchShell() {
+    const openIds = state.windows.filter(w => w.workspace === state.workspace).map(w => w.id);
+    closeAllWindows();
+    buildShell();
+    applySettings();
+    setTimeout(() => { openIds.forEach(id => openWindow(id)); }, 260);
+  }
+  function bindPane() {
+    const seg = root.querySelector('[data-seg=lang]');
+    if (seg) seg.querySelectorAll('button').forEach(b => b.addEventListener('click', () => {
+      LANG = b.dataset.v;
+      try { localStorage.setItem('miaos.lang', LANG); } catch(_) {}
+      relaunchShell();
+    }));
+    root.querySelectorAll('.wallpaper-swatch').forEach(s => s.addEventListener('click', () => {
+      state.settings.wallpaper = s.dataset.wp; saveSettings(); applySettings(); render();
+    }));
+    root.querySelectorAll('.settings__sw').forEach(sw => sw.addEventListener('click', () => {
+      const key = sw.dataset.sw;
+      state.settings[key] = !state.settings[key];
+      saveSettings(); applySettings();
+      sw.classList.toggle('on', state.settings[key]);
+    }));
+    const test = root.querySelector('#snd-test');
+    if (test) test.addEventListener('click', () => beep());
+  }
+  render();
+  return { dispose: () => {} };
+}
+// tiny Web Audio click — only when sound enabled
+let _audioCtx = null;
+function beep(freq = 660, dur = 0.06) {
+  if (!state.settings.sound) return;
+  try {
+    _audioCtx = _audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+    const o = _audioCtx.createOscillator(), g = _audioCtx.createGain();
+    o.frequency.value = freq; o.type = 'sine';
+    g.gain.setValueAtTime(0.0001, _audioCtx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.18, _audioCtx.currentTime + 0.01);
+    g.gain.exponentialRampToValueAtTime(0.0001, _audioCtx.currentTime + dur);
+    o.connect(g); g.connect(_audioCtx.destination);
+    o.start(); o.stop(_audioCtx.currentTime + dur);
+  } catch(_) {}
+}
+
+// ====================================================================
+// APPS: Calculator
+// ====================================================================
+function mountCalc(root) {
+  let cur = '0', acc = null, op = null, fresh = true, hist = '';
+  const KEYS = [
+    ['(', 'fn'],[')', 'fn'],['√','fn'],['^','fn'],['C','fn'],
+    ['7',''],['8',''],['9',''],['÷','op'],['%','fn'],
+    ['4',''],['5',''],['6',''],['×','op'],['π','fn'],
+    ['1',''],['2',''],['3',''],['−','op'],['e','fn'],
+    ['0','wide'],['.',''],['⌫','fn'],['+','op'],
+    ['=','eq wide'],['±','fn'],['1/x','fn'],['x²','fn'],
+  ];
+  function render() {
+    root.innerHTML = `
+      <div class="calc">
+        <div class="calc__display">
+          <div class="calc__hist">${escapeHtml(hist || ' ')}</div>
+          <div class="calc__main">${escapeHtml(cur)}</div>
+        </div>
+        <div class="calc__grid">
+          ${KEYS.map(([k,c]) => `<button class="calc__btn ${c}" data-k="${escapeHtml(k)}">${escapeHtml(k)}</button>`).join('')}
+        </div>
+      </div>`;
+    root.querySelectorAll('.calc__btn').forEach(b => b.addEventListener('click', () => { press(b.dataset.k); beep(); }));
+  }
+  function evalOp(a, b, o) {
+    if (o === '+') return a + b;
+    if (o === '−') return a - b;
+    if (o === '×') return a * b;
+    if (o === '÷') return b === 0 ? NaN : a / b;
+    if (o === '^') return Math.pow(a, b);
+    return b;
+  }
+  function fmt(n) {
+    if (!isFinite(n)) return 'Error';
+    if (Number.isInteger(n)) return String(n);
+    return String(parseFloat(n.toPrecision(12)));
+  }
+  function press(k) {
+    if (k === 'C') { cur = '0'; acc = null; op = null; fresh = true; hist = ''; return render(); }
+    if (k === '⌫') { cur = cur.length > 1 ? cur.slice(0,-1) : '0'; return render(); }
+    if (/[0-9]/.test(k)) { cur = (fresh || cur === '0') ? k : cur + k; fresh = false; return render(); }
+    if (k === '.') { if (!cur.includes('.')) cur += '.'; fresh = false; return render(); }
+    if (k === '±') { cur = cur.startsWith('-') ? cur.slice(1) : (cur === '0' ? cur : '-' + cur); return render(); }
+    if (k === 'π') { cur = fmt(Math.PI); fresh = true; return render(); }
+    if (k === 'e') { cur = fmt(Math.E); fresh = true; return render(); }
+    if (k === '√') { cur = fmt(Math.sqrt(parseFloat(cur))); fresh = true; return render(); }
+    if (k === 'x²') { cur = fmt(Math.pow(parseFloat(cur),2)); fresh = true; return render(); }
+    if (k === '1/x') { cur = fmt(1/parseFloat(cur)); fresh = true; return render(); }
+    if (k === '%') { cur = fmt(parseFloat(cur)/100); fresh = true; return render(); }
+    if (k === '(' || k === ')') { return; } // visual only — kept minimal
+    if (['+','−','×','÷','^'].includes(k)) {
+      if (op !== null && !fresh) { acc = evalOp(acc, parseFloat(cur), op); cur = fmt(acc); }
+      else acc = parseFloat(cur);
+      op = k; fresh = true; hist = fmt(acc) + ' ' + k; return render();
+    }
+    if (k === '=') {
+      if (op !== null) { const r = evalOp(acc, parseFloat(cur), op); hist = fmt(acc) + ' ' + op + ' ' + cur + ' ='; cur = fmt(r); acc = r; op = null; fresh = true; }
+      return render();
+    }
+  }
+  const keyHandler = (e) => {
+    if (!root.isConnected || state.focusedId !== 'calc') return;
+    if (e.target.matches('input,textarea')) return;
+    const map = { '/':'÷', '*':'×', '-':'−', 'Enter':'=', '=':'=', 'Backspace':'⌫', 'Escape':'C', '%':'%' };
+    let k = e.key;
+    if (/[0-9.]/.test(k)) { press(k); }
+    else if (k === '+') press('+');
+    else if (map[k]) { press(map[k]); }
+    else return;
+    e.preventDefault();
+  };
+  window.addEventListener('keydown', keyHandler);
+  render();
+  return { dispose: () => window.removeEventListener('keydown', keyHandler) };
+}
+
+// ====================================================================
+// APPS: Notes (Markdown editor + live preview, localStorage-backed)
+// ====================================================================
+function mdRender(src) {
+  // minimal, safe markdown — escape first, then apply inline + block rules
+  const esc = escapeHtml(src);
+  const lines = esc.split(/\n/);
+  let out = '', inCode = false, inList = null;
+  const inline = (s) => s
+    .replace(/`([^`]+)`/g, '<code>$1</code>')
+    .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+    .replace(/(^|[^*])\*([^*]+)\*/g, '$1<em>$2</em>')
+    .replace(/\[([^\]]+)\]\((https?:[^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
+  const closeList = () => { if (inList) { out += `</${inList}>`; inList = null; } };
+  for (let ln of lines) {
+    if (/^```/.test(ln)) {
+      if (inCode) { out += '</pre>'; inCode = false; }
+      else { closeList(); out += '<pre>'; inCode = true; }
+      continue;
+    }
+    if (inCode) { out += ln + '\n'; continue; }
+    if (/^#{1,3}\s/.test(ln)) { closeList(); const lvl = ln.match(/^#+/)[0].length; out += `<h${lvl}>${inline(ln.replace(/^#+\s/,''))}</h${lvl}>`; continue; }
+    if (/^\s*[-*]\s/.test(ln)) { if (inList !== 'ul') { closeList(); out += '<ul>'; inList = 'ul'; } out += `<li>${inline(ln.replace(/^\s*[-*]\s/,''))}</li>`; continue; }
+    if (/^\s*\d+\.\s/.test(ln)) { if (inList !== 'ol') { closeList(); out += '<ol>'; inList = 'ol'; } out += `<li>${inline(ln.replace(/^\s*\d+\.\s/,''))}</li>`; continue; }
+    if (/^&gt;\s?/.test(ln)) { closeList(); out += `<blockquote>${inline(ln.replace(/^&gt;\s?/,''))}</blockquote>`; continue; }
+    if (/^(-{3,}|\*{3,})$/.test(ln.trim())) { closeList(); out += '<hr>'; continue; }
+    if (ln.trim() === '') { closeList(); continue; }
+    closeList();
+    out += `<p>${inline(ln)}</p>`;
+  }
+  if (inCode) out += '</pre>';
+  closeList();
+  return out;
+}
+function mountNotes(root) {
+  let notes = [];
+  let activeId = null;
+  try { notes = JSON.parse(localStorage.getItem('miaos.notes') || '[]'); } catch(_) { notes = []; }
+  if (!notes.length) {
+    notes = [{ id: Date.now(), title: tx('Welcome note','はじめてのノート'),
+      body: tx('# Notes\n\nA local **Markdown** notebook.\n\n- Saved to `localStorage`\n- Live preview on the right\n- Nothing leaves this tab\n\n> White hacking starts with good documentation.',
+               '# ノート\n\nローカルの **Markdown** ノートです。\n\n- `localStorage` に保存\n- 右側にライブプレビュー\n- このタブの外には出ません\n\n> ホワイトハッキングは良い記録から。'),
+      updated: Date.now() }];
+  }
+  activeId = notes[0] ? notes[0].id : null;
+  const save = () => { try { localStorage.setItem('miaos.notes', JSON.stringify(notes)); } catch(_) {} };
+  function render() {
+    const a = notes.find(n => n.id === activeId);
+    root.innerHTML = `
+      <div class="notes">
+        <aside class="notes__side">
+          <div class="notes__toolbar">
+            <button class="btn btn--accent" id="nt-new" style="flex:1">${escapeHtml(tx('New','新規'))}</button>
+            <button class="btn btn--ghost" id="nt-del">${escapeHtml(tx('Delete','削除'))}</button>
+          </div>
+          <div class="notes__list">
+            ${notes.map(n => `<div class="notes__item${n.id===activeId?' is-active':''}" data-id="${n.id}">
+              <div class="ttl">${escapeHtml(n.title || tx('Untitled','無題'))}</div>
+              <div class="meta">${new Date(n.updated).toLocaleString()}</div>
+            </div>`).join('') || `<div class="muted" style="padding:14px;font-size:11px">${escapeHtml(tx('No notes','ノートなし'))}</div>`}
+          </div>
+        </aside>
+        <main class="notes__main">
+          ${a ? `
+            <input class="notes__title-in" id="nt-title" value="${escapeHtml(a.title)}" placeholder="${escapeHtml(tx('Title','タイトル'))}">
+            <div class="notes__edit-row">
+              <div class="notes__edit"><textarea id="nt-body" spellcheck="false" placeholder="${escapeHtml(tx('Write Markdown…','Markdown を入力…'))}">${escapeHtml(a.body)}</textarea></div>
+              <div class="notes__preview" id="nt-prev"></div>
+            </div>
+          ` : `<div class="notes__empty">${escapeHtml(tx('Select or create a note','ノートを選択または作成'))}</div>`}
+        </main>
+      </div>`;
+    root.querySelectorAll('.notes__item').forEach(it => it.addEventListener('click', () => { activeId = parseInt(it.dataset.id,10); render(); }));
+    root.querySelector('#nt-new').addEventListener('click', () => {
+      const n = { id: Date.now(), title: tx('Untitled','無題'), body: '', updated: Date.now() };
+      notes.unshift(n); activeId = n.id; save(); render();
+    });
+    root.querySelector('#nt-del').addEventListener('click', () => {
+      if (activeId == null) return;
+      notes = notes.filter(n => n.id !== activeId);
+      activeId = notes[0] ? notes[0].id : null;
+      save(); render();
+    });
+    if (a) {
+      const title = root.querySelector('#nt-title');
+      const body = root.querySelector('#nt-body');
+      const prev = root.querySelector('#nt-prev');
+      const refresh = () => { prev.innerHTML = mdRender(body.value); };
+      refresh();
+      let timer = null;
+      const persist = () => {
+        a.title = title.value; a.body = body.value; a.updated = Date.now();
+        clearTimeout(timer); timer = setTimeout(save, 400);
+      };
+      title.addEventListener('input', persist);
+      body.addEventListener('input', () => { persist(); refresh(); });
+    }
+  }
+  render();
+  return { dispose: () => {} };
+}
+
+// ====================================================================
+// APPS: Diff Viewer (line-level LCS diff)
+// ====================================================================
+function lcsDiff(aLines, bLines) {
+  const n = aLines.length, m = bLines.length;
+  const dp = Array.from({length:n+1}, () => new Uint32Array(m+1));
+  for (let i = n-1; i >= 0; i--)
+    for (let j = m-1; j >= 0; j--)
+      dp[i][j] = aLines[i] === bLines[j] ? dp[i+1][j+1] + 1 : Math.max(dp[i+1][j], dp[i][j+1]);
+  const out = [];
+  let i = 0, j = 0;
+  while (i < n && j < m) {
+    if (aLines[i] === bLines[j]) { out.push({ t:'eq', l:aLines[i], a:i+1, b:j+1 }); i++; j++; }
+    else if (dp[i+1][j] >= dp[i][j+1]) { out.push({ t:'del', l:aLines[i], a:i+1 }); i++; }
+    else { out.push({ t:'add', l:bLines[j], b:j+1 }); j++; }
+  }
+  while (i < n) out.push({ t:'del', l:aLines[i], a:++i });
+  while (j < m) out.push({ t:'add', l:bLines[j], b:++j });
+  return out;
+}
+function mountDiff(root) {
+  root.innerHTML = `
+    <div class="app-header">
+      <h1>${escapeHtml(tx('Diff Viewer','差分ビューア'))}</h1>
+      <div class="app-sub">${escapeHtml(tx('line-level comparison of two texts','2 つのテキストの行単位比較'))}</div>
+    </div>
+    <div class="hr"></div>
+    <div class="diff">
+      <div class="diff__inputs">
+        <div><span class="label">${escapeHtml(tx('Original / A','元 / A'))}</span><textarea class="textarea" id="df-a" spellcheck="false"></textarea></div>
+        <div><span class="label">${escapeHtml(tx('Changed / B','変更後 / B'))}</span><textarea class="textarea" id="df-b" spellcheck="false"></textarea></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn--accent" id="df-go">${escapeHtml(tx('Compare','比較'))}</button>
+        <button class="btn btn--ghost" id="df-swap">${escapeHtml(tx('Swap','入替'))}</button>
+        <button class="btn btn--ghost" id="df-clear">${escapeHtml(tx('Clear','消去'))}</button>
+        <span class="muted" id="df-stat" style="align-self:center;font-size:11px;font-family:var(--font-mono)"></span>
+      </div>
+      <div class="diff__out" id="df-out"></div>
+    </div>
+  `;
+  const $a = root.querySelector('#df-a'), $b = root.querySelector('#df-b');
+  const $out = root.querySelector('#df-out'), $stat = root.querySelector('#df-stat');
+  function run() {
+    const rows = lcsDiff($a.value.split(/\r?\n/), $b.value.split(/\r?\n/));
+    let add = 0, del = 0;
+    $out.innerHTML = rows.map(r => {
+      if (r.t === 'add') add++; if (r.t === 'del') del++;
+      const sign = r.t === 'add' ? '+' : r.t === 'del' ? '−' : ' ';
+      const num = r.t === 'add' ? r.b : r.t === 'del' ? r.a : r.a;
+      return `<div class="diff__line ${r.t === 'eq' ? '' : r.t}"><span class="num">${num||''}</span><span class="sign">${sign}</span><span class="txt">${escapeHtml(r.l) || ' '}</span></div>`;
+    }).join('') || `<div class="muted" style="padding:14px">${escapeHtml(tx('(identical / empty)','(同一 / 空)'))}</div>`;
+    $stat.textContent = `+${add}  −${del}  ${tx('lines','行')}`;
+  }
+  root.querySelector('#df-go').addEventListener('click', run);
+  root.querySelector('#df-swap').addEventListener('click', () => { const t2 = $a.value; $a.value = $b.value; $b.value = t2; run(); });
+  root.querySelector('#df-clear').addEventListener('click', () => { $a.value = ''; $b.value = ''; $out.innerHTML = ''; $stat.textContent = ''; });
+  return { dispose: () => {} };
+}
+
+// ====================================================================
+// APPS: UUID / Random generator (crypto-backed)
+// ====================================================================
+function mountUuid(root) {
+  let tab = 'uuid';
+  const WORDS = ['amber','basalt','cipher','dawn','ember','fjord','glyph','harbor','ivory','jade','kelp','lumen','marble','nimbus','onyx','prism','quartz','raven','slate','tundra','umbra','vellum','willow','xenon','yarrow','zephyr','anchor','beacon','cobalt','drift'];
+  function randBytes(n) { const a = new Uint8Array(n); crypto.getRandomValues(a); return a; }
+  function uuidv4() {
+    const b = randBytes(16);
+    b[6] = (b[6] & 0x0f) | 0x40;
+    b[8] = (b[8] & 0x3f) | 0x80;
+    const h = [...b].map(x => x.toString(16).padStart(2,'0'));
+    return `${h.slice(0,4).join('')}-${h.slice(4,6).join('')}-${h.slice(6,8).join('')}-${h.slice(8,10).join('')}-${h.slice(10,16).join('')}`;
+  }
+  function render() {
+    root.innerHTML = `
+      <div class="app-header">
+        <h1>${escapeHtml(tx('UUID / Random','UUID・乱数'))}</h1>
+        <div class="app-sub">${escapeHtml(tx('CSPRNG via crypto.getRandomValues — local only','crypto.getRandomValues による CSPRNG — ローカル動作'))}</div>
+      </div>
+      <div class="hr"></div>
+      <div class="rnd-tabs">
+        <button data-t="uuid"   class="${tab==='uuid'?'is-active':''}">UUID v4</button>
+        <button data-t="bytes"  class="${tab==='bytes'?'is-active':''}">${escapeHtml(tx('Random bytes','ランダムバイト'))}</button>
+        <button data-t="pass"   class="${tab==='pass'?'is-active':''}">${escapeHtml(tx('Passphrase','パスフレーズ'))}</button>
+        <button data-t="num"    class="${tab==='num'?'is-active':''}">${escapeHtml(tx('Numbers','数値'))}</button>
+      </div>
+      <div id="rnd-body"></div>
+    `;
+    root.querySelectorAll('.rnd-tabs button').forEach(b => b.addEventListener('click', () => { tab = b.dataset.t; render(); }));
+    renderBody();
+  }
+  function renderBody() {
+    const body = root.querySelector('#rnd-body');
+    if (tab === 'uuid') {
+      body.innerHTML = `
+        <div class="ps-grid" style="grid-template-columns:140px 1fr">
+          <span class="label" style="margin:0">${escapeHtml(tx('Count','個数'))}</span><input class="input" id="u-count" type="number" value="5" min="1" max="200">
+        </div>
+        <div class="btn-row"><button class="btn btn--accent" id="u-go">${escapeHtml(tx('Generate','生成'))}</button><button class="btn btn--ghost" id="u-copy">${escapeHtml(tx('Copy','コピー'))}</button></div>
+        <div class="rnd-out" id="u-out"></div>`;
+      const out = body.querySelector('#u-out');
+      const gen = () => { const n = Math.max(1, Math.min(200, parseInt(body.querySelector('#u-count').value)||5)); out.textContent = Array.from({length:n}, uuidv4).join('\n'); };
+      body.querySelector('#u-go').addEventListener('click', gen);
+      body.querySelector('#u-copy').addEventListener('click', () => copyText(out.textContent));
+      gen();
+    } else if (tab === 'bytes') {
+      body.innerHTML = `
+        <div class="ps-grid" style="grid-template-columns:140px 1fr">
+          <span class="label" style="margin:0">${escapeHtml(tx('Byte length','バイト長'))}</span><input class="input" id="b-len" type="number" value="32" min="1" max="1024">
+          <span class="label" style="margin:0">${escapeHtml(tx('Format','形式'))}</span>
+          <div class="enc-modes"><label><input type="radio" name="b-f" value="hex" checked>Hex</label><label><input type="radio" name="b-f" value="b64">Base64</label><label><input type="radio" name="b-f" value="dec">Decimal</label></div>
+        </div>
+        <div class="btn-row"><button class="btn btn--accent" id="b-go">${escapeHtml(tx('Generate','生成'))}</button><button class="btn btn--ghost" id="b-copy">${escapeHtml(tx('Copy','コピー'))}</button></div>
+        <div class="rnd-out" id="b-out"></div>`;
+      const out = body.querySelector('#b-out');
+      const gen = () => {
+        const n = Math.max(1, Math.min(1024, parseInt(body.querySelector('#b-len').value)||32));
+        const fmt = body.querySelector('input[name=b-f]:checked').value;
+        const a = randBytes(n);
+        if (fmt === 'hex') out.textContent = [...a].map(x => x.toString(16).padStart(2,'0')).join('');
+        else if (fmt === 'dec') out.textContent = [...a].join(' ');
+        else { let bin = ''; a.forEach(x => bin += String.fromCharCode(x)); out.textContent = btoa(bin); }
+      };
+      body.querySelector('#b-go').addEventListener('click', gen);
+      body.querySelector('#b-copy').addEventListener('click', () => copyText(out.textContent));
+      gen();
+    } else if (tab === 'pass') {
+      body.innerHTML = `
+        <div class="ps-grid" style="grid-template-columns:140px 1fr">
+          <span class="label" style="margin:0">${escapeHtml(tx('Word count','単語数'))}</span><input class="input" id="p-words" type="number" value="5" min="2" max="12">
+          <span class="label" style="margin:0">${escapeHtml(tx('Separator','区切り'))}</span><input class="input" id="p-sep" value="-" maxlength="3">
+        </div>
+        <label style="display:inline-flex;gap:6px;align-items:center;font-size:12px;margin:6px 0"><input type="checkbox" id="p-num" checked> ${escapeHtml(tx('append random number','末尾に乱数を付加'))}</label>
+        <div class="btn-row"><button class="btn btn--accent" id="p-go">${escapeHtml(tx('Generate','生成'))}</button><button class="btn btn--ghost" id="p-copy">${escapeHtml(tx('Copy','コピー'))}</button></div>
+        <div class="rnd-out" id="p-out"></div>
+        <p class="muted" style="font-size:11px;margin-top:10px;line-height:1.6">${escapeHtml(tx('Diceware-style passphrases are easy to type and remember. Entropy ≈ 4.9 bits/word from this 30-word demo list; use a larger list (7776 words) for real use.','Diceware 風のパスフレーズは入力・記憶が容易です。このデモは 30 語のため約 4.9 bit/語。実用には大きな単語リスト (7776 語) を使用してください。'))}</p>`;
+      const out = body.querySelector('#p-out');
+      const gen = () => {
+        const wc = Math.max(2, Math.min(12, parseInt(body.querySelector('#p-words').value)||5));
+        const sep = body.querySelector('#p-sep').value || '-';
+        const idx = randBytes(wc);
+        let parts = [...idx].map(x => WORDS[x % WORDS.length]);
+        if (body.querySelector('#p-num').checked) parts.push(String(randBytes(1)[0] % 100).padStart(2,'0'));
+        out.textContent = parts.join(sep);
+      };
+      body.querySelector('#p-go').addEventListener('click', gen);
+      body.querySelector('#p-copy').addEventListener('click', () => copyText(out.textContent));
+      gen();
+    } else {
+      body.innerHTML = `
+        <div class="ps-grid" style="grid-template-columns:140px 1fr">
+          <span class="label" style="margin:0">${escapeHtml(tx('Minimum','最小'))}</span><input class="input" id="n-min" type="number" value="1">
+          <span class="label" style="margin:0">${escapeHtml(tx('Maximum','最大'))}</span><input class="input" id="n-max" type="number" value="100">
+          <span class="label" style="margin:0">${escapeHtml(tx('Count','個数'))}</span><input class="input" id="n-count" type="number" value="10" min="1" max="500">
+        </div>
+        <div class="btn-row"><button class="btn btn--accent" id="n-go">${escapeHtml(tx('Generate','生成'))}</button><button class="btn btn--ghost" id="n-copy">${escapeHtml(tx('Copy','コピー'))}</button></div>
+        <div class="rnd-out" id="n-out"></div>`;
+      const out = body.querySelector('#n-out');
+      const gen = () => {
+        let lo = parseInt(body.querySelector('#n-min').value)||0;
+        let hi = parseInt(body.querySelector('#n-max').value)||100;
+        if (hi < lo) [lo,hi] = [hi,lo];
+        // clamp to a uint32-safe span so rejection sampling always terminates
+        lo = Math.max(-2147483648, Math.min(2147483647, lo));
+        hi = Math.max(lo, Math.min(lo + 0xffffffff, hi));
+        const count = Math.max(1, Math.min(500, parseInt(body.querySelector('#n-count').value)||10));
+        const span = hi - lo + 1;
+        const res = [];
+        // rejection sampling for unbiased range
+        const limit = Math.floor(0x100000000 / span) * span;
+        const buf = new Uint32Array(count * 2);
+        crypto.getRandomValues(buf);
+        let bi = 0;
+        while (res.length < count) {
+          if (bi >= buf.length) crypto.getRandomValues(buf), bi = 0;
+          const v = buf[bi++];
+          if (v < limit) res.push(lo + (v % span));
+        }
+        out.textContent = res.join('  ');
+      };
+      body.querySelector('#n-go').addEventListener('click', gen);
+      body.querySelector('#n-copy').addEventListener('click', () => copyText(out.textContent));
+      gen();
+    }
+  }
+  render();
+  return { dispose: () => {} };
+}
+function copyText(s) {
+  try { navigator.clipboard.writeText(s); pushNotification(tx('Copied','コピー完了'), s.length > 60 ? s.slice(0,60)+'…' : s); }
+  catch(_) { pushNotification(tx('Copy failed','コピー失敗'), tx('Clipboard unavailable in this context.','このコンテキストではクリップボードを使用できません。')); }
+}
+
+// ====================================================================
+// APPS: Header Inspector — HTTP response security-header audit
+// ====================================================================
+const SAMPLE_HEADERS = `HTTP/2 200
+content-type: text/html; charset=utf-8
+strict-transport-security: max-age=63072000; includeSubDomains; preload
+content-security-policy: default-src 'self'; script-src 'self'
+x-content-type-options: nosniff
+x-frame-options: DENY
+referrer-policy: strict-origin-when-cross-origin
+cache-control: no-store
+server: nginx`;
+function mountHeaders(root) {
+  root.innerHTML = `
+    <div class="app-header">
+      <h1>${escapeHtml(tx('Header Inspector','ヘッダ監査'))}</h1>
+      <div class="app-sub">${escapeHtml(tx('audit HTTP response security headers — paste, do not fetch','HTTP レスポンスのセキュリティヘッダ監査 — 貼り付け式'))}</div>
+    </div>
+    <div class="hr"></div>
+    <div class="banner">${escapeHtml(tx('Paste raw response headers (e.g. from DevTools → Network → Headers, or curl -I). MiaOS analyses text only and sends nothing.','レスポンスヘッダを貼り付けてください (DevTools の Network → Headers や curl -I など)。MiaOS はテキスト解析のみで送信は行いません。'))}</div>
+    <textarea class="textarea" id="hd-in" rows="7" spellcheck="false">${escapeHtml(SAMPLE_HEADERS)}</textarea>
+    <div class="btn-row">
+      <button class="btn btn--accent" id="hd-go">${escapeHtml(tx('Audit','監査'))}</button>
+      <button class="btn btn--ghost" id="hd-clear">${escapeHtml(tx('Clear','消去'))}</button>
+    </div>
+    <div id="hd-out"></div>
+  `;
+  const $in = root.querySelector('#hd-in'), $out = root.querySelector('#hd-out');
+  // checks: header → {grade fn}
+  const CHECKS = [
+    { key:'strict-transport-security', name:'Strict-Transport-Security', tip:tx('Forces HTTPS. Want max-age ≥ 15552000 and includeSubDomains.','HTTPS を強制。max-age ≥ 15552000 と includeSubDomains 推奨。'),
+      grade:v => { if (!v) return ['miss', tx('not set — connections can be downgraded','未設定 — 接続のダウングレードが可能')];
+        const m = /max-age=(\d+)/.exec(v); const age = m ? +m[1] : 0;
+        if (age < 15552000) return ['warn', tx('max-age too short','max-age が短い')];
+        return ['ok', tx('strong','良好')]; } },
+    { key:'content-security-policy', name:'Content-Security-Policy', tip:tx('Mitigates XSS / injection. Avoid unsafe-inline / unsafe-eval.','XSS / インジェクション対策。unsafe-inline / unsafe-eval は避ける。'),
+      grade:v => { if (!v) return ['miss', tx('not set — no injection mitigation','未設定 — インジェクション対策なし')];
+        if (/unsafe-inline|unsafe-eval/.test(v)) return ['warn', tx("present but uses 'unsafe-*'","設定済みだが unsafe-* を使用")];
+        return ['ok', tx('present','設定済み')]; } },
+    { key:'x-content-type-options', name:'X-Content-Type-Options', tip:tx('Should be "nosniff" to stop MIME confusion.','MIME 推測を防ぐため "nosniff" にする。'),
+      grade:v => !v ? ['miss', tx('not set','未設定')] : (/nosniff/i.test(v) ? ['ok','nosniff'] : ['warn', tx('unexpected value','想定外の値')]) },
+    { key:'x-frame-options', name:'X-Frame-Options', tip:tx('DENY / SAMEORIGIN blocks clickjacking (or use CSP frame-ancestors).','DENY / SAMEORIGIN でクリックジャッキング対策 (CSP frame-ancestors でも可)。'),
+      grade:v => !v ? ['warn', tx('not set — rely on CSP frame-ancestors','未設定 — CSP frame-ancestors に依存')] : ['ok', v.toUpperCase()] },
+    { key:'referrer-policy', name:'Referrer-Policy', tip:tx('Limits referrer leakage. strict-origin-when-cross-origin is a good default.','リファラ漏洩を制限。strict-origin-when-cross-origin が無難。'),
+      grade:v => !v ? ['warn', tx('not set — browser default applies','未設定 — ブラウザ既定が適用')] : ['ok', v] },
+    { key:'permissions-policy', name:'Permissions-Policy', tip:tx('Restricts powerful features (camera, geolocation…).','カメラ・位置情報などの強力な機能を制限。'),
+      grade:v => !v ? ['info', tx('not set — optional but recommended','未設定 — 任意だが推奨')] : ['ok', tx('present','設定済み')] },
+  ];
+  function parse(text) {
+    const h = {};
+    text.split(/\r?\n/).forEach(line => {
+      const m = /^([A-Za-z0-9-]+):\s?(.*)$/.exec(line.trim());
+      if (m) h[m[1].toLowerCase()] = m[2];
+    });
+    return h;
+  }
+  function audit() {
+    const h = parse($in.value);
+    let score = 0, max = 0;
+    const rows = CHECKS.map(c => {
+      const v = h[c.key];
+      const [g, msg] = c.grade(v);
+      max += 2;
+      score += g === 'ok' ? 2 : (g === 'warn' || g === 'info') ? 1 : 0;
+      return `<div class="audit-row">
+        <div class="h">${escapeHtml(c.name)}<div style="font-weight:400;color:var(--t-3);font-size:10px;margin-top:3px;font-family:var(--font-ui)">${escapeHtml(c.tip)}</div></div>
+        <div class="v">${escapeHtml(v || '—')}<div style="color:var(--t-3);margin-top:2px">${escapeHtml(msg)}</div></div>
+        <div class="b"><span class="badge ${g}">${g==='ok'?'OK':g==='warn'?'WEAK':g==='info'?'INFO':'MISS'}</span></div>
+      </div>`;
+    }).join('');
+    const pct = max ? score / max : 0;
+    let letter = 'F', desc = tx('Significant gaps — harden before exposure.','重大な不足 — 公開前に強化を。');
+    if (pct >= 0.92) { letter = 'A'; desc = tx('Strong security-header posture.','セキュリティヘッダは良好。'); }
+    else if (pct >= 0.75) { letter = 'B'; desc = tx('Good, with minor improvements available.','良好、わずかに改善余地あり。'); }
+    else if (pct >= 0.55) { letter = 'C'; desc = tx('Several headers need attention.','複数のヘッダに注意が必要。'); }
+    else if (pct >= 0.35) { letter = 'D'; desc = tx('Many protections missing.','多くの保護が欠落。'); }
+    $out.innerHTML = `
+      <div class="audit-grade">
+        <div class="letter">${letter}</div>
+        <div class="desc"><strong>${escapeHtml(tx('Header score','ヘッダスコア'))} — ${Math.round(pct*100)}%</strong>${escapeHtml(desc)}</div>
+      </div>
+      <div style="border:1px solid var(--hair);border-radius:8px;overflow:hidden">${rows}</div>
+      <p class="muted" style="font-size:11px;margin-top:10px;line-height:1.6">${escapeHtml(tx('This is a heuristic checklist, not a full assessment. Header presence does not prove correct configuration.','これは経験則によるチェックリストであり完全な評価ではありません。ヘッダの有無は正しい設定を保証しません。'))}</p>`;
+  }
+  root.querySelector('#hd-go').addEventListener('click', audit);
+  root.querySelector('#hd-clear').addEventListener('click', () => { $in.value = ''; $out.innerHTML = ''; });
+  audit();
+  return { dispose: () => {} };
+}
+
+// ====================================================================
+// APPS: Cookie Inspector — Set-Cookie attribute audit
+// ====================================================================
+function mountCookies(root) {
+  const SAMPLE = `Set-Cookie: session=ab12cd34; Path=/; HttpOnly; Secure; SameSite=Lax
+Set-Cookie: theme=dark; Path=/; Max-Age=31536000
+Set-Cookie: __Host-csrf=xyz789; Path=/; Secure; HttpOnly; SameSite=Strict`;
+  root.innerHTML = `
+    <div class="app-header">
+      <h1>${escapeHtml(tx('Cookie Inspector','Cookie 監査'))}</h1>
+      <div class="app-sub">${escapeHtml(tx('flag missing Secure / HttpOnly / SameSite attributes','Secure / HttpOnly / SameSite 属性の欠落を検出'))}</div>
+    </div>
+    <div class="hr"></div>
+    <div class="banner">${escapeHtml(tx('Paste one or more Set-Cookie headers. Use your own dev cookies — never production session cookies you do not own.','Set-Cookie ヘッダを貼り付けてください。検証用の自分の Cookie のみを使用し、所有しない本番セッション Cookie は扱わないこと。'))}</div>
+    <textarea class="textarea" id="ck-in" rows="6" spellcheck="false">${escapeHtml(SAMPLE)}</textarea>
+    <div class="btn-row">
+      <button class="btn btn--accent" id="ck-go">${escapeHtml(tx('Inspect','解析'))}</button>
+      <button class="btn btn--ghost" id="ck-clear">${escapeHtml(tx('Clear','消去'))}</button>
+    </div>
+    <div id="ck-out"></div>
+  `;
+  const $in = root.querySelector('#ck-in'), $out = root.querySelector('#ck-out');
+  function parseCookie(line) {
+    const parts = line.replace(/^set-cookie:\s*/i, '').split(';').map(s => s.trim()).filter(Boolean);
+    if (!parts.length) return null;
+    const [name, ...valRest] = parts[0].split('=');
+    const c = { name: name.trim(), value: valRest.join('='), attrs: {} };
+    parts.slice(1).forEach(p => {
+      const [k, ...v] = p.split('=');
+      c.attrs[k.trim().toLowerCase()] = v.length ? v.join('=').trim() : true;
+    });
+    return c;
+  }
+  function inspect() {
+    const lines = $in.value.split(/\r?\n/).map(l => l.trim()).filter(l => /\S/.test(l));
+    if (!lines.length) { $out.innerHTML = `<p class="muted" style="margin-top:10px">${escapeHtml(tx('(no cookies)','(Cookie なし)'))}</p>`; return; }
+    $out.innerHTML = lines.map(line => {
+      const c = parseCookie(line);
+      if (!c) return '';
+      const a = c.attrs;
+      const findings = [];
+      const isHost = c.name.startsWith('__Host-');
+      const isSecPfx = c.name.startsWith('__Secure-');
+      if (!a.secure) findings.push(['warn', tx('Secure missing — cookie can travel over HTTP','Secure 欠落 — HTTP で送信される可能性')]);
+      else findings.push(['ok','Secure']);
+      if (!a.httponly) findings.push(['warn', tx('HttpOnly missing — readable by JavaScript (XSS theft risk)','HttpOnly 欠落 — JS から読取可能 (XSS 窃取リスク)')]);
+      else findings.push(['ok','HttpOnly']);
+      if (!a.samesite) findings.push(['warn', tx('SameSite missing — CSRF exposure (defaults to Lax in modern browsers)','SameSite 欠落 — CSRF リスク (近年の既定は Lax)')]);
+      else findings.push(['ok','SameSite=' + a.samesite]);
+      if (isHost) {
+        if (a.domain) findings.push(['warn', tx('__Host- prefix forbids Domain attribute','__Host- 接頭辞は Domain 属性を禁止')]);
+        if (a.path !== '/') findings.push(['warn', tx('__Host- prefix requires Path=/','__Host- 接頭辞は Path=/ が必須')]);
+        if (!a.secure) findings.push(['warn', tx('__Host- prefix requires Secure','__Host- 接頭辞は Secure が必須')]);
+      }
+      if ((isHost || isSecPfx)) findings.push(['info', tx('uses a security prefix — good practice','セキュリティ接頭辞を使用 — 良い習慣')]);
+      const sameVal = (a.samesite||'').toLowerCase();
+      if (sameVal === 'none' && !a.secure) findings.push(['warn', tx('SameSite=None requires Secure','SameSite=None は Secure 必須')]);
+      const bad = findings.filter(f => f[0] === 'warn').length;
+      const badge = bad === 0 ? '<span class="badge ok">SAFE</span>' : `<span class="badge warn">${bad} ${tx('ISSUE','問題')}</span>`;
+      return `
+        <div style="border:1px solid var(--hair);border-radius:9px;margin-top:10px;overflow:hidden">
+          <div style="padding:9px 12px;background:rgba(245,245,248,0.7);display:flex;justify-content:space-between;align-items:center">
+            <span style="font-family:var(--font-mono);font-size:12px;font-weight:600">${escapeHtml(c.name)}</span>${badge}
+          </div>
+          <div style="padding:6px 0">
+            ${findings.map(([g,msg]) => `<div class="audit-row"><div class="h" style="flex:0 0 26px"><span class="badge ${g}" style="padding:2px 5px">${g==='ok'?'✓':g==='info'?'i':'!'}</span></div><div class="v" style="font-family:var(--font-ui)">${escapeHtml(msg)}</div></div>`).join('')}
+            <div class="audit-row"><div class="h" style="flex:0 0 26px"></div><div class="v" style="color:var(--t-3)">attrs: ${escapeHtml(Object.keys(c.attrs).join(', ') || '—')}</div></div>
+          </div>
+        </div>`;
+    }).join('');
+  }
+  root.querySelector('#ck-go').addEventListener('click', inspect);
+  root.querySelector('#ck-clear').addEventListener('click', () => { $in.value = ''; $out.innerHTML = ''; });
+  inspect();
+  return { dispose: () => {} };
+}
+
+// ====================================================================
+// APPS: DNS Lookup (DNS-over-HTTPS via Cloudflare)
+// ====================================================================
+function mountDns(root) {
+  const TYPES = ['A','AAAA','CNAME','MX','TXT','NS','SOA','CAA'];
+  const RR = { 1:'A', 2:'NS', 5:'CNAME', 6:'SOA', 15:'MX', 16:'TXT', 28:'AAAA', 257:'CAA' };
+  root.innerHTML = `
+    <div class="app-header">
+      <h1>${escapeHtml(tx('DNS Lookup','DNS 解決'))}</h1>
+      <div class="app-sub">${escapeHtml(tx('DNS-over-HTTPS via Cloudflare 1.1.1.1','Cloudflare 1.1.1.1 経由の DNS-over-HTTPS'))}</div>
+    </div>
+    <div class="hr"></div>
+    <div class="banner">${escapeHtml(tx('Resolves public DNS records over an encrypted HTTPS request to cloudflare-dns.com. This is a normal, read-only lookup — the same thing any browser does.','cloudflare-dns.com への暗号化 HTTPS リクエストで公開 DNS レコードを解決します。ブラウザが行うのと同じ通常の読み取り専用クエリです。'))}</div>
+    <div class="ps-grid" style="grid-template-columns:1fr 120px">
+      <input class="input" id="dn-host" spellcheck="false" placeholder="example.com" value="example.com" style="font-family:var(--font-mono)">
+      <select class="input" id="dn-type">${TYPES.map(t2 => `<option ${t2==='A'?'selected':''}>${t2}</option>`).join('')}</select>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn--accent" id="dn-go">${escapeHtml(tx('Resolve','解決'))}</button>
+      <span class="muted" id="dn-stat" style="align-self:center;font-size:11px;font-family:var(--font-mono)"></span>
+    </div>
+    <div id="dn-out"></div>
+  `;
+  const $host = root.querySelector('#dn-host'), $type = root.querySelector('#dn-type');
+  const $out = root.querySelector('#dn-out'), $stat = root.querySelector('#dn-stat');
+  async function resolve() {
+    const host = $host.value.trim().replace(/^https?:\/\//,'').replace(/\/.*$/,'');
+    if (!host) return;
+    const type = $type.value;
+    $stat.textContent = tx('resolving…','解決中…'); $out.innerHTML = '';
+    const t0 = performance.now();
+    try {
+      const res = await fetch(`https://cloudflare-dns.com/dns-query?name=${encodeURIComponent(host)}&type=${type}`, { headers:{ accept:'application/dns-json' }});
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const data = await res.json();
+      const ms = Math.round(performance.now() - t0);
+      const RCODE = { 0:'NOERROR', 1:'FORMERR', 2:'SERVFAIL', 3:'NXDOMAIN', 5:'REFUSED' };
+      $stat.textContent = `${RCODE[data.Status]||('RCODE '+data.Status)} · ${ms}ms`;
+      const ans = data.Answer || [];
+      if (!ans.length) {
+        $out.innerHTML = `<p class="muted" style="margin-top:10px">${escapeHtml(tx('No records of this type.','このタイプのレコードはありません。'))}</p>`;
+        return;
+      }
+      $out.innerHTML = `
+        <table class="kv-table" style="margin-top:6px"><thead><tr>
+          <th style="width:46%">${escapeHtml(tx('Name','名前'))}</th><th style="width:70px">Type</th><th style="width:60px">TTL</th><th>${escapeHtml(tx('Data','データ'))}</th>
+        </tr></thead><tbody>
+        ${ans.map(a => `<tr><td class="mono">${escapeHtml(a.name)}</td><td class="mono">${escapeHtml(RR[a.type]||String(a.type))}</td><td class="mono">${a.TTL}</td><td class="mono" style="word-break:break-all">${escapeHtml(a.data)}</td></tr>`).join('')}
+        </tbody></table>`;
+    } catch (e) {
+      $stat.textContent = tx('failed','失敗');
+      $out.innerHTML = `<div class="banner danger" style="margin-top:10px">${escapeHtml(tx('Lookup failed: ','解決失敗: ') + e.message)}</div>`;
+    }
+  }
+  root.querySelector('#dn-go').addEventListener('click', resolve);
+  $host.addEventListener('keydown', e => { if (e.key === 'Enter') resolve(); });
+  return { dispose: () => {} };
+}
+
+// ====================================================================
+// APPS: RDAP / Whois (registration data via rdap.org)
+// ====================================================================
+function mountRdap(root) {
+  root.innerHTML = `
+    <div class="app-header">
+      <h1>${escapeHtml(tx('RDAP / Whois','RDAP / Whois'))}</h1>
+      <div class="app-sub">${escapeHtml(tx('domain registration data via the RDAP protocol','RDAP プロトコルによるドメイン登録情報'))}</div>
+    </div>
+    <div class="hr"></div>
+    <div class="banner">${escapeHtml(tx('Looks up public registration data (registrar, dates, status, name servers) for a domain via rdap.org. RDAP is the modern, structured successor to Whois.','rdap.org 経由でドメインの公開登録情報 (レジストラ・日付・ステータス・ネームサーバ) を取得します。RDAP は Whois の後継となる構造化プロトコルです。'))}</div>
+    <div class="ps-grid" style="grid-template-columns:1fr 120px">
+      <input class="input" id="rd-host" spellcheck="false" placeholder="example.com" value="example.com" style="font-family:var(--font-mono)">
+      <button class="btn btn--accent" id="rd-go">${escapeHtml(tx('Look up','照会'))}</button>
+    </div>
+    <div class="muted" id="rd-stat" style="font-size:11px;font-family:var(--font-mono);margin:4px 0"></div>
+    <div id="rd-out"></div>
+  `;
+  const $host = root.querySelector('#rd-host'), $out = root.querySelector('#rd-out'), $stat = root.querySelector('#rd-stat');
+  async function lookup() {
+    const host = $host.value.trim().replace(/^https?:\/\//,'').replace(/\/.*$/,'').toLowerCase();
+    if (!host) return;
+    $stat.textContent = tx('querying rdap.org…','rdap.org に照会中…'); $out.innerHTML = '';
+    try {
+      const res = await fetch(`https://rdap.org/domain/${encodeURIComponent(host)}`);
+      if (!res.ok) throw new Error('HTTP ' + res.status + (res.status === 404 ? ' — ' + tx('domain not found','ドメインが見つかりません') : ''));
+      const d = await res.json();
+      $stat.textContent = tx('done','完了');
+      const events = {};
+      (d.events || []).forEach(e => { events[e.eventAction] = e.eventDate; });
+      const ns = (d.nameservers || []).map(n => n.ldhName).filter(Boolean);
+      const status = (d.status || []);
+      const fmtDate = (s) => s ? new Date(s).toLocaleString() : '—';
+      const rows = [
+        [tx('Domain','ドメイン'), d.ldhName || host],
+        [tx('Handle','ハンドル'), d.handle || '—'],
+        [tx('Registered','登録日'), fmtDate(events.registration)],
+        [tx('Last changed','最終更新'), fmtDate(events['last changed'] || events['last update of RDAP database'])],
+        [tx('Expires','有効期限'), fmtDate(events.expiration)],
+        [tx('Status','ステータス'), status.join(', ') || '—'],
+      ];
+      $out.innerHTML = `
+        <table class="kv-table" style="margin-top:6px"><tbody>
+          ${rows.map(([k,v]) => `<tr><td style="width:180px">${escapeHtml(k)}</td><td class="mono" style="word-break:break-all">${escapeHtml(String(v))}</td></tr>`).join('')}
+        </tbody></table>
+        ${ns.length ? `<span class="label" style="margin-top:12px">${escapeHtml(tx('Name servers','ネームサーバ'))}</span><div class="code">${ns.map(escapeHtml).join('\n')}</div>` : ''}
+        <p class="muted" style="font-size:11px;margin-top:10px;line-height:1.6">${escapeHtml(tx('Registrant contact details are usually redacted for privacy (GDPR / ICANN policy).','登録者の連絡先はプライバシー保護のため通常は秘匿されます (GDPR / ICANN ポリシー)。'))}</p>`;
+    } catch (e) {
+      $stat.textContent = tx('failed','失敗');
+      $out.innerHTML = `<div class="banner danger" style="margin-top:10px">${escapeHtml(tx('Lookup failed: ','照会失敗: ') + e.message)}</div>`;
+    }
+  }
+  root.querySelector('#rd-go').addEventListener('click', lookup);
+  $host.addEventListener('keydown', e => { if (e.key === 'Enter') lookup(); });
+  return { dispose: () => {} };
+}
+
+// ====================================================================
+// APPS: Codepoint Inspector — per-character Unicode breakdown
+// ====================================================================
+function mountCodepoint(root) {
+  root.innerHTML = `
+    <div class="app-header">
+      <h1>${escapeHtml(tx('Codepoint Inspector','文字コード解析'))}</h1>
+      <div class="app-sub">${escapeHtml(tx('per-character Unicode / UTF-8 breakdown','文字単位の Unicode / UTF-8 内訳'))}</div>
+    </div>
+    <div class="hr"></div>
+    <span class="label">${escapeHtml(tx('Input / 入力','入力 / Input'))}</span>
+    <textarea class="textarea" id="cp-in" rows="3" spellcheck="false">Mia OS — 美杏 ☺</textarea>
+    <div class="muted" id="cp-stat" style="font-size:11px;font-family:var(--font-mono);margin:6px 0"></div>
+    <div class="pr-wrap" style="height:auto;max-height:340px">
+      <table class="cp-table">
+        <thead><tr><th>${escapeHtml(tx('Char','文字'))}</th><th>${escapeHtml(tx('Codepoint','コードポイント'))}</th><th>${escapeHtml(tx('Decimal','10進'))}</th><th>UTF-8</th><th>${escapeHtml(tx('Notes','備考'))}</th></tr></thead>
+        <tbody id="cp-body"></tbody>
+      </table>
+    </div>
+  `;
+  const $in = root.querySelector('#cp-in'), $body = root.querySelector('#cp-body'), $stat = root.querySelector('#cp-stat');
+  function charNote(cp) {
+    if (cp <= 0x1f || (cp >= 0x7f && cp <= 0x9f)) return tx('control character','制御文字');
+    if (cp === 0x20) return tx('space','スペース');
+    if (cp >= 0x30 && cp <= 0x39) return tx('digit','数字');
+    if ((cp >= 0x41 && cp <= 0x5a) || (cp >= 0x61 && cp <= 0x7a)) return tx('basic latin letter','基本ラテン文字');
+    if (cp >= 0x3040 && cp <= 0x309f) return tx('hiragana','ひらがな');
+    if (cp >= 0x30a0 && cp <= 0x30ff) return tx('katakana','カタカナ');
+    if (cp >= 0x4e00 && cp <= 0x9fff) return tx('CJK unified ideograph','CJK 統合漢字');
+    if (cp >= 0x1f300 && cp <= 0x1faff) return tx('emoji / pictograph','絵文字 / 記号');
+    if (cp >= 0x2000 && cp <= 0x206f) return tx('general punctuation','一般句読点');
+    if (cp > 0xffff) return tx('astral plane (surrogate pair)','追加面 (サロゲートペア)');
+    return tx('symbol / other','記号 / その他');
+  }
+  function render() {
+    const text = $in.value;
+    const chars = [...text];
+    $stat.textContent = `${chars.length} ${tx('codepoints','コードポイント')} · ${new TextEncoder().encode(text).length} ${tx('UTF-8 bytes','UTF-8 バイト')} · ${text.length} ${tx('UTF-16 units','UTF-16 単位')}`;
+    $body.innerHTML = chars.map(ch => {
+      const cp = ch.codePointAt(0);
+      const utf8 = [...new TextEncoder().encode(ch)].map(b => b.toString(16).padStart(2,'0').toUpperCase()).join(' ');
+      const display = (cp <= 0x20 || (cp >= 0x7f && cp <= 0xa0)) ? '·' : ch;
+      return `<tr>
+        <td class="gly">${escapeHtml(display)}</td>
+        <td class="hex">U+${cp.toString(16).toUpperCase().padStart(4,'0')}</td>
+        <td class="dec">${cp}</td>
+        <td class="utf">${utf8}</td>
+        <td class="name">${escapeHtml(charNote(cp))}</td>
+      </tr>`;
+    }).join('') || `<tr><td colspan="5" class="muted" style="text-align:center;padding:14px">${escapeHtml(tx('(empty)','(空)'))}</td></tr>`;
+  }
+  $in.addEventListener('input', render);
+  render();
+  return { dispose: () => {} };
+}
+
+// ====================================================================
+// APPS: Task Manager
+// ====================================================================
+function mountTaskmgr(root) {
+  let timer = null;
+  // deterministic pseudo-memory per app id so the figures stay stable
+  function memOf(id) {
+    let h = 0; for (let i = 0; i < id.length; i++) h = (h * 31 + id.charCodeAt(i)) | 0;
+    return 14 + (Math.abs(h) % 120);
+  }
+  function render() {
+    const here = state.windows;
+    const totalMem = here.reduce((s,w) => s + memOf(w.id), 48);
+    root.innerHTML = `
+      <div class="app-header">
+        <h1>${escapeHtml(tx('Task Manager','タスクマネージャ'))}</h1>
+        <div class="app-sub">${escapeHtml(tx('open windows across all workspaces','全ワークスペースの稼働ウィンドウ'))}</div>
+      </div>
+      <div class="hr"></div>
+      <div style="display:flex;gap:18px;margin-bottom:10px">
+        <div style="flex:1"><span class="label">${escapeHtml(tx('Windows','ウィンドウ数'))}</span><div style="font-size:22px;font-weight:300">${here.length}</div></div>
+        <div style="flex:1"><span class="label">${escapeHtml(tx('Memory (sim.)','メモリ (擬似)'))}</span><div style="font-size:22px;font-weight:300">${totalMem} MB</div><div class="bar"><span style="width:${Math.min(100, totalMem/12)}%"></span></div></div>
+        <div style="flex:1"><span class="label">${escapeHtml(tx('Workspace','ワークスペース'))}</span><div style="font-size:22px;font-weight:300">${state.workspace+1} / ${state.workspaceCount}</div></div>
+      </div>
+      <div class="taskmgr" style="border:1px solid var(--hair);border-radius:8px;overflow:hidden">
+        <table>
+          <thead><tr><th>${escapeHtml(tx('Application','アプリ'))}</th><th style="width:60px">WS</th><th style="width:80px">${escapeHtml(tx('State','状態'))}</th><th style="width:90px">${escapeHtml(tx('Memory','メモリ'))}</th><th style="width:70px"></th></tr></thead>
+          <tbody>
+            ${here.length ? here.map(w => {
+              const meta = APP_BY_ID[w.id];
+              const st = w.minimized ? tx('minimized','最小化') : w.maximized ? tx('maximized','最大化') : (state.focusedId===w.id ? tx('focused','フォーカス') : tx('running','稼働'));
+              return `<tr>
+                <td><span style="font-family:var(--font-mono);font-size:11px;background:rgba(20,20,30,0.06);padding:2px 6px;border-radius:4px;margin-right:8px">${escapeHtml(meta.icon)}</span>${escapeHtml(meta.title)}</td>
+                <td><span class="pill">${w.workspace+1}</span></td>
+                <td style="color:var(--t-2)">${escapeHtml(st)}</td>
+                <td class="mono" style="font-size:11px">${memOf(w.id)} MB</td>
+                <td><button class="end-btn" data-id="${w.id}">${escapeHtml(tx('End','終了'))}</button></td>
+              </tr>`;
+            }).join('') : `<tr><td colspan="5" class="muted" style="text-align:center;padding:18px;font-size:12px">${escapeHtml(tx('No running windows','稼働中のウィンドウなし'))}</td></tr>`}
+          </tbody>
+        </table>
+      </div>
+      <p class="muted" style="font-size:11px;margin-top:10px;line-height:1.6">${escapeHtml(tx('Memory figures are simulated for this single-page build. "End" closes the window through the normal animated close path.','メモリ値はこの単一ページ版での擬似値です。「終了」は通常のアニメーション付きクローズ処理を呼び出します。'))}</p>
+    `;
+    root.querySelectorAll('.end-btn').forEach(b => b.addEventListener('click', () => { closeWindow(b.dataset.id); setTimeout(render, 260); }));
+  }
+  render();
+  timer = setInterval(render, 2000);
+  return { dispose: () => clearInterval(timer) };
+}
+
+// ====================================================================
 // App mounters
 // ====================================================================
 const APP_MOUNTERS = {
@@ -2336,6 +4011,17 @@ const APP_MOUNTERS = {
   regex:    mountRegex,
   browser:  mountBrowser,
   finder:   mountFinder,
+  settings: mountSettings,
+  notes:    mountNotes,
+  calc:     mountCalc,
+  diff:     mountDiff,
+  uuid:     mountUuid,
+  headers:  mountHeaders,
+  cookies:  mountCookies,
+  dns:      mountDns,
+  rdap:     mountRdap,
+  codepoint:mountCodepoint,
+  taskmgr:  mountTaskmgr,
 };
 
 // ====================================================================
