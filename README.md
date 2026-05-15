@@ -26,14 +26,18 @@ MIAのポートフォリオサイトのソースコードです。
 ## ディレクトリ構成 (Directory Structure)
 ```text
 mia-0203/
-├── index.html       # メインのHTMLファイル
-├── top.css          # メインのスタイルシート
+├── index.html          # メインのHTMLファイル
+├── top.css             # メインのスタイルシート
+├── mia-os-react.html   # Mia OSポートフォリオ用のHTMLファイル
+├── mia-os-react.css    # Mia OSポートフォリオ用のスタイルシート
 ├── js/
-│   ├── top.js       # メインのJavaScript（開発用・解説コメント入り）
-│   └── top.min.js   # 圧縮済みのJavaScript（本番読み込み用）
-├── img/             # 画像ファイルディレクトリ（WebP, ICO等）
-├── video/           # 動画ファイルディレクトリ（ヒーローセクション用）
-└── README.md        # このファイル
+│   ├── top.js          # メインのJavaScript（開発用・解説コメント入り）
+│   └── top.min.js      # 圧縮済みのJavaScript（本番読み込み用）
+├── img/                # 画像ファイルディレクトリ（WebP, ICO等）
+├── video/              # 動画ファイルディレクトリ（ヒーローセクション用）
+├── models/             # 機械学習モデルのディレクトリ
+├── deep learning/      # ディープラーニング関連のスクリプト
+└── README.md           # このファイル
 ```
 
 ## 開発ワークフロー（GitHubへのアップロード手順）
